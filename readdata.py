@@ -51,3 +51,6 @@ gr.nphi # number of pts in azimuth
 
 sp = MagicSpectrum(datadir=my_path,tag='rot01', field='e_mag', ispec=12) # 1D spectra
 sp = MagicSpectrum2D(datadir=my_path,tag='rot01', field='e_mag', ispec=12) # 2D spectra - throughs an error for now, check with MagIC website
+
+ts = MagicTs(datadir=my_path,field='dipole',tag = 'rot01', all=True)
+ts = MagicTs(datadir=my_path,field='par', tag = 'rot01', all=True)
