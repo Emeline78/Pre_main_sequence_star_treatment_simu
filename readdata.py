@@ -13,6 +13,7 @@ from numpy import *
 from scipy import *
 from matplotlib.pyplot import *
 matplotlib.interactive(True)
+print(matplotlib.get_backend())
 
 from matplotlib.ticker import FuncFormatter
 formatter = FuncFormatter(lambda y, _: '{:.16g}'.format(y))
