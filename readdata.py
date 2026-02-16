@@ -36,6 +36,7 @@ my_path = '/travail/dynconv/multiscale_dyno/anelasticCouette/gr2/xi_p35_pm4/ra_2
 s = Surf(datadir=my_path,ivar=12, ave=False, tag='rot01') # useful plotting routines ivar = 20 donne le dernier output
 s.avg(field='Br', cm='seismic') # plots of averages
 s.surf('Br', r=0.9, cm = 'seismic') # surface plots
+"""
 gr = MagicGraph(datadir=my_path,ivar=12,tag='rot01') # access to 3D fields 
 
 gr.vtheta # theta component of velocity - numpy array
@@ -46,6 +47,6 @@ print(gr.radius.shape)
 gr.ntheta # number of pts in latitude
 gr.nphi # number of pts in azimuth
 # you have to "construct" the grid in phi and theta yourself - check the plotting routines 
-
+"""
 sp = MagicSpectrum(datadir=my_path,tag='rot01', field='e_mag', ispec=12) # 1D spectra
 sp = MagicSpectrum2D(datadir=my_path,tag='rot01', field='e_mag', ispec=12) # 2D spectra - throughs an error for now, check with MagIC website
