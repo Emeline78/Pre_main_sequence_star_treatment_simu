@@ -3,11 +3,20 @@ import matplotlib.pyplot as plt
 from magic import *
 import glob #pour appeler tous les fichiers correspondants a un pattern : glob.glob('pattern')
 
-my_path = '/travail/dynconv/multiscale_dyno/'
-my_dir = 'Nrho4_Ek4'
+""" 
+in Pre_main_sequence_star_treatment_simu
+git add first_treatment.py
+git commit -m "modifications"
+git push
 
-# il y a 2 log un avec un tag thicka et l'autre thickb, raison ??
-# datadir doit etre mis partout 
+in meso psl 
+git pull
+"""
+
+
+my_path = '/travail/dynconv/multiscale_dyno/anelasticCouette/'
+my_dir = ''
+
 # ----------------------- log treatment ----------------------- 
 
 stp = MagicSetup(datadir= my_path+my_dir,nml='log.thicka', quiet=True)
@@ -72,10 +81,10 @@ print(gr.vr.shape) # shape of vr
 print(gr.ek) # print ekman number
 print(gr.minc) # azimuthal symmetry
 
-# Averaged G file with double precision
+# Averaged file with double precision
 gr = MagicGraph(datadir=my_path+my_dir,ave=True, tag='thicka', precision=np.float64)
 
-# To read G_1.test
+# To read first file
 s = Surf(datadir=my_path+my_dir,ivar=1, ave=False, tag='thicka',precision=np.float64)
 
 # ====== avg ======
