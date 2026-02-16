@@ -30,8 +30,8 @@ rcParams['figure.figsize']= [8, 6]
 
 # this is the most important line from the header - it loads the python routines to analyse data
 from magic import *
-
-my_path = '/travail/dynconv/multiscale_dyno/anelasticCouette/gr2/xi_p35_pm4/ra_2e6/om25'
+a = input("dossier voulu dans AnelasticCouette : ")
+my_path = '/travail/dynconv/multiscale_dyno/anelasticCouette/'+a
 
 gr = MagicGraph(datadir=my_path,ivar=20,tag='rot01') # access to 3D fields 
 print(gr.__dict__.keys())
@@ -39,9 +39,7 @@ print(gr.__dict__.keys())
 s = Surf(datadir=my_path,ivar=20, ave=False, tag='rot01') # useful plotting routines ivar = 20 donne le dernier output
 
 s.avg(field='vphi', cm='seismic') # plots of averages
-s.surf('vphi', r=0.9, cm = 'seismic') # surface plots
-
-gr = MagicGraph(datadir=my_path,ivar=12,tag='rot01') # access to 3D fields 
+s.surf('vphi', r=0.9, cm = 'seismic') # surface plots 
 
 gr.vtheta # theta component of velocity - numpy array
 print(gr.vtheta.shape) # theta component of velocity - shape
@@ -52,8 +50,8 @@ gr.ntheta # number of pts in latitude
 gr.nphi # number of pts in azimuth
 # you have to "construct" the grid in phi and theta yourself - check the plotting routines 
 
-sp = MagicSpectrum(datadir=my_path,tag='rot01', field='e_mag', ispec=20) # 1D spectra
-sp = MagicSpectrum2D(datadir=my_path,tag='rot01', field='e_mag', ispec=20) # 2D spectra - throughs an error for now, check with MagIC website
+#sp = MagicSpectrum(datadir=my_path,tag='rot01', field='e_mag', ispec=20) # 1D spectra
+#sp = MagicSpectrum2D(datadir=my_path,tag='rot01', field='e_mag', ispec=20) # 2D spectra - throughs an error for now, check with MagIC website
 
 ts = MagicTs(datadir=my_path,field='dipole',tag = 'rot01', all=True)
 ts = MagicTs(datadir=my_path,field='par', tag = 'rot01', all=True)
