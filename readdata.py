@@ -1,5 +1,13 @@
-# coding: utf-8
-# coding: utf-8
+""" 
+in Pre_main_sequence_star_treatment_simu
+git add readdata.py
+git commit -m "modifications"
+git push
+
+in meso psl 
+git pull
+"""
+
 from math import *
 from numpy import *
 from scipy import *
@@ -23,7 +31,7 @@ rcParams['figure.figsize']= [8, 6]
 # this is the most important line from the header - it loads the python routines to analyse data
 from magic import *
 
-my_path = '/travail/dynconv/multiscale_dyno/anelasticCouette/gr2/xi_p35_pm4/ra_2e6'
+my_path = '/travail/dynconv/multiscale_dyno/anelasticCouette/gr2/xi_p35_pm4/ra_2e6/om'
 
 s = Surf(datadir=my_path,ivar=20, ave=False, tag='rot01') # useful plotting routines ivar = 20 donne le dernier pas de temps
 s.avg(field='Br', cm='seismic') # plots of averages
