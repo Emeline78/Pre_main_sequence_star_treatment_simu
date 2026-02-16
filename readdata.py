@@ -15,6 +15,9 @@ from matplotlib.pyplot import *
 matplotlib.interactive(True)
 print(matplotlib.get_backend())
 
+plt.plot([1,2,3])
+plt.show()
+
 from matplotlib.ticker import FuncFormatter
 formatter = FuncFormatter(lambda y, _: '{:.16g}'.format(y))
 
