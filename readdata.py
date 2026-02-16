@@ -31,9 +31,9 @@ rcParams['figure.figsize']= [8, 6]
 # this is the most important line from the header - it loads the python routines to analyse data
 from magic import *
 
-my_path = '/travail/dynconv/multiscale_dyno/anelasticCouette/gr2/xi_p35_pm4/ra_2e6/om25'
+my_path = '/travail/dynconv/multiscale_dyno/anelasticCouette/gr2/xi_p35_pm4/ra_2e6/om50'
 
-s = Surf(datadir=my_path,ivar=20, ave=False, tag='rot01') # useful plotting routines ivar = 20 donne le dernier pas de temps
+s = Surf(datadir=my_path,ivar=20, ave=False, tag='rot01') # useful plotting routines ivar = 20 donne le dernier output
 s.avg(field='Br', cm='seismic') # plots of averages
 s.surf('Br', r=0.9, cm = 'seismic') # surface plots
 gr = MagicGraph(datadir=my_path,ivar=20,tag='rot01') # access to 3D fields 
