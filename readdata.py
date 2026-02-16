@@ -34,7 +34,7 @@ from magic import *
 my_path = '/travail/dynconv/multiscale_dyno/anelasticCouette/gr2/xi_p35_pm4/ra_2e6/om300'
 
 s = Surf(datadir=my_path,ivar=12, ave=False, tag='rot01') # useful plotting routines ivar = 20 donne le dernier output
-print(s.__dict__)
+print(s.__getattribute__)
 s.avg(field='Br', cm='seismic') # plots of averages
 s.surf('Br', r=0.9, cm = 'seismic') # surface plots
 
