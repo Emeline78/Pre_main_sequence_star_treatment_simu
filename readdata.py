@@ -35,8 +35,11 @@ my_path = '/travail/dynconv/multiscale_dyno/anelasticCouette/gr2/xi_p35_pm4/ra_2
 
 s = Surf(datadir=my_path,ivar=12, ave=False, tag='rot01') # useful plotting routines ivar = 20 donne le dernier output
 
-s.avg(field='vphi', cm='seismic') # plots of averages
-s.surf('vphi', r=0.9, cm = 'seismic') # surface plots
+s.avg(field='rey', cm='seismic') # plots of averages
+s.surf('rey', r=0.9, cm = 'seismic') # surface plots
+
+s.avg(field='mr', cm='seismic') # plots of averages
+s.surf('mr', r=0.9, cm = 'seismic') # surface plots
 
 gr = MagicGraph(datadir=my_path,ivar=12,tag='rot01') # access to 3D fields 
 
