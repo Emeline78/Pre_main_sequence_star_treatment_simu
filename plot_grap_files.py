@@ -29,10 +29,20 @@ rcParams['xtick.top']='True'
 rcParams['figure.figsize']= [8, 6]
 
 from magic import *
-a = input("dossier voulu dans AnelasticCouette : ")
-my_path = '/travail/dynconv/multiscale_dyno/anelasticCouette/'+a
+for a in ["gr/Nr2p5_Pm4/ra_8e6/om50","gr2/xi_p2_pm4/ra_1e6/om15","gr2/xi_p35_pm4/ra_5e6/om50"]:
+	my_path = '/travail/dynconv/multiscale_dyno/anelasticCouette/'+a
+	gr = MagicGraph(datadir=my_path,ivar=9,tag='rot01') # access to 3D fields 
+	s = Surf(datadir=my_path,ivar=9, ave=False, tag='rot01')
+	s.avg(field='vr', cm='seismic')
+	s.avg(field='br', cm='seismic')
+	s.avg(field='helicity', cm='seismic')
+"""
+s.avg(field='vtheta', cm='seismic')
+s.avg(field='vphi', cm='seismic')
+s.avg(field='btheta', cm='seismic')
+s.avg(field='bphi', cm='seismic')
 
-gr = MagicGraph(datadir=my_path,ivar=9,tag='rot01') # access to 3D fields 
+
 print(gr.__dict__.keys())
 print(gr.vr.shape) # theta component of velocity - shape
 print(gr.vtheta.shape)
@@ -43,21 +53,12 @@ print(gr.Bphi.shape)
 print(gr.ntheta) # number of pts in latitude
 print(gr.nphi) # number of pts in azimuth
 
- 
-s = Surf(datadir=my_path,ivar=9, ave=False, tag='rot01')
 s.surf('vr', r=0.9, cm = 'seismic')
 s.surf('vtheta', r=0.9, cm = 'seismic')
 s.surf('vphi', r=0.9, cm = 'seismic')
 s.surf('br', r=0.9, cm = 'seismic')
 s.surf('btheta', r=0.9, cm = 'seismic')
 s.surf('bphi', r=0.9, cm = 'seismic')
-
-s.avg(field='vr', cm='seismic')
-s.avg(field='vtheta', cm='seismic')
-s.avg(field='vphi', cm='seismic')
-s.avg(field='br', cm='seismic')
-s.avg(field='btheta', cm='seismic')
-s.avg(field='bphi', cm='seismic')
 
 s.equat(field='vr', levels=65, cm='seismic')
 s.equat(field='vtheta', levels=65, cm='seismic')
@@ -67,5 +68,5 @@ s.equat(field='btheta', levels=65, cm='seismic')
 s.equat(field='bphi', levels=65, cm='seismic')
 
 s.avg(field='cr', cm='seismic')
-
+"""
 
