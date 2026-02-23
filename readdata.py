@@ -38,8 +38,8 @@ print(gr.__dict__.keys())
 
 s = Surf(datadir=my_path,ivar=20, ave=False, tag='rot01') # useful plotting routines ivar = 20 donne le dernier output
 
-s.avg(field='vphi', cm='seismic') # plots of averages
-s.surf('vphi', r=0.9, cm = 'seismic') # surface plots 
+#s.avg(field='vphi', cm='seismic') # plots of averages
+#s.surf('vphi', r=0.9, cm = 'seismic') # surface plots 
 
 gr.vtheta # theta component of velocity - numpy array
 print(gr.vtheta.shape) # theta component of velocity - shape
@@ -55,3 +55,5 @@ gr.nphi # number of pts in azimuth
 
 ts = MagicTs(datadir=my_path,field='dipole',tag = 'rot01', all=True)
 ts = MagicTs(datadir=my_path,field='par', tag = 'rot01', all=True)
+
+
