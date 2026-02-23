@@ -46,8 +46,8 @@ print(gr.vtheta.shape) # theta component of velocity - shape
 gr.Btheta.shape # theta component of magnetic field - shape
 gr.radius # radius  - numpy array
 print(gr.radius.shape)  
-gr.ntheta # number of pts in latitude
-gr.nphi # number of pts in azimuth
+print(gr.ntheta) # number of pts in latitude
+print(gr.nphi) # number of pts in azimuth
 # you have to "construct" the grid in phi and theta yourself - check the plotting routines 
 
 #sp = MagicSpectrum(datadir=my_path,tag='rot01', field='e_mag', ispec=20) # 1D spectra
