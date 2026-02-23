@@ -34,14 +34,14 @@ for i,a in enumerate(["gr/Nr2p5_Pm4/ra_8e6/om50","gr2/xi_p2_pm4/ra_1e6/om15","gr
 	my_path = '/travail/dynconv/multiscale_dyno/anelasticCouette/'+a
 	gr = MagicGraph(datadir=my_path,ivar=9,tag='rot01') # access to 3D fields 
 	s = Surf(datadir=my_path,ivar=9, ave=False, tag='rot01')
-	
-	
+
+
 	fig, axes = plt.subplots(3, 3, figsize=(15, 12))
 	for j,field in enumerate(['vr','br','helicity']):
-        	ax = axes[i, j]  
+		ax = axes[i, j]  
 		s.avg(field=field, cm='seismic', ax=ax)
 		if i == 0:
-			ax.set_title(field, fontsize=14)  # titre colonne en haut
+			ax.set_title(field, fontsize=14)
 
 plt.tight_layout()
 plt.show()
