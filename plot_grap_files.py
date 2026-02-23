@@ -41,7 +41,7 @@ for i,a in enumerate(["gr/Nr2p5_Pm4/ra_8e6/om50","gr2/xi_p2_pm4/ra_1e6/om15","gr
         	ax = axes[i, j]  
 		s.avg(field=field, cm='seismic', ax=ax)
 		if i == 0:
-		    ax.set_title(field, fontsize=14)  # titre colonne en haut
+			ax.set_title(field, fontsize=14)  # titre colonne en haut
 
 plt.tight_layout()
 plt.show()
