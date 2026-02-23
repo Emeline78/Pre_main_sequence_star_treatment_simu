@@ -39,7 +39,12 @@ for i,a in enumerate(["gr/Nr2p5_Pm4/ra_8e6/om50","gr2/xi_p2_pm4/ra_1e6/om15","gr
 	fig, axes = plt.subplots(3, 3, figsize=(15, 12))
 	for j,field in enumerate(['vr','br','helicity']):
 		ax = axes[i, j]  
-		s.avg(field=field, cm='seismic', ax=ax)
+		surf_data = s.avg(field=field, cm='seismic', show=False)
+		data = surf_data.get_array()  # récupère les données 2D
+		lon, lat = surf_data.get_coords()  # récupère les coordonnées
+
+		# Tracer sur le subplot correspondant
+		im = axes[i, j].pcolormesh(lon, lat, data, cmap='seismic')
 		if i == 0:
 			ax.set_title(field, fontsize=14)
 
