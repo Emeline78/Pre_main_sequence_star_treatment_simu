@@ -38,47 +38,16 @@ for a in ["gr/Nr2p5_Pm4/ra_8e6/om50","gr2/xi_p2_pm4/ra_1e6/om15","gr2/xi_p35_pm4
 	s.avg(field='br', cm='seismic')
 	s.avg(field='helicity', cm='seismic')
 	
-	#thlin = np.linspace(0., np.pi, gr.ntheta)
-	#indices = np.where(np.isclose(thlin, np.pi*81/180,atol=1e-1))[0]
-	#print(indices)
-	#filtre = (gr.vr[:,indices,:]).mean(axis=0)
-	#plt.figure(50)
-	#plt.plot(gr.radius,filtre[0])
+	
+
+thlin = np.linspace(0., np.pi, gr.ntheta)
+indices = np.where(np.isclose(thlin, np.pi*81/180,atol=1e-1))[0]
+print(indices)
+filtre = (gr.vr[:,indices,:]).mean(axis=0)
+plt.figure(50)
+plt.plot(gr.radius,filtre[0])
 plt.show()
 
 	
 
-"""
-s.avg(field='vtheta', cm='seismic')
-s.avg(field='vphi', cm='seismic')
-s.avg(field='btheta', cm='seismic')
-s.avg(field='bphi', cm='seismic')
-
-
-print(gr.__dict__.keys())
-print(gr.vr.shape) # theta component of velocity - shape
-print(gr.vtheta.shape)
-print(gr.vphi.shape)
-print(gr.Br.shape)  
-print(gr.Btheta.shape) 
-print(gr.Bphi.shape) 
-print(gr.ntheta) # number of pts in latitude
-print(gr.nphi) # number of pts in azimuth
-
-s.surf('vr', r=0.9, cm = 'seismic')
-s.surf('vtheta', r=0.9, cm = 'seismic')
-s.surf('vphi', r=0.9, cm = 'seismic')
-s.surf('br', r=0.9, cm = 'seismic')
-s.surf('btheta', r=0.9, cm = 'seismic')
-s.surf('bphi', r=0.9, cm = 'seismic')
-
-s.equat(field='vr', levels=65, cm='seismic')
-s.equat(field='vtheta', levels=65, cm='seismic')
-s.equat(field='vphi', levels=65, cm='seismic')
-s.equat(field='br', levels=65, cm='seismic')
-s.equat(field='btheta', levels=65, cm='seismic')
-s.equat(field='bphi', levels=65, cm='seismic')
-
-s.avg(field='cr', cm='seismic')
-"""
 
