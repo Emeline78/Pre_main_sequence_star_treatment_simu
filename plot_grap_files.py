@@ -45,7 +45,7 @@ n = len(paths)
 for i,a in enumerate(paths) :
 	gr = MagicGraph(datadir=a,tag='rot01')
 	thlin = np.linspace(0., np.pi, gr.ntheta)
-	indices = np.where(np.isclose(thlin, np.pi/2,atol=1e-2))[0]
+	indices = np.where(np.isclose(thlin, np.pi/2,atol=1e-2))[1]
 	print(indices, thlin[indices])
 	filtre = (gr.vr[:,indices,:]).mean(axis=0)
 	rth = gr.radius * (1 - 0.35)
