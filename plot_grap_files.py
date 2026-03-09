@@ -52,6 +52,9 @@ for i,a in enumerate(paths) :
 	color = plt.cm.Reds(0.3 + 0.7 * i / max(n-1, 1))
 	plt.figure(1)
 	plt.plot(rth,filtre,color = color)
+
+plt.xlabel(r'$r/r_o$')
+plt.ylabel(r'$\langle U_r \rangle_\phi$')
 plt.grid()
 plt.show()
 
