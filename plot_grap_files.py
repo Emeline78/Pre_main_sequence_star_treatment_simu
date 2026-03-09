@@ -12,6 +12,7 @@ from math import *
 from numpy import *
 from scipy import *
 from matplotlib.pyplot import *
+from glob import glob.glob
 matplotlib.interactive(True)
 
 from matplotlib.ticker import FuncFormatter
@@ -38,11 +39,14 @@ for a,xi in [("gr/Nr2p5_Pm4/ra_8e6/om50",0.2),("gr2/xi_p2_pm4/ra_1e6/om15",0.2),
 	#s.avg(field='br', cm='seismic')
 	#s.avg(field='helicity', cm='seismic')
 	
+
+for a in glob.glob("/travail/dynconv/multiscale_dyno/anelasticCouette/gr2/xi_p35_pm4/ra_5e6/om*") :
+	gr = MagicGraph(datadir=my_path,tag='rot01')
 	thlin = np.linspace(0., np.pi, gr.ntheta)
 	indices = np.where(np.isclose(thlin, np.pi/2,atol=1e-2))[0]
 	print(indices, thlin[indices])
 	filtre = (gr.vr[:,indices,:]).mean(axis=0)
-	rth = gr.radius * (1 - xi)
+	rth = gr.radius * (1 - 0.35)
 	plt.figure(1)
 	plt.plot(rth,filtre[0])
 plt.grid()
