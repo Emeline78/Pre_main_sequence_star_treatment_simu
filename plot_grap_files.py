@@ -40,7 +40,9 @@ for a,xi in [("gr/Nr2p5_Pm4/ra_8e6/om50",0.2),("gr2/xi_p2_pm4/ra_1e6/om15",0.2),
 	#s.avg(field='helicity', cm='seismic')
 	
 
-for i,a in enumerate(glob.glob("/travail/dynconv/multiscale_dyno/anelasticCouette/gr2/xi_p35_pm4/ra_5e6/om*")) :
+paths = glob.glob("/travail/dynconv/multiscale_dyno/anelasticCouette/gr2/xi_p35_pm4/ra_5e6/om*")
+n = len(paths)
+for i,a in enumerate(paths) :
 	gr = MagicGraph(datadir=a,tag='rot01')
 	thlin = np.linspace(0., np.pi, gr.ntheta)
 	indices = np.where(np.isclose(thlin, np.pi/2,atol=1e-2))[0]
