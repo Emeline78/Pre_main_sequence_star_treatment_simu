@@ -51,7 +51,7 @@ for i,a in enumerate(paths) :
 	rth = gr.radius * (1 - 0.35)
 	color = plt.cm.Reds(0.3 + 0.7 * i / max(n-1, 1))
 	plt.figure(1)
-	plt.plot(rth,filtre[0],color = color)
+	plt.plot(rth,filtre,color = color)
 plt.grid()
 plt.show()
 
