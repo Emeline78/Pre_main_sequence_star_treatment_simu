@@ -46,8 +46,8 @@ for i,a in enumerate(paths) :
 	gr = MagicGraph(datadir=a,tag='rot01')
 	thlin = np.linspace(0., np.pi, gr.ntheta)
 	indices = np.where(np.isclose(thlin, np.pi * 81/180 ,atol=1e-2))[0]
-	print(indices, thlin[indices])
-	filtre = (gr.vr[:,indices[0],:]).mean(axis=0)
+	#print(indices, thlin[indices])
+	filtre = gr.vr[:,indices[1],:].mean(axis=0)
 	rth = gr.radius * (1 - 0.35)
 	color = plt.cm.Reds(0.3 + 0.7 * i / max(n-1, 1))
 	plt.figure(1)
