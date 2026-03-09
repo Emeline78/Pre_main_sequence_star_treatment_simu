@@ -46,6 +46,8 @@ for i,a in enumerate(paths) :
 	gr = MagicGraph(datadir=a,tag='rot01')
 	vrad = gr.vr
 	files = glob.glob(a+"G_[0-9]*.rot01")
+	print(files)
+	#os.path.join(a, 'G_*.rot01')
 	for j in range(len(files)):
 		gr = MagicGraph(datadir=a,tag='rot01',ivar = j)
 		vrad += gr.vr
