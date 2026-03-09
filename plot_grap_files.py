@@ -13,6 +13,7 @@ from numpy import *
 from scipy import *
 from matplotlib.pyplot import *
 import glob
+import os
 matplotlib.interactive(True)
 
 from matplotlib.ticker import FuncFormatter
@@ -45,9 +46,8 @@ n = len(paths)
 for i,a in enumerate(paths) :
 	gr = MagicGraph(datadir=a,tag='rot01')
 	vrad = gr.vr
-	files = glob.glob(a+"G_[0-9]*.rot01")
+	files = glob.glob(os.path.join(a, 'G_[0-9]*.rot01'))
 	print(files)
-	#os.path.join(a, 'G_*.rot01')
 	for j in range(len(files)):
 		gr = MagicGraph(datadir=a,tag='rot01',ivar = j)
 		vrad += gr.vr
