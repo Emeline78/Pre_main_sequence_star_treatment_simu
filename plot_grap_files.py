@@ -12,7 +12,7 @@ from math import *
 from numpy import *
 from scipy import *
 from matplotlib.pyplot import *
-from glob import glob.glob
+import glob
 matplotlib.interactive(True)
 
 from matplotlib.ticker import FuncFormatter
