@@ -46,7 +46,6 @@ n = len(paths)
 for i,a in enumerate(paths) :
 	print(i)
 	if 'om150' in a:
-		i = i-1
 		continue
 	gr = MagicGraph(datadir=a,tag='rot01')
 	vrad = gr.vr
@@ -63,12 +62,15 @@ for i,a in enumerate(paths) :
 	if 'om50' in a:
 		color = plt.cm.Reds(0.3 + 0.7 * 5 / max(n-1, 1))
 		label = "0.005"
+		ty = "-"
 	if 'om100' in a:
 		color = plt.cm.Reds(0.3 + 0.7 * 4 / max(n-1, 1))
 		label = "0.01"
+		ty = "-"
 	if 'om125' in a:
 		color = plt.cm.Reds(0.3 + 0.7 * 3 / max(n-1, 1))
 		label = "0.0125"
+		ty = "-"
 	if 'om200' in a:
 		color = plt.cm.Reds(0.3 + 0.7 * 2 / max(n-1, 1))
 		label = "0.02"
