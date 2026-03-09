@@ -44,10 +44,12 @@ for a,xi in [("gr/Nr2p5_Pm4/ra_8e6/om50",0.2),("gr2/xi_p2_pm4/ra_1e6/om15",0.2),
 paths = glob.glob("/travail/dynconv/multiscale_dyno/anelasticCouette/gr2/xi_p35_pm4/ra_5e6/om*")
 n = len(paths)
 for i,a in enumerate(paths) :
+	print(i)
+	if 'om150' in a:
+		continue
 	gr = MagicGraph(datadir=a,tag='rot01')
 	vrad = gr.vr
 	files = glob.glob(os.path.join(a, 'G_[0-9]*.rot01'))
-	print(files)
 	for j in range(len(files)):
 		gr = MagicGraph(datadir=a,tag='rot01',ivar = j)
 		vrad += gr.vr
