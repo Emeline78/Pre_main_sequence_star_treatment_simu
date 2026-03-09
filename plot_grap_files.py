@@ -40,15 +40,16 @@ for a,xi in [("gr/Nr2p5_Pm4/ra_8e6/om50",0.2),("gr2/xi_p2_pm4/ra_1e6/om15",0.2),
 	#s.avg(field='helicity', cm='seismic')
 	
 
-for a in glob.glob("/travail/dynconv/multiscale_dyno/anelasticCouette/gr2/xi_p35_pm4/ra_5e6/om*") :
+for i,a in enumerate(glob.glob("/travail/dynconv/multiscale_dyno/anelasticCouette/gr2/xi_p35_pm4/ra_5e6/om*")) :
 	gr = MagicGraph(datadir=a,tag='rot01')
 	thlin = np.linspace(0., np.pi, gr.ntheta)
-	indices = np.where(np.isclose(thlin, np.pi*81/180,atol=1e-2))[0]
+	indices = np.where(np.isclose(thlin, np.pi/2,atol=1e-2))[0]
 	print(indices, thlin[indices])
 	filtre = (gr.vr[:,indices,:]).mean(axis=0)
 	rth = gr.radius * (1 - 0.35)
+	color = plt.cm.Reds(0.3 + 0.7 * i / max(n-1, 1))
 	plt.figure(1)
-	plt.plot(rth,filtre[0])
+	plt.plot(rth,filtre[0],color = color)
 plt.grid()
 plt.show()
 
