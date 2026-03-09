@@ -50,7 +50,7 @@ for i,a in enumerate(paths) :
 	gr = MagicGraph(datadir=a,tag='rot01')
 	vrad = gr.vr
 	files = glob.glob(os.path.join(a, 'G_[0-9]*.rot01'))
-	for j in range(len(files)):
+	for j in range(1,len(files)):
 		gr = MagicGraph(datadir=a,tag='rot01',ivar = j)
 		vrad += gr.vr
 	vrad = vrad/len(files)
