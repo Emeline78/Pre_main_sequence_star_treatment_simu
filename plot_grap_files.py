@@ -39,8 +39,8 @@ for a,xi in [("gr/Nr2p5_Pm4/ra_8e6/om50",0.2),("gr2/xi_p2_pm4/ra_1e6/om15",0.2),
 	#s.avg(field='helicity', cm='seismic')
 	
 	thlin = np.linspace(0., np.pi, gr.ntheta)
-	indices = np.where(np.isclose(thlin, np.pi/2,atol=1e-5))[0]
-	print(thlin, np.pi/2)
+	indices = np.where(np.isclose(thlin, np.pi/2,atol=1e-2))[0]
+	print(indices)
 	filtre = (gr.vr[:,indices,:]).mean(axis=0)
 	rth = gr.radius * (1 - xi)
 	plt.figure()
