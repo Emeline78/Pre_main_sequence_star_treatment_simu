@@ -46,6 +46,7 @@ n = len(paths)
 for i,a in enumerate(paths) :
 	print(i)
 	if 'om150' in a:
+		i = i-1
 		continue
 	gr = MagicGraph(datadir=a,tag='rot01')
 	vrad = gr.vr
@@ -59,12 +60,33 @@ for i,a in enumerate(paths) :
 	#print(indices, thlin[indices])
 	filtre = vrad[:,indices[1],:].mean(axis=0)
 	rth = gr.radius * (1 - 0.35)
-	color = plt.cm.Reds(0.3 + 0.7 * i / max(n-1, 1))
+	if 'om50' in a:
+		color = plt.cm.Reds(0.3 + 0.7 * 5 / max(n-1, 1))
+		label = "0.005"
+	if 'om100' in a:
+		color = plt.cm.Reds(0.3 + 0.7 * 4 / max(n-1, 1))
+		label = "0.01"
+	if 'om125' in a:
+		color = plt.cm.Reds(0.3 + 0.7 * 3 / max(n-1, 1))
+		label = "0.0125"
+	if 'om200' in a:
+		color = plt.cm.Reds(0.3 + 0.7 * 2 / max(n-1, 1))
+		label = "0.02"
+		ty = "--"
+	if 'om300' in a:
+		color = plt.cm.Reds(0.3 + 0.7 * 1 / max(n-1, 1))
+		label = "0.03"
+		ty = "--"
+	if 'om500' in a:
+		color = plt.cm.Reds(0.3 + 0.7 * 0 / max(n-1, 1))
+		label = "0.05"
+		ty = "--"
 	plt.figure(1)
-	plt.plot(rth,filtre,color = color)
+	plt.plot(rth,filtre,ty,color = color,label = label)
 
 plt.xlabel(r'$r/r_o$')
 plt.ylabel(r'$\langle U_r \rangle_\phi$')
+plt.legend()
 plt.grid()
 plt.show()
 
