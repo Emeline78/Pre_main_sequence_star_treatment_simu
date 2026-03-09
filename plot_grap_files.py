@@ -44,6 +44,7 @@ paths = glob.glob("/travail/dynconv/multiscale_dyno/anelasticCouette/gr2/xi_p35_
 n = len(paths)
 for i,a in enumerate(paths) :
 	gr = MagicGraph(datadir=a,tag='rot01',ave = True)
+	print(gr.vr)
 	thlin = np.linspace(0., np.pi, gr.ntheta)
 	indices = np.where(np.isclose(thlin, np.pi * 81/180 ,atol=5e-3))[0]
 	#print(indices, thlin[indices])
