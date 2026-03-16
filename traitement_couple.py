@@ -1,7 +1,7 @@
 from math import *
 import numpy as np
 from scipy import *
-from matplotlib.pyplot import *
+import matplotlib.pyplot as plt
 import glob
 import os
 matplotlib.interactive(True)
@@ -52,9 +52,15 @@ for j in range(1,len(files)+1):
 	prod_tot[j-1] = int_theta/(4*np.pi)
 
 RS = (prod_tot*dt).sum(axis=0) / t_total
+print(RS.shape)
+plt.figure()
+plt.plot(RS)
+plt.show()
 
-temp0, rho0, beta = anelprof(gr.radius,strat=gr.strat, polind=gr.polind,g0=gr.g0, g1=gr.g1, g2=gr.g2)
+#temp0, rho0, beta = anelprof(gr.radius,strat=gr.strat, polind=gr.polind,g0=gr.g0, g1=gr.g1, g2=gr.g2)
 
-RS = rho0 * RS
+#RS = rho0 * RS
+
+
 
 
