@@ -22,7 +22,7 @@ rcParams['figure.figsize']= [8, 6]
 
 from magic import *
 
-a = "gr/Nr2p5_Pm4/ra_8e6/om50"
+a = "/travail/dynconv/multiscale_dyno/anelasticCouette/gr/Nr2p5_Pm4/ra_8e6/om50/"
 
 # ------ Useful values -------
 
