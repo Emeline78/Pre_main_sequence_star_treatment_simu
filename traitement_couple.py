@@ -25,67 +25,62 @@ from magic import *
 
 a = "/travail/dynconv/multiscale_dyno/anelasticCouette/gr/Nr2p5_Pm4/ra_8e6/om50/"
 
-# ------ Reynolds stress -------
-g1 = MagicGraph(datadir=a,tag='rot01',ivar = 1)
+files = glob.glob(os.path.join(a,'G_[0-9]*.rot01'))
 
-files = glob.glob(os.path.join(a, 'G_[0-9]*.rot01'))
-prod_tot = np.zeros((len(files),g1.nr))
 times = []
+RS_snap = []
+MS_snap = []
 
-for j in range(1,len(files)+1):
-	gr = MagicGraph(datadir=a,tag='rot01',ivar = j)
-	times.append(gr.time)
-	r = gr.radius
-	thlin = np.linspace(0., np.pi, gr.ntheta)
-	dthet = np.pi / (gr.ntheta - 1) * np.sin(thlin) 
-	dphi   = 2 * np.pi / gr.nphi
-	vr = gr.vr.copy()- gr.vr.mean(axis=0)
-	vp = gr.vphi.copy()- gr.vphi.mean(axis=0) 
-	
-	prod = vr*vp
-	int_phi = (prod*dphi).sum(axis=0)
-	int_theta =  (int_phi*dthet[:, np.newaxis]).sum(axis = 0)
-	prod_tot[j-1] = int_theta/(4*np.pi) *r
+for j in range(1,len(files)+1): 
+    gr = MagicGraph(datadir=a,tag='rot01',ivar = j)
+    times.append(gr.time)
+
+    if j == 1:
+        r = gr.radius
+        th = np.linspace(0,np.pi,gr.ntheta)
+
+        dphi = 2*np.pi/gr.nphi
+        dtheta = np.pi/(gr.ntheta-1)
+
+        weight = np.sin(th)*dtheta*dphi/(4*np.pi)
+
+    # fluctuations
+    vr = gr.vr - gr.vr.mean(axis=0)
+    vp = gr.vphi - gr.vphi.mean(axis=0)
+
+    Br = gr.Br - gr.Br.mean(axis=0)
+    Bp = gr.Bphi - gr.Bphi.mean(axis=0)
+
+    # Reynolds
+    prodR = vr*vp
+    RS = (prodR*weight[:,None]).sum(axis=(0,1))*r
+
+    # Maxwell
+    prodM = Br*Bp
+    MS = -(prodM*weight[:,None]).sum(axis=(0,1))*r/(4*np.pi)	# 4pi = mu0 si en SI
+
+    RS_snap.append(RS)
+    MS_snap.append(MS)
 
 times = np.array(times)
-dt = np.diff(times)
+RS_snap = np.array(RS_snap)
+MS_snap = np.array(MS_snap)
 t_total = times[-1] - times[0]
 
-RS = np.zeros(g1.nr)
+dt = np.diff(times)
+
+RS = np.zeros_like(RS_snap[0])
+MS = np.zeros_like(MS_snap[0])
+
 for i in range(len(dt)):
-	RS += 0.5 * (prod_tot[i] + prod_tot[i+1]) * dt[i]
-RS = RS / t_total
-print(RS.shape)
+    RS += 0.5*(RS_snap[i] + RS_snap[i+1])*dt[i]
+    MS += 0.5*(MS_snap[i] + MS_snap[i+1])*dt[i]
+
+RS /= t_total
+MS /= t_total
+
 plt.figure()
 plt.plot(RS)
-plt.show()
-
-#temp0, rho0, beta = anelprof(gr.radius,strat=gr.strat, polind=gr.polind,g0=gr.g0, g1=gr.g1, g2=gr.g2)
-#RS = rho0 * RS
-
-# -------------- Maxwell stress ---------------
-prod_tot = np.zeros((len(files),g1.nr))
-
-for j in range(1,len(files)+1):
-	gr = MagicGraph(datadir=a,tag='rot01',ivar = j)
-	r = gr.radius
-	thlin = np.linspace(0., np.pi, gr.ntheta)
-	dthet = np.pi / (gr.ntheta - 1) * np.sin(thlin) 
-	dphi   = 2 * np.pi / gr.nphi
-	Br = gr.Br.copy()- gr.Br.mean(axis=0)
-	Bp = gr.Bphi.copy()- gr.Bphi.mean(axis=0) 
-	prod = Br*Bp
-	int_phi = (prod*dphi).sum(axis=0)
-	int_theta =  (int_phi*dthet[:, np.newaxis]).sum(axis = 0)
-	prod_tot[j-1] = int_theta/(4*np.pi) *r
-
-MS = np.zeros(g1.nr)
-for i in range(len(dt)):
-	MS += 0.5 * (prod_tot[i] + prod_tot[i+1]) * dt[i]
-	
-MS = MS / t_total * (-1/(4* np.pi * 1e-7))
-print(MS.shape)
-plt.figure()
 plt.plot(MS)
 plt.show()
 
