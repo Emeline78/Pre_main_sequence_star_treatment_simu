@@ -43,6 +43,8 @@ for j in range(1,len(files)+1):
         dtheta = np.pi/(gr.ntheta-1)
 
         weight = np.sin(th)*dtheta*dphi/(4*np.pi)
+        ur_snap = np.zeros((len(files),gr.ntheta,gr.nr))
+        l_snap = np.zeros((len(files),gr.ntheta,gr.nr))
 
     # fluctuations
     vr = gr.vr - gr.vr.mean(axis=0)
@@ -57,7 +59,11 @@ for j in range(1,len(files)+1):
 
     # Maxwell
     prodM = Br*Bp
-    MS = -(prodM*weight[:,None]).sum(axis=(0,1))*r/(4*np.pi)	# 4pi = mu0 si en SI
+    MS = -(prodM*weight[:,None]).sum(axis=(0,1))*r  
+    
+    # Ecoulement meridional
+    ur_snap[j-1] = (gr.vr*dphi[:,None,None]).sum(axis=0)
+    l_snap[j-1] = (gr.vphi*r[None,None,:]*np.sin(th)[None,:,None]*dphi).sum(axis=0)
 
     RS_snap.append(RS)
     MS_snap.append(MS)
@@ -71,19 +77,32 @@ dt = np.diff(times)
 
 RS = np.zeros_like(RS_snap[0])
 MS = np.zeros_like(MS_snap[0])
+ur = np.zeros_like(ur[0])
+l = np.zeros_like(l[0])
 
 for i in range(len(dt)):
     RS += 0.5*(RS_snap[i] + RS_snap[i+1])*dt[i]
     MS += 0.5*(MS_snap[i] + MS_snap[i+1])*dt[i]
+    ur += 0.5*(ur_snap[i] + ur_snap[i+1])*dt[i]
+    l += 0.5*(l_snap[i] + l_snap[i+1])*dt[i]
 
-RS /= t_total
-MS /= t_total
+RS /= t_total	# * rho * L**3 / tau**2
+MS /= t_total	#* L * B0**2 / mu
+ur /= t_total
+l /= t_total
+    
+MC = (ur*l*dtheta*np.sin(th)[:,None]).sum(axis =0) 	# * rho * L**3 / tau**2
 
+#rajouter B0, L, rho et l'ecoulement visqueux
 plt.figure()
 plt.plot(RS)
 
 plt.figure()
 plt.plot(MS)
+
+plt.figure()
+plt.plot(MC)
+
 plt.show()
 
 
