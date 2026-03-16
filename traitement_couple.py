@@ -12,14 +12,14 @@ formatter = FuncFormatter(lambda y, _: '{:.16g}'.format(y))
 
 matplotlib.rcParams['font.family'] = 'STIXGeneral'
 matplotlib.rcParams['mathtext.fontset'] = 'cm'
-rcParams['font.size'] = 24
-rcParams['ytick.labelsize']=20
-rcParams['ytick.direction']='in'
-rcParams['ytick.right']='True'
-rcParams['xtick.labelsize']=20
-rcParams['xtick.direction']='in'
-rcParams['xtick.top']='True'
-rcParams['figure.figsize']= [8, 6]
+matplotlib.rcParams['font.size'] = 24
+matplotlib.rcParams['ytick.labelsize']=20
+matplotlib.rcParams['ytick.direction']='in'
+matplotlib.rcParams['ytick.right']='True'
+matplotlib.rcParams['xtick.labelsize']=20
+matplotlib.rcParams['xtick.direction']='in'
+matplotlib.rcParams['xtick.top']='True'
+matplotlib.rcParams['figure.figsize']= [8, 6]
 
 from magic import *
 
