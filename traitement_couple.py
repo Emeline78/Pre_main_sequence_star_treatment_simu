@@ -81,6 +81,8 @@ MS /= t_total
 
 plt.figure()
 plt.plot(RS)
+
+plt.figure()
 plt.plot(MS)
 plt.show()
 
