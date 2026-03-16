@@ -95,15 +95,15 @@ MC = (ur*l*dtheta*np.sin(th)[:,None]).sum(axis =0) 	# * rho * L**3 / tau**2
 
 #rajouter B0, L, rho et l'ecoulement visqueux
 plt.figure()
-plt.plot(RS)
+plt.plot(r,RS)
 plt.ylabel("Reynolds stress")
 
 plt.figure()
-plt.plot(MS)
+plt.plot(r,MS)
 plt.ylabel("Maxwell stress")
 
 plt.figure()
-plt.plot(MC)
+plt.plot(r,MC)
 plt.ylabel("Meridional circulation")
 
 plt.show()
