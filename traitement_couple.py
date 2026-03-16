@@ -79,6 +79,7 @@ for j in range(1,len(files)+1):
 	int_theta =  (int_phi*dthet[:, np.newaxis]).sum(axis = 0)
 	prod_tot[j-1] = int_theta/(4*np.pi) *r
 
+MS = np.zeros(g1.nr)
 for i in range(len(dt)):
 	MS += 0.5 * (prod_tot[i] + prod_tot[i+1]) * dt[i]
 	
