@@ -33,7 +33,6 @@ prod_tot = np.zeros((len(files),g1.nr))
 times = []
 
 for j in range(1,len(files)+1):
-	print(j)
 	gr = MagicGraph(datadir=a,tag='rot01',ivar = j)
 	times.append(gr.time)
 	r = gr.radius
@@ -52,6 +51,7 @@ times = np.array(times)
 dt = np.diff(times)
 t_total = times[-1] - times[0]
 
+RS = np.zeros(g1.nr)
 for i in range(len(dt)):
 	RS += 0.5 * (prod_tot[i] + prod_tot[i+1]) * dt[i]
 RS = RS / t_total
