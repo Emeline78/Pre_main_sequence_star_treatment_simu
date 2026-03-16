@@ -25,7 +25,7 @@ from magic import *
 
 a = "/travail/dynconv/multiscale_dyno/anelasticCouette/gr/Nr2p5_Pm4/ra_8e6/om50/"
 
-# ------ Useful values -------
+# ------ Reynolds stress -------
 
 g1 = MagicGraph(datadir=a,tag='rot01',ivar=1)
 g2 = MagicGraph(datadir=a,tag='rot01',ivar=2)
@@ -50,7 +50,7 @@ for j in range(1,len(files)+1):
 	prod = vr*vp
 	int_phi = (prod*dphi).sum(axis=0)
 	int_theta =  (int_phi*dthet[:, np.newaxis]).sum(axis = 0)
-	prod_tot[j-1] = int_theta/(4*np.pi)
+	prod_tot[j-1] = int_theta/(4*np.pi) *r
 
 RS = (prod_tot*dt).sum(axis=0) / t_total
 print(RS.shape)
@@ -62,6 +62,25 @@ plt.show()
 
 #RS = rho0 * RS
 
+prod_tot = np.zeros((len(files),g1.nr))
+for j in range(1,len(files)+1):
+	gr = MagicGraph(datadir=a,tag='rot01',ivar = j)
+	r = gr.radius
+	thlin = np.linspace(0., np.pi, gr.ntheta)
+	dthet = np.pi / (gr.ntheta - 1) * np.sin(thlin) 
+	dphi   = 2 * np.pi / gr.nphi
+	Br = gr.Br.copy()- gr.Br.mean(axis=0)
+	Bp = gr.Bphi.copy()- gr.Bphi.mean(axis=0) 
+	prod = Br*Bp
+	int_phi = (prod*dphi).sum(axis=0)
+	int_theta =  (int_phi*dthet[:, np.newaxis]).sum(axis = 0)
+	prod_tot[j-1] = int_theta/(4*np.pi) *r
+
+MS = (prod_tot*dt).sum(axis=0) / t_total * (-1/(4* np.pi * 1e-7))
+print(MS.shape)
+plt.figure()
+plt.plot(MS)
+plt.show()
 
 
 
