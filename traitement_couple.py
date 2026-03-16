@@ -4,6 +4,7 @@ from scipy import *
 import matplotlib.pyplot as plt
 import glob
 import os
+import matplotlib
 matplotlib.interactive(True)
 from magic.libmagic import anelprof
 from matplotlib.ticker import FuncFormatter
