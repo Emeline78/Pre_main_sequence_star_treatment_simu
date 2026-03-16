@@ -97,15 +97,17 @@ MC = (ur*l*dtheta*np.sin(th)[:,None]).sum(axis =0) 	# * rho * L**3 / tau**2
 plt.figure()
 plt.plot(r,RS)
 plt.ylabel("Reynolds stress")
+plt.xlabel("r")
 
 plt.figure()
 plt.plot(r,MS)
 plt.ylabel("Maxwell stress")
+plt.xlabel("r")
 
 plt.figure()
 plt.plot(r,MC)
 plt.ylabel("Meridional circulation")
-
+plt.xlabel("r")
 plt.show()
 
 
