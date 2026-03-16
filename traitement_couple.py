@@ -32,6 +32,11 @@ g2 = MagicGraph(datadir=a,tag='rot01',ivar=2)
 dt = g2.time - g1.time
 print(dt)
 
+g1 = MagicGraph(datadir=a,tag='rot01',ivar=2)
+g2 = MagicGraph(datadir=a,tag='rot01',ivar=3)
+dt = g2.time - g1.time
+print(dt)
+
 g_last  = MagicGraph(datadir=a,tag='rot01')
 t_total = g_last.time - g1.time
 print(t_total)
