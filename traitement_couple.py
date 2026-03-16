@@ -26,6 +26,7 @@ from magic import *
 a = "/travail/dynconv/multiscale_dyno/anelasticCouette/gr/Nr2p5_Pm4/ra_8e6/om50/"
 
 # ------ Reynolds stress -------
+g1 = MagicGraph(datadir=a,tag='rot01',ivar = 1)
 
 files = glob.glob(os.path.join(a, 'G_[0-9]*.rot01'))
 prod_tot = np.zeros((len(files),g1.nr))
@@ -49,6 +50,7 @@ for j in range(1,len(files)+1):
 times = np.array(times)
 dt = np.diff(times)
 print(prod_tot.shape,times.shape)
+
 t_total = times[-1] - times[0]
 
 RS = (prod_tot*dt[:, np.newaxis]).sum(axis=0) / t_total
