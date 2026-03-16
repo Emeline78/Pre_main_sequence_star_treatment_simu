@@ -31,7 +31,7 @@ g1 = MagicGraph(datadir=a,tag='rot01',ivar = 1)
 files = glob.glob(os.path.join(a, 'G_[0-9]*.rot01'))
 prod_tot = np.zeros((len(files),g1.nr))
 times = []
-
+print(files)
 for j in range(1,len(files)+1):
 	gr = MagicGraph(datadir=a,tag='rot01',ivar = j)
 	times.append(gr.time)
