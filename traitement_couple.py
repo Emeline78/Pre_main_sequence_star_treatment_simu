@@ -33,8 +33,8 @@ prod_tot = np.zeros((len(files),g1.nr))
 times = []
 
 for j in range(1,len(files)+1):
-	times.append(gr.time)
 	gr = MagicGraph(datadir=a,tag='rot01',ivar = j)
+	times.append(gr.time)
 	r = gr.radius
 	thlin = np.linspace(0., np.pi, gr.ntheta)
 	dthet = np.pi / (gr.ntheta - 1) * np.sin(thlin) 
