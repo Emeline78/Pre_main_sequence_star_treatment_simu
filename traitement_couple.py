@@ -27,24 +27,12 @@ a = "/travail/dynconv/multiscale_dyno/anelasticCouette/gr/Nr2p5_Pm4/ra_8e6/om50/
 
 # ------ Reynolds stress -------
 
-g1 = MagicGraph(datadir=a,tag='rot01',ivar=1)
-g2 = MagicGraph(datadir=a,tag='rot01',ivar=2)
-dt = g2.time - g1.time
-print(dt)
-
-g1 = MagicGraph(datadir=a,tag='rot01',ivar=2)
-g2 = MagicGraph(datadir=a,tag='rot01',ivar=3)
-dt = g2.time - g1.time
-print(dt)
-
-g_last  = MagicGraph(datadir=a,tag='rot01')
-t_total = g_last.time - g1.time
-print(t_total)
-
 files = glob.glob(os.path.join(a, 'G_[0-9]*.rot01'))
 prod_tot = np.zeros((len(files),g1.nr))
+times = []
 
 for j in range(1,len(files)+1):
+	times.append(gr.time)
 	gr = MagicGraph(datadir=a,tag='rot01',ivar = j)
 	r = gr.radius
 	thlin = np.linspace(0., np.pi, gr.ntheta)
@@ -52,12 +40,18 @@ for j in range(1,len(files)+1):
 	dphi   = 2 * np.pi / gr.nphi
 	vr = gr.vr.copy()- gr.vr.mean(axis=0)
 	vp = gr.vphi.copy()- gr.vphi.mean(axis=0) 
+	
 	prod = vr*vp
 	int_phi = (prod*dphi).sum(axis=0)
 	int_theta =  (int_phi*dthet[:, np.newaxis]).sum(axis = 0)
 	prod_tot[j-1] = int_theta/(4*np.pi) *r
 
-RS = (prod_tot*dt).sum(axis=0) / t_total
+times = np.array(times)
+dt = np.diff(times)
+print(prod_tot.shape,times.shape)
+t_total = times[-1] - times[0]
+
+RS = (prod_tot*dt[:, np.newaxis]).sum(axis=0) / t_total
 print(RS.shape)
 plt.figure()
 plt.plot(RS)
