@@ -77,8 +77,8 @@ dt = np.diff(times)
 
 RS = np.zeros_like(RS_snap[0])
 MS = np.zeros_like(MS_snap[0])
-ur = np.zeros_like(ur[0])
-l = np.zeros_like(l[0])
+ur = np.zeros_like(ur_snap[0])
+l = np.zeros_like(l_snap[0])
 
 for i in range(len(dt)):
     RS += 0.5*(RS_snap[i] + RS_snap[i+1])*dt[i]
