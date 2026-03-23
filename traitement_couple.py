@@ -107,14 +107,14 @@ L = 1 - ki
 nu = Ek * om * L**2
 tau = L**2/nu
 eta = nu/Pm
-B0car = rho*mu0*eta*om
 rho = fun_rho(r,Nrho,n,ki)
+B0car = rho*mu0*eta*om
 
 print(f"rho(ri)/rho(ro) = {rho.max()/rho.min():.4f}")
 print(f"attendu         = {np.exp(2.5):.4f}")
 
 RS = RS / t_total * rho * L**3 / tau**2
-MS = MS / t_total * L * B0 / mu0
+MS = MS / t_total * L * B0car / mu0
 ur /= t_total
 l /= t_total
     
