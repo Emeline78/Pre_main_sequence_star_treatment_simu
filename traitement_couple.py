@@ -40,6 +40,7 @@ g2 = stp.g2
 ts = MagicTs(datadir = a, field='e_kin', all=True)
 
 files = glob.glob(os.path.join(a,'G_[0-9]*.rot01'))
+files.sort(key=lambda f: int(f.split('_')[1].split('.')[0]))
 
 times = []
 RS_snap = []
@@ -81,8 +82,8 @@ for j in range(1,len(files)+1):
     MS = -(prodM*weight[:,None]).sum(axis=(0,1))*r  
     
     # Ecoulement meridional
-    ur_snap[j-1] = (gr.vr*dphi).sum(axis=0)
-    l_snap[j-1] = (gr.vphi*r[None,None,:]*np.sin(th)[None,:,None]*dphi).sum(axis=0)
+    ur_snap[j-1] = (gr.vr*dphi).sum(axis=0)/(2*np.pi)
+    l_snap[j-1] = (gr.vphi*r[None,None,:]*np.sin(th)[None,:,None]*dphi).sum(axis=0)/(2*np.pi)
     
     # Viscosite
     Visc = -((tau_rphi * weight[:,None]).sum(axis=(0,1))) * r
@@ -120,8 +121,9 @@ temp0, rho0, drho = anelprof(r, strat = Nrho, polind = n, g0=g0, g1=g1, g2=g2)
 rho = rho0
 B0car = rho * mu0 * eta * om
 
-print(f"rho(ri)/rho(ro) = {rho.max()/rho.min():.4f}")
-print(f"attendu         = {np.exp(Nrho):.4f}")
+#print(f"rho(ri)/rho(ro) = {rho.max()/rho.min():.4f}")
+#print(f"attendu         = {np.exp(Nrho):.4f}")
+print(ki,r.min()/r.max())
 
 RS = RS / t_total * rho * L**3 / tau**2
 MS = MS / t_total * L * B0car / mu0
@@ -129,14 +131,13 @@ ur /= t_total
 l /= t_total
 Visc = Visc / t_total * rho * L**3 / tau**2
     
-MC = (ur*l*dtheta*np.sin(th)[:,None]).sum(axis =0) * rho * L**3 / tau**2
+MC = (ur*l*dtheta*np.sin(th)[:,None]).sum(axis =0)/2 * rho * L**3 / tau**2
 
 plt.figure()
 plt.plot(r,RS, label = "Reynolds stress")
 plt.plot(r,MS, label ="Maxwell stress")
 plt.plot(r,MC,label ="Meridional circulation")
 plt.plot(r,Visc, label = "Viscous stress")
-plt.plot
 plt.xlabel("r")
 plt.ylabel("Stresses")
 plt.legend()
