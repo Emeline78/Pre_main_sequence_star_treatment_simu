@@ -70,8 +70,7 @@ for j in range(1,len(files)+1):
     Br = gr.Br - gr.Br.mean(axis=0)
     Bp = gr.Bphi - gr.Bphi.mean(axis=0)
     
-    dvphi_droite = np.ones_like(vr)*np.nan
-    dvphi_droite[:,:,:-1] = (gr.vphi[:,:,1:] - gr.vphi[:,:,:-1])/((r[1:] - r[:-1])[None,None,:])
+    dvphi = np.gradient(gr.vphi, r, axis=2)
     tau_rphi = dvphi_droite - gr.vphi/r[None,None,:]
 
     # Reynolds
