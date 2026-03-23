@@ -83,7 +83,7 @@ for j in range(1,len(files)+1):
     l_snap[j-1] = (gr.vphi*r[None,None,:]*np.sin(th)[None,:,None]*dphi).sum(axis=0)
     
     # Viscosite
-    Visc = -(tau_rphi * weight[:,None]).sum(axis=(0,1) * r
+    Visc = -((tau_rphi * weight[:,None]).sum(axis=(0,1))) * r
     
     Visc_snap.append(Visc)
     RS_snap.append(RS)
