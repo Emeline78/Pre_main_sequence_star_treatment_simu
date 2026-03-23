@@ -42,6 +42,7 @@ files = glob.glob(os.path.join(a,'G_[0-9]*.rot01'))
 times = []
 RS_snap = []
 MS_snap = []
+Visc_snap = []
 
 for j in range(1,len(files)+1): 
     gr = MagicGraph(datadir=a,tag='rot01',ivar = j)
@@ -64,6 +65,10 @@ for j in range(1,len(files)+1):
 
     Br = gr.Br - gr.Br.mean(axis=0)
     Bp = gr.Bphi - gr.Bphi.mean(axis=0)
+    
+    dvphi_droite = np.ones_like(vr)*np.nan
+    dvphi_droite[:-1] = (gr.vphi[1:] - gr.vphi[:-1])/(r[1:] - r[:-1])
+    tau_rphi = dvphi_droite - gr.vphi/r
 
     # Reynolds
     prodR = vr*vp
@@ -76,13 +81,18 @@ for j in range(1,len(files)+1):
     # Ecoulement meridional
     ur_snap[j-1] = (gr.vr*dphi).sum(axis=0)
     l_snap[j-1] = (gr.vphi*r[None,None,:]*np.sin(th)[None,:,None]*dphi).sum(axis=0)
-
+    
+    # Viscosite
+    Visc = -(tau_rphi * weight[:,None]).sum(axis=(0,1) * r
+    
+    Visc_snap.append(Visc)
     RS_snap.append(RS)
     MS_snap.append(MS)
 
 times = np.array(times)
 RS_snap = np.array(RS_snap)
 MS_snap = np.array(MS_snap)
+Visc_snap = np.array(Visc_snap)
 t_total = times[-1] - times[0]
 
 dt = np.diff(times)
@@ -91,12 +101,14 @@ RS = np.zeros_like(RS_snap[0])
 MS = np.zeros_like(MS_snap[0])
 ur = np.zeros_like(ur_snap[0])
 l = np.zeros_like(l_snap[0])
+Visc = np.zeros_like(Visc_snap[0])
 
 for i in range(len(dt)):
     RS += 0.5*(RS_snap[i] + RS_snap[i+1])*dt[i]
     MS += 0.5*(MS_snap[i] + MS_snap[i+1])*dt[i]
     ur += 0.5*(ur_snap[i] + ur_snap[i+1])*dt[i]
     l += 0.5*(l_snap[i] + l_snap[i+1])*dt[i]
+    Visc += 0.5*(Visc_snap[i] + Visc_snap[i+1])*dt[i]
 
 L = 1 - ki
 nu = Ek * om * L**2
@@ -113,6 +125,7 @@ RS = RS / t_total * rho * L**3 / tau**2
 MS = MS / t_total * L * B0car / mu0
 ur /= t_total
 l /= t_total
+Visc = Visc / t_total * rho * L**3 / tau**2
     
 MC = (ur*l*dtheta*np.sin(th)[:,None]).sum(axis =0) * rho * L**3 / tau**2
 
@@ -120,6 +133,7 @@ plt.figure()
 plt.plot(r,RS, label = "Reynolds stress")
 plt.plot(r,MS, label ="Maxwell stress")
 plt.plot(r,MC,label ="Meridional circulation")
+plt.plot
 plt.xlabel("r")
 plt.ylabel("Stresses")
 plt.legend()
