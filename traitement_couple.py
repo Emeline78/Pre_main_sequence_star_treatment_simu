@@ -22,13 +22,26 @@ matplotlib.rcParams['xtick.top']='True'
 matplotlib.rcParams['figure.figsize']= [8, 6]
 
 from magic import *
+mu0 = 4*np.pi*1e-7
+
+def fun_rho(r,Nrho,n):
+    ri = r.min()
+    r0 = r.max()
+    a = np.exp(Nrho/n)
+    C = (a-1)/(ri-r0*a)
+    return (- C*r0 + C/r)**n
+
 
 a = "/travail/dynconv/multiscale_dyno/anelasticCouette/gr/Nr2p5_Pm4/ra_8e6/om50/"
 stp = MagicSetup(datadir = a)
 
-print(stp.ra) # print the Rayleigh number
-print(stp.nrho) # print n_r_max
-'''
+om = stp.omega_ic1
+n = stp.polind
+Pm = stp.prmag
+ki = stp.radratio
+Nrho = stp.strat 
+Ek = stp.ek
+
 files = glob.glob(os.path.join(a,'G_[0-9]*.rot01'))
 
 times = []
@@ -90,29 +103,29 @@ for i in range(len(dt)):
     ur += 0.5*(ur_snap[i] + ur_snap[i+1])*dt[i]
     l += 0.5*(l_snap[i] + l_snap[i+1])*dt[i]
 
-RS /= t_total	# * rho * L**3 / tau**2
-MS /= t_total	#* L * B0**2 / mu
+L = 1 - ki
+nu = Ek * om * L**2
+tau = L**2/nu
+eta = nu/Pm
+B0car = rho*mu0*eta*om
+rho = fun_rho(r,Nrho,n,ki)
+
+print(f"rho(ri)/rho(ro) = {rho.max()/rho.min():.4f}")
+print(f"attendu         = {np.exp(2.5):.4f}")
+
+RS = RS / t_total * rho * L**3 / tau**2
+MS = MS / t_total * L * B0 / mu0
 ur /= t_total
 l /= t_total
     
-MC = (ur*l*dtheta*np.sin(th)[:,None]).sum(axis =0) 	# * rho * L**3 / tau**2
-
-#rajouter B0, L, rho et l'ecoulement visqueux
-plt.figure()
-plt.plot(r,RS)
-plt.ylabel("Reynolds stress")
-plt.xlabel("r")
+MC = (ur*l*dtheta*np.sin(th)[:,None]).sum(axis =0) * rho * L**3 / tau**2
 
 plt.figure()
-plt.plot(r,MS)
-plt.ylabel("Maxwell stress")
+plt.plot(r,RS, label = "Reynolds stress")
+plt.plot(r,MS, label ="Maxwell stress")
+plt.plot(r,MC,label ="Meridional circulation")
 plt.xlabel("r")
-
-plt.figure()
-plt.plot(r,MC)
-plt.ylabel("Meridional circulation")
-plt.xlabel("r")
+plt.ylabel("Stresses")
 plt.show()
-'''
 
 
