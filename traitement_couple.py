@@ -81,7 +81,7 @@ for j in range(1,len(files)+1):
     MS = -(prodM* np.sin(th)[:,None]*weight[:,None]).sum(axis=(0,1))*r  
     
     # Ecoulement meridional
-    prodMC = (gr.vr*dphi).sum(axis=0)/(2*np.pi)*(gr.vphi*r[None,None,:]*np.sin(th)[None,:,None]*dphi).mean(axis=0)/(2*np.pi)
+    prodMC = (gr.vr*dphi).sum(axis=0)/(2*np.pi)*(gr.vphi*r[None,None,:]*np.sin(th)[None,:,None]*dphi).sum(axis=0)/(2*np.pi)
     MC = (prodMC *np.sin(th)[:,None] *dtheta).sum(axis = 0)/2
     
     # Viscosite
