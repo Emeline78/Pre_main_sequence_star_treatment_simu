@@ -33,6 +33,9 @@ Pm = stp.prmag
 ki = stp.radratio
 Nrho = stp.strat 
 Ek = stp.ek
+g0 = stp.g0
+g1 = stp.g1
+g2 = stp.g2
 
 files = glob.glob(os.path.join(a,'G_[0-9]*.rot01'))
 
@@ -99,7 +102,7 @@ L = 1 - ki
 nu = Ek * om * L**2
 tau = L**2/nu
 eta = nu/Pm
-temp0, rho0, beta, dbeta = anelprof(r, Nrho, n)
+temp0, rho0, drho = anelprof(r, strat = Nrho, polind = n, g0=g0, g1=g1, g2=g2)
 rho = rho0
 B0car = rho * mu0 * eta * om
 
