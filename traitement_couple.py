@@ -126,6 +126,7 @@ plt.plot(r,MS, label ="Maxwell stress")
 plt.plot(r,MC,label ="Meridional circulation")
 plt.xlabel("r")
 plt.ylabel("Stresses")
+plt.legend()
 plt.show()
 
 
