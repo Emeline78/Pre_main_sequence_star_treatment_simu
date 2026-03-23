@@ -107,7 +107,7 @@ L = 1 - ki
 nu = Ek * om * L**2
 tau = L**2/nu
 eta = nu/Pm
-rho = fun_rho(r,Nrho,n,ki)
+rho = fun_rho(r,Nrho,n)
 B0car = rho*mu0*eta*om
 
 print(f"rho(ri)/rho(ro) = {rho.max()/rho.min():.4f}")
