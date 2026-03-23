@@ -47,6 +47,7 @@ times = []
 RS_snap = []
 MS_snap = []
 Visc_snap = []
+MC_snap = []
 
 for j in range(1,len(files)+1): 
     gr = MagicGraph(datadir=a,tag='rot01',ivar = j)
@@ -60,8 +61,6 @@ for j in range(1,len(files)+1):
         dtheta = np.pi/(gr.ntheta-1)
 
         weight = np.sin(th)*dtheta*dphi/(4*np.pi)
-        ur_snap = np.zeros((len(files),gr.ntheta,gr.nr))
-        l_snap = np.zeros((len(files),gr.ntheta,gr.nr))
 
     # fluctuations
     vr = gr.vr - gr.vr.mean(axis=0)
@@ -82,8 +81,8 @@ for j in range(1,len(files)+1):
     MS = -(prodM* np.sin(th)[:,None]*weight[:,None]).sum(axis=(0,1))*r  
     
     # Ecoulement meridional
-    ur_snap[j-1] = (gr.vr*dphi).sum(axis=0)/(2*np.pi)
-    l_snap[j-1] = (gr.vphi*r[None,None,:]*np.sin(th)[None,:,None]*dphi).sum(axis=0)/(2*np.pi)
+    prodMC = (gr.vr).mean(axis=0)*(gr.vphi*r[None,None,:]*np.sin(th)[None,:,None]).mean(axis=0)
+    MC = (prodMC *np.sin(th)[:,None] *dtheta).sum(axis = 0)/2
     
     # Viscosite
     Visc = -((tau_rphi * np.sin(th)[:,None] * weight[:,None]).sum(axis=(0,1))) * r
@@ -91,26 +90,26 @@ for j in range(1,len(files)+1):
     Visc_snap.append(Visc)
     RS_snap.append(RS)
     MS_snap.append(MS)
+    MC_snap.append(MC)
 
 times = np.array(times)
 RS_snap = np.array(RS_snap)
 MS_snap = np.array(MS_snap)
 Visc_snap = np.array(Visc_snap)
+MC_snap = np.array(MC_snap)
 t_total = times[-1] - times[0]
 
 dt = np.diff(times)
 
 RS = np.zeros_like(RS_snap[0])
 MS = np.zeros_like(MS_snap[0])
-ur = np.zeros_like(ur_snap[0])
-l = np.zeros_like(l_snap[0])
+MC = np.zeros_like(MC_snap[0])
 Visc = np.zeros_like(Visc_snap[0])
 
 for i in range(len(dt)):
     RS += 0.5*(RS_snap[i] + RS_snap[i+1])*dt[i]
     MS += 0.5*(MS_snap[i] + MS_snap[i+1])*dt[i]
-    ur += 0.5*(ur_snap[i] + ur_snap[i+1])*dt[i]
-    l += 0.5*(l_snap[i] + l_snap[i+1])*dt[i]
+    MC += 0.5*(MC_snap[i] + MC_snap[i+1])*dt[i]
     Visc += 0.5*(Visc_snap[i] + Visc_snap[i+1])*dt[i]
 
 L = 1 - ki
@@ -126,11 +125,8 @@ B0car = rho * mu0 * eta * om
 
 RS = RS / t_total * rho * L**3 / tau**2
 MS = MS / t_total * L * B0car / mu0
-ur /= t_total
-l /= t_total
-Visc = Visc / t_total * rho * L**3 / tau**2
-    
-MC = (ur*l*dtheta*np.sin(th)[:,None]).sum(axis =0)/2 * rho * L**3 / tau**2
+Visc = Visc / t_total * rho * L**3 / tau**2 
+MC = MC / t_total * rho * L**3 / tau**2
 
 plt.figure()
 plt.plot(r,RS, label = "Reynolds stress")
