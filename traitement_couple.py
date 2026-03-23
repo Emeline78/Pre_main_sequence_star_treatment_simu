@@ -27,7 +27,8 @@ mu0 = 4*np.pi*1e-7
 a = "/travail/dynconv/multiscale_dyno/anelasticCouette/gr/Nr2p5_Pm4/ra_8e6/om50/"
 stp = MagicSetup(datadir = a)
 
-om = stp.omega_ic1
+if stp.rotma == 0 :
+    om = 1
 n = stp.polind
 Pm = stp.prmag
 ki = stp.radratio
@@ -75,18 +76,18 @@ for j in range(1,len(files)+1):
 
     # Reynolds
     prodR = vr*vp
-    RS = (prodR*weight[:,None]).sum(axis=(0,1))*r
+    RS = (prodR* np.sin(th)[:,None]*weight[:,None]).sum(axis=(0,1))*r
 
     # Maxwell
     prodM = Br*Bp
-    MS = -(prodM*weight[:,None]).sum(axis=(0,1))*r  
+    MS = -(prodM* np.sin(th)[:,None]*weight[:,None]).sum(axis=(0,1))*r  
     
     # Ecoulement meridional
     ur_snap[j-1] = (gr.vr*dphi).sum(axis=0)/(2*np.pi)
     l_snap[j-1] = (gr.vphi*r[None,None,:]*np.sin(th)[None,:,None]*dphi).sum(axis=0)/(2*np.pi)
     
     # Viscosite
-    Visc = -((tau_rphi * weight[:,None]).sum(axis=(0,1))) * r
+    Visc = -((tau_rphi * np.sin(th)[:,None] * weight[:,None]).sum(axis=(0,1))) * r
     
     Visc_snap.append(Visc)
     RS_snap.append(RS)
@@ -123,7 +124,6 @@ B0car = rho * mu0 * eta * om
 
 #print(f"rho(ri)/rho(ro) = {rho.max()/rho.min():.4f}")
 #print(f"attendu         = {np.exp(Nrho):.4f}")
-print(ki,r.min()/r.max())
 
 RS = RS / t_total * rho * L**3 / tau**2
 MS = MS / t_total * L * B0car / mu0
