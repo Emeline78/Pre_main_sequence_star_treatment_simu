@@ -27,7 +27,7 @@ a = "/travail/dynconv/multiscale_dyno/anelasticCouette/gr/Nr2p5_Pm4/ra_8e6/om50/
 stp = MagicSetup(datadir = a)
 
 print(stp.ra) # print the Rayleigh number
-print(stp.n_r_max) # print n_r_max
+print(stp.nrho) # print n_r_max
 '''
 files = glob.glob(os.path.join(a,'G_[0-9]*.rot01'))
 
