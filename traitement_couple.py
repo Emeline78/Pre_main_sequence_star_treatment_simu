@@ -133,6 +133,7 @@ plt.figure()
 plt.plot(r,RS, label = "Reynolds stress")
 plt.plot(r,MS, label ="Maxwell stress")
 plt.plot(r,MC,label ="Meridional circulation")
+plt.plot(r,Visc, label = "Viscous stress")
 plt.plot
 plt.xlabel("r")
 plt.ylabel("Stresses")
