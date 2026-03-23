@@ -24,14 +24,6 @@ matplotlib.rcParams['figure.figsize']= [8, 6]
 from magic import *
 mu0 = 4*np.pi*1e-7
 
-def fun_rho(r,Nrho,n):
-    ri = r.min()
-    r0 = r.max()
-    a = np.exp(Nrho/n)
-    C = (a-1)/(ri-r0*a)
-    return (- C*r0 + C/r)**n
-
-
 a = "/travail/dynconv/multiscale_dyno/anelasticCouette/gr/Nr2p5_Pm4/ra_8e6/om50/"
 stp = MagicSetup(datadir = a)
 
@@ -107,8 +99,9 @@ L = 1 - ki
 nu = Ek * om * L**2
 tau = L**2/nu
 eta = nu/Pm
-rho = fun_rho(r,Nrho,n)
-B0car = rho*mu0*eta*om
+temp0, rho0, beta, dbeta = anelprof(r, Nrho, n)
+rho = rho0
+B0car = rho * mu0 * eta * om
 
 print(f"rho(ri)/rho(ro) = {rho.max()/rho.min():.4f}")
 print(f"attendu         = {np.exp(Nrho):.4f}")
