@@ -68,7 +68,7 @@ for j in range(1,len(files)+1):
     
     dvphi_droite = np.ones_like(vr)*np.nan
     dvphi_droite[:-1] = (gr.vphi[1:] - gr.vphi[:-1])/(r[1:] - r[:-1])
-    tau_rphi = dvphi_droite - gr.vphi/r
+    tau_rphi = dvphi_droite - gr.vphi/r[None,None,:]
 
     # Reynolds
     prodR = vr*vp
