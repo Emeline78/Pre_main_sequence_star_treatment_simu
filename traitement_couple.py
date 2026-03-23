@@ -27,7 +27,7 @@ mu0 = 4*np.pi*1e-7
 a = "/travail/dynconv/multiscale_dyno/anelasticCouette/gr/Nr2p5_Pm4/ra_8e6/om50/"
 stp = MagicSetup(datadir = a)
 
-if stp.nrotma == 0 :
+if stp.nRotMa == 0 :
     om = 1
 n = stp.polind
 Pm = stp.prmag
