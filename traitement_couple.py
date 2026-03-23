@@ -143,4 +143,11 @@ plt.ylabel("Stresses")
 plt.legend()
 plt.show()
 
+F = MC + MS + RS + Visc
+plt.figure()
+plt.plot(r,F)
+plt.xlabel("r")
+plt.ylabel("Radial flux of angular momentum")
+plt.show()
+
 
