@@ -37,7 +37,7 @@ g0 = stp.g0
 g1 = stp.g1
 g2 = stp.g2
 
-ts = MagicTs(datadir = a, field='e_mag', all=True)
+ts = MagicTs(datadir = a, field='e_kin', all=True)
 
 files = glob.glob(os.path.join(a,'G_[0-9]*.rot01'))
 
