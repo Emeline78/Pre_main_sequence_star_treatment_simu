@@ -111,7 +111,7 @@ rho = fun_rho(r,Nrho,n)
 B0car = rho*mu0*eta*om
 
 print(f"rho(ri)/rho(ro) = {rho.max()/rho.min():.4f}")
-print(f"attendu         = {np.exp(2.5):.4f}")
+print(f"attendu         = {np.exp(Nrho):.4f}")
 
 RS = RS / t_total * rho * L**3 / tau**2
 MS = MS / t_total * L * B0car / mu0
