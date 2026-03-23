@@ -40,7 +40,7 @@ g2 = stp.g2
 ts = MagicTs(datadir = a, field='e_kin', all=True)
 
 files = glob.glob(os.path.join(a,'G_[0-9]*.rot01'))
-files.sort(key=lambda f: int(f.split('_')[1].split('.')[0]))
+files.sort(key=lambda f: int(os.path.basename(f).split('_')[1].split('.')[0]))
 
 times = []
 RS_snap = []
