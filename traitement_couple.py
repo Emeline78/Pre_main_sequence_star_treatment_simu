@@ -41,12 +41,11 @@ Pm = stp.prmag
 ki = stp.radratio
 Nrho = stp.strat 
 Ek = stp.ek
-print(Ek)
 g0 = stp.g0
 g1 = stp.g1
 g2 = stp.g2
 
-ts = MagicTs(datadir = a, field='e_kin', all=True)
+ts = MagicTs(datadir = a, field='e_kin', all=True) 	# verification que le regime ne change pas dans le temps pour pouvoir faire l'integration en temps 
 
 files = glob.glob(os.path.join(a,'G_[0-9]*.rot01'))
 files.sort(key=lambda f: int(os.path.basename(f).split('_')[1].split('.')[0]))
@@ -122,20 +121,20 @@ for i in range(len(dt)):
     MC += 0.5*(MC_snap[i] + MC_snap[i+1])*dt[i]
     Visc += 0.5*(Visc_snap[i] + Visc_snap[i+1])*dt[i]
 
-L = 1		# 1 - ki non car r0 n'est pas egale a 1 mais a 1/(1-ki)
+L = 1		# pas 1 - ki car r0 n'est pas egale a 1 mais a 1/(1-ki)
 nu = Ek * om * L**2
-tau = 1/om		#L**2/nu
+tau = L**2/nu		# savoir quoi prendre entre temps visqueux (L**2/nu) ou de rotation (1/om)
 eta = nu/Pm
 temp, rho, drho = anelprof(r, strat = Nrho, polind = n, g0=g0, g1=g1, g2=g2)
 rho0 = rho[-1]
 rho = rho / rho0
-B0car = rho0 * eta * om
+B0car = rho0 * eta * om	* mu0	# de l'ordre de 1e-4
 
 #print(f"rho(ri)/rho(ro) = {rho.max()/rho.min():.4f}")
 #print(f"attendu         = {np.exp(Nrho):.4f}")
 
-RS = RS / t_total * rho * L**3 / tau**2
-MS = MS / t_total * L * B0car
+RS = RS / t_total * rho * L**3 / tau**2		# facteur # de l'ordre de 1e-1
+MS = MS / t_total * L * B0car / mu0
 Visc = Visc / t_total * rho * L**3 / tau**2 
 MC = MC / t_total * rho * L**3 / tau**2
 
