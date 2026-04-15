@@ -66,8 +66,9 @@ for j in range(1,len(files)+1):
 
         dphi = 2*np.pi/gr.nphi
         dtheta = np.pi/(gr.ntheta-1)
-
-        weight = np.sin(th)*dtheta*dphi/(4*np.pi)
+        
+        w_theta = dtheta * sin(th)
+        w_phi = dphi / (2* np.pi)
 
     # fluctuations
     vr = gr.vr - gr.vr.mean(axis=0)
@@ -76,25 +77,26 @@ for j in range(1,len(files)+1):
     Br = gr.Br - gr.Br.mean(axis=0)
     Bp = gr.Bphi - gr.Bphi.mean(axis=0)
     
+    # def de tau
     dvphi = np.gradient(gr.vphi, r, axis=2)
     tau_rphi = dvphi - gr.vphi/r[None,None,:]
 
     # Reynolds
-    prodR = vr*vp
-    RS = (prodR* np.sin(th)[:,None]*weight[:,None]).sum(axis=(0,1))*r
+    prodR = (vr * vp * w_phi).sum(axis=0)	# flux
+    RS = (prodR * np.sin(th)[:,None] * w_theta[:,None]).sum(axis=0) * r # integrated flux over a spherical surface
 
     # Maxwell
-    prodM = Br*Bp
-    MS = -(prodM* np.sin(th)[:,None]*weight[:,None]).sum(axis=(0,1))*r  
+    prodM = -(Br * Bp * w_phi).sum(axis=0)
+    MS = (prodM * np.sin(th)[:,None] * w_theta[:,None]).sum(axis=0) * r  
     
     # Ecoulement meridional
-    vr_mean = (gr.vr*dphi).sum(axis=0)/(2*np.pi)
-    l_mean = (gr.vphi*r[None,None,:]*np.sin(th)[None,:,None]*dphi).sum(axis=0)/(2*np.pi)
-    
-    MC = (vr_mean * l_mean *np.sin(th)[:,None] *dtheta).sum(axis = 0)/2
+    vr_mean = (gr.vr * w_phi).sum(axis=0)
+    vphi_mean = (gr.vphi * w_phi).sum(axis=0)
+    MC = (vr_mean * vphi_mean * np.sin(th)[:,None] * w_theta[:,None]).sum(axis = 0) * r
     
     # Viscosite
-    Visc = -((tau_rphi * np.sin(th)[:,None] * weight[:,None]).sum(axis=(0,1))) * r
+    mean_tau = (tau_rphi * w_phi).sum(axis = 0)
+    Visc = - (mean_tau * np.sin(th)[:,None] * w_theta[:,None]).sum(axis=0,1) * r
     
     Visc_snap.append(Visc)
     RS_snap.append(RS)
@@ -168,11 +170,12 @@ plt.ylabel("Stresses")
 plt.legend() 
 plt.show()
 
-F = MC + MS + RS + Visc
+F = 2 * np.pi * r**2 *(MC + MS + RS + Visc)
 plt.figure()
-plt.plot(r,r**2 * F)
+plt.plot(r,F)
 plt.xlabel("r")
 plt.ylabel("Radial flux of angular momentum")
 plt.show()
 
-print(np.max(np.abs(np.diff(r**2 * F))) / np.median(np.abs(r**2 * F)), np.max(np.abs(np.diff(r**2 * F))), np.median(np.abs(r**2 * F)))
+print(np.max(np.abs(np.diff(F))) / np.mean(np.abs(F)), np.max(np.abs(np.diff(F))), np.median(np.abs(F)))
+
