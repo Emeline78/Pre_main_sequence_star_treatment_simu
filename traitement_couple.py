@@ -82,13 +82,14 @@ for j in range(1,len(files)+1):
     MS = -(prodM* np.sin(th)[:,None]*weight[:,None]).sum(axis=(0,1))*r  
     
     # Ecoulement meridional
-    #vr_mean = (gr.vr*dphi).sum(axis=0)/(2*np.pi)
-    #l_mean = (gr.vphi*r[None,None,:]*np.sin(th)[None,:,None]*dphi).sum(axis=0)/(2*np.pi)
+    vr_mean = (gr.vr*dphi).sum(axis=0)/(2*np.pi)
+    l_mean = (gr.vphi*r[None,None,:]*np.sin(th)[None,:,None]*dphi).sum(axis=0)/(2*np.pi)
     
-    #MC = (vr_mean * l_mean *np.sin(th)[:,None] *dtheta).sum(axis = 0)/2
+    MC = (vr_mean * l_mean *np.sin(th)[:,None] *dtheta).sum(axis = 0)/2
     l = gr.vphi * r[None,None,:] * np.sin(th)[None,:,None]
 
-    MC = (gr.vr * l * weight[:,None]).sum(axis=(0,1)) 
+    MC1 = (gr.vr * l * weight[:,None]).sum(axis=(0,1)) 
+    print(MC/MC1)
     
     # Viscosite
     Visc = -((tau_rphi * np.sin(th)[:,None] * weight[:,None]).sum(axis=(0,1))) * r
