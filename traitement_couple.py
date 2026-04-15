@@ -132,6 +132,20 @@ B0car = rho0 * eta * om	* mu0	# de l'ordre de 1e-4
 
 print(B0car/mu0, rho[30] * L**3 / tau**2	)
 
+plt.figure() 
+plt.subplot(2,1,1)
+plt.plot(r,RS/t_total, label = "Reynolds stress")  
+plt.plot(r,MC/t_total,label ="Meridional circulation") 
+plt.plot(r,Visc/t_total, label = "Viscous stress") 
+plt.legend() 
+plt.ylabel("Stresses")
+plt.subplot(2,1,2)
+plt.plot(r,MS/t_total, label ="Maxwell stress")
+plt.xlabel("r") 
+plt.ylabel("Stresses") 
+plt.legend() 
+plt.show()
+
 #print(f"rho(ri)/rho(ro) = {rho.max()/rho.min():.4f}")
 #print(f"attendu         = {np.exp(Nrho):.4f}")
 
