@@ -126,8 +126,8 @@ nu = Ek * om * L**2
 tau = L**2/nu		# savoir quoi prendre entre temps visqueux (L**2/nu) ou de rotation (1/om)
 eta = nu/Pm
 temp, rho, drho = anelprof(r, strat = Nrho, polind = n, g0=g0, g1=g1, g2=g2)
-rho0 = rho[-1]
-#rho = rho / rho0  # normaliser ou pas ? 
+rho0 = rho[0]
+rho = rho / rho0  
 B0car = eta * om * mu0 	* rho0
 
 print(B0car/mu0, rho[30]/ tau**2)
