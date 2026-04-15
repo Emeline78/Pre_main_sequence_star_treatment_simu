@@ -67,9 +67,9 @@ for j in range(1,len(files)+1):
     vr = gr.vr - gr.vr.mean(axis=0)
     vr1 = gr.vr - (gr.vr * dphi).sum(axis=0)/(2*np.pi)
     plt.figure()
-    plt.plot(r,vr)
-    plt.plot(r,vr1)
-    plt.plot(r,vr/vr1)
+    plt.plot(r,vr[0,0,:])
+    plt.plot(r,vr1[0,0,:])
+    plt.plot(r,vr[0,0,:]/vr1[0,0,:])
     plt.show()
     
     vp = gr.vphi - gr.vphi.mean(axis=0)
