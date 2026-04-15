@@ -82,10 +82,13 @@ for j in range(1,len(files)+1):
     MS = -(prodM* np.sin(th)[:,None]*weight[:,None]).sum(axis=(0,1))*r  
     
     # Ecoulement meridional
-    vr_mean = (gr.vr*dphi).sum(axis=0)/(2*np.pi)
-    l_mean = (gr.vphi*r[None,None,:]*np.sin(th)[None,:,None]*dphi).sum(axis=0)/(2*np.pi)
+    #vr_mean = (gr.vr*dphi).sum(axis=0)/(2*np.pi)
+    #l_mean = (gr.vphi*r[None,None,:]*np.sin(th)[None,:,None]*dphi).sum(axis=0)/(2*np.pi)
     
-    MC = (vr_mean * l_mean *np.sin(th)[:,None] *dtheta).sum(axis = 0)/2
+    #MC = (vr_mean * l_mean *np.sin(th)[:,None] *dtheta).sum(axis = 0)/2
+    l = gr.vphi * r[None,None,:] * np.sin(th)[None,:,None]
+
+    MC = (gr.vr * l * weight[:,None]).sum(axis=(0,1)) 
     
     # Viscosite
     Visc = -((tau_rphi * np.sin(th)[:,None] * weight[:,None]).sum(axis=(0,1))) * r
@@ -124,7 +127,7 @@ rho0 = rho[-1]
 rho = rho / rho0
 B0car = rho0 * mu0 * eta * om
 
-F = (MC * rho * L**3 / tau**2 + MS + RS * rho * L**3 / tau**2 + Visc * rho * L**3 / tau**2)/t_total
+F = (MC + MS + RS + Visc)/t_total
 plt.figure()
 plt.plot(r,r**2 * F)
 plt.xlabel("r")
