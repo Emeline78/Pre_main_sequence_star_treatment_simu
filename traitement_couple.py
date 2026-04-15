@@ -82,13 +82,13 @@ for j in range(1,len(files)+1):
     MS = -(prodM* np.sin(th)[:,None]*weight[:,None]).sum(axis=(0,1))*r  
     
     # Ecoulement meridional
-    #vr_mean = gr.vr.mean(axis=0)
-    #vphi_mean = gr.vphi.mean(axis=0)
+    vr_mean = gr.vr.mean(axis=0)
+    vphi_mean = gr.vphi.mean(axis=0)
 
-    #MC = (vr_mean * vphi_mean * np.sin(th)[:,None] * weight[:,None]).sum(axis=(0,1)) * r
+    MC1 = (vr_mean * vphi_mean * np.sin(th)[:,None] * weight[:,None]).sum(axis=(0,1)) * r
     prodMC = (gr.vr*dphi).sum(axis=0)/(2*np.pi)*(gr.vphi*r[None,None,:]*np.sin(th)[None,:,None]*dphi).sum(axis=0)/(2*np.pi)
     MC = (prodMC *np.sin(th)[:,None] *dtheta).sum(axis = 0)/2
-    
+    print(MC1/MC)
     # Viscosite
     Visc = -((tau_rphi * np.sin(th)[:,None] * weight[:,None]).sum(axis=(0,1))) * r
     
@@ -128,16 +128,31 @@ B0car = rho * mu0 * eta * om
 #print(f"rho(ri)/rho(ro) = {rho.max()/rho.min():.4f}")
 #print(f"attendu         = {np.exp(Nrho):.4f}")
 
-RS = RS / t_total * rho * L**3 / tau**2
-MS = MS / t_total * L * B0car / mu0
-Visc = Visc / t_total * rho * L**3 / tau**2 
-MC = MC / t_total * rho * L**3 / tau**2
+RS = RS / t_total 
+MS = MS / t_total 
+Visc = Visc / t_total 
+MC = MC / t_total
 
 plt.figure()
 plt.plot(r,RS, label = "Reynolds stress")
 plt.plot(r,MS, label ="Maxwell stress")
 plt.plot(r,MC,label ="Meridional circulation")
 plt.plot(r,Visc, label = "Viscous stress")
+plt.xlabel("r")
+plt.ylabel("Stresses")
+plt.legend()
+plt.show()
+
+RSdim = RS / t_total * rho * L**3 / tau**2
+MSdim = MS / t_total * L * B0car / mu0
+Viscdim = Visc / t_total * rho * L**3 / tau**2 
+MCdim = MC / t_total * rho * L**3 / tau**2
+
+plt.figure()
+plt.plot(r,RSdim, label = "Reynolds stress")
+plt.plot(r,MSdim, label ="Maxwell stress")
+plt.plot(r,MCdim,label ="Meridional circulation")
+plt.plot(r,Viscdim, label = "Viscous stress")
 plt.xlabel("r")
 plt.ylabel("Stresses")
 plt.legend()
