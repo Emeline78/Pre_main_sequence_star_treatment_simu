@@ -115,6 +115,13 @@ for i in range(len(dt)):
     MC += 0.5*(MC_snap[i] + MC_snap[i+1])*dt[i]
     Visc += 0.5*(Visc_snap[i] + Visc_snap[i+1])*dt[i]
 
+F = (MC + MS + RS + Visc)/t_total
+plt.figure()
+plt.plot(r,r**2 * F)
+plt.xlabel("r")
+plt.ylabel("Radial flux of angular momentum")
+plt.show()
+
 L = 1 - ki
 nu = Ek * om * L**2
 tau = L**2/nu
@@ -149,4 +156,4 @@ plt.xlabel("r")
 plt.ylabel("Radial flux of angular momentum")
 plt.show()
 
-#print(MS/RS)
+
