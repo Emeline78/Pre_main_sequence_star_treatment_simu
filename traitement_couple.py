@@ -175,4 +175,4 @@ plt.xlabel("r")
 plt.ylabel("Radial flux of angular momentum")
 plt.show()
 
-print(np.max(np.abs(np.diff(r**2 * F))) / np.mean(np.abs(r**2 * F)), np.max(np.abs(np.diff(r**2 * F))), np.mean(np.abs(r**2 * F)))
+print(np.max(np.abs(np.diff(r**2 * F))) / np.median(np.abs(r**2 * F)), np.max(np.abs(np.diff(r**2 * F))), np.median(np.abs(r**2 * F)))
