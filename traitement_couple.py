@@ -121,7 +121,7 @@ tau = L**2/nu
 eta = nu/Pm
 temp, rho, drho = anelprof(r, strat = Nrho, polind = n, g0=g0, g1=g1, g2=g2)
 rho0 = rho[-1]
-print(rho)
+rho = rho / rho0
 B0car = rho0 * mu0 * eta * om
 
 #print(f"rho(ri)/rho(ro) = {rho.max()/rho.min():.4f}")
