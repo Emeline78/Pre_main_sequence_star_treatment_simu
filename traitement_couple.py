@@ -115,13 +115,6 @@ for i in range(len(dt)):
     MC += 0.5*(MC_snap[i] + MC_snap[i+1])*dt[i]
     Visc += 0.5*(Visc_snap[i] + Visc_snap[i+1])*dt[i]
 
-F = (MC + MS + RS + Visc)/t_total
-plt.figure()
-plt.plot(r,r**2 * F)
-plt.xlabel("r")
-plt.ylabel("Radial flux of angular momentum")
-plt.show()
-
 L = 1 - ki
 nu = Ek * om * L**2
 tau = L**2/nu
@@ -130,6 +123,13 @@ temp, rho, drho = anelprof(r, strat = Nrho, polind = n, g0=g0, g1=g1, g2=g2)
 rho0 = rho[-1]
 rho = rho / rho0
 B0car = rho0 * mu0 * eta * om
+
+F = (MC * rho * L**3 / tau**2 + MS + RS * rho * L**3 / tau**2 + Visc * rho * L**3 / tau**2)/t_total
+plt.figure()
+plt.plot(r,r**2 * F)
+plt.xlabel("r")
+plt.ylabel("Radial flux of angular momentum")
+plt.show()
 
 #print(f"rho(ri)/rho(ro) = {rho.max()/rho.min():.4f}")
 #print(f"attendu         = {np.exp(Nrho):.4f}")
