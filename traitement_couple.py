@@ -41,6 +41,7 @@ Pm = stp.prmag
 ki = stp.radratio
 Nrho = stp.strat 
 Ek = stp.ek
+print(Ek)
 g0 = stp.g0
 g1 = stp.g1
 g2 = stp.g2
@@ -129,10 +130,6 @@ temp, rho, drho = anelprof(r, strat = Nrho, polind = n, g0=g0, g1=g1, g2=g2)
 rho0 = rho[-1]
 rho = rho / rho0
 B0car = rho0 * eta * om
-print(B0car)
-print(rho/tau**2)
-
-print(RS/t_total,MS/t_total,MC/t_total,Visc/t_total)
 
 #print(f"rho(ri)/rho(ro) = {rho.max()/rho.min():.4f}")
 #print(f"attendu         = {np.exp(Nrho):.4f}")
