@@ -25,7 +25,7 @@ from magic import *
 mu0 = 4*np.pi*1e-7
 
 a = "/travail/dynconv/multiscale_dyno/anelasticCouette/gr/Nr2p5_Pm4/ra_8e6/om50/"
-a = "/travail/dynconv/multiscale_dyno/anelasticCouette/gr2/xi_p35_pm4/ra_5e6/om50/"
+#a = "/travail/dynconv/multiscale_dyno/anelasticCouette/gr2/xi_p35_pm4/ra_5e6/om50/"
 stp = MagicSetup(datadir = a)
 
 if stp.nRotMa == 0 :
@@ -65,6 +65,13 @@ for j in range(1,len(files)+1):
 
     # fluctuations
     vr = gr.vr - gr.vr.mean(axis=0)
+    vr1 = gr.vr - (gr.vr * dphi).sum(axis=0)/(2*np.pi)
+    plt.figure()
+    plt.plot(r,vr)
+    plt.plot(r,vr1)
+    plt.plot(r,vr/vr1)
+    plt.show()
+    
     vp = gr.vphi - gr.vphi.mean(axis=0)
 
     Br = gr.Br - gr.Br.mean(axis=0)
@@ -130,6 +137,15 @@ RS = RS / t_total * rho * L**3 / tau**2
 MS = MS / t_total * L * B0car / mu0
 Visc = Visc / t_total * rho * L**3 / tau**2 
 MC = MC / t_total * rho * L**3 / tau**2
+
+plt.figure() 
+plt.plot(r,RS, label = "Reynolds stress") 
+plt.plot(r,MS, label ="Maxwell stress") 
+plt.plot(r,MC,label ="Meridional circulation") 
+plt.plot(r,Visc, label = "Viscous stress") 
+plt.xlabel("r") plt.ylabel("Stresses") 
+plt.legend() 
+plt.show()
 
 F = MC + MS + RS + Visc
 plt.figure()
