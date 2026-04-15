@@ -28,7 +28,7 @@ a = "/travail/dynconv/multiscale_dyno/anelasticCouette/gr/Nr2p5_Pm4/ra_8e6/om50/
 #a = "/travail/dynconv/multiscale_dyno/anelasticCouette/gr2/xi_p35_pm4/ra_5e6/om50/"
 stp = MagicSetup(datadir = a)
 
-if stp.nRotMa == 0 :
+if stp.nRotMa == 0 :	# rotation implicite dans les unites 
     om = 1
 n = stp.polind
 Pm = stp.prmag
@@ -124,14 +124,9 @@ rho0 = rho[-1]
 rho = rho / rho0
 B0car = rho0 * eta * om
 print(B0car)
+print(tau**2*rho)
 
-
-F = (MC + MS + RS + Visc)/t_total
-plt.figure()
-plt.plot(r,r**2 * F)
-plt.xlabel("r")
-plt.ylabel("Radial flux of angular momentum")
-plt.show()
+print(RS/t_total,MS/t_total,MC/t_total,Visc/t_total)
 
 #print(f"rho(ri)/rho(ro) = {rho.max()/rho.min():.4f}")
 #print(f"attendu         = {np.exp(Nrho):.4f}")
