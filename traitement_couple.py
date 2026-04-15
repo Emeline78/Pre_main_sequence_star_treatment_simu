@@ -149,10 +149,10 @@ plt.show()
 #print(f"rho(ri)/rho(ro) = {rho.max()/rho.min():.4f}")
 #print(f"attendu         = {np.exp(Nrho):.4f}")
 
-RS = RS / t_total * rho * L**3 / tau**2	*10
+RS = RS / t_total * rho * L**3 / tau**2	*5
 MS = MS / t_total * L * B0car / mu0
-Visc = Visc / t_total * rho * L**3 / tau**2 *10
-MC = MC / t_total * rho * L**3 / tau**2 *10
+Visc = Visc / t_total * rho * L**3 / tau**2 *50
+MC = MC / t_total * rho * L**3 / tau**2 *100
 
 plt.figure() 
 plt.subplot(2,1,1)
