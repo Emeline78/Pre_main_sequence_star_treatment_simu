@@ -28,7 +28,7 @@ a = "/travail/dynconv/multiscale_dyno/anelasticCouette/gr/Nr2p5_Pm4/ra_8e6/om50/
 #a = "/travail/dynconv/multiscale_dyno/anelasticCouette/gr2/xi_p35_pm4/ra_5e6/om50/"
 stp = MagicSetup(datadir = a)
 
-if stp.nRotMa == 0 :	# rotation implicite dans les unites 
+if stp.nRotMa == 0 :	# rotation implicite dans les unites ( = 1 rotation explicite)
     om = 1
 n = stp.polind
 Pm = stp.prmag
@@ -124,7 +124,7 @@ rho0 = rho[-1]
 rho = rho / rho0
 B0car = rho0 * eta * om
 print(B0car)
-print(tau**2*rho)
+print(rho/tau**2)
 
 print(RS/t_total,MS/t_total,MC/t_total,Visc/t_total)
 
