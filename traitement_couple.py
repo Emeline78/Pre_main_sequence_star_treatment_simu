@@ -82,13 +82,11 @@ for j in range(1,len(files)+1):
     MS = -(prodM* np.sin(th)[:,None]*weight[:,None]).sum(axis=(0,1))*r  
     
     # Ecoulement meridional
-    vr_mean = gr.vr.mean(axis=0)
-    vphi_mean = gr.vphi.mean(axis=0)
-
-    MC1 = (vr_mean * vphi_mean * np.sin(th)[:,None] * weight[:,None]).sum(axis=(0,1)) * r
-    prodMC = (gr.vr*dphi).sum(axis=0)/(2*np.pi)*(gr.vphi*r[None,None,:]*np.sin(th)[None,:,None]*dphi).sum(axis=0)/(2*np.pi)
-    MC = (prodMC *np.sin(th)[:,None] *dtheta).sum(axis = 0)/2
-    print(MC1/MC)
+    vr_mean = (gr.vr*dphi).sum(axis=0)/(2*np.pi)
+    l_mean = (gr.vphi*r[None,None,:]*np.sin(th)[None,:,None]*dphi).sum(axis=0)/(2*np.pi)
+    
+    MC = (vr_mean * l_mean *np.sin(th)[:,None] *dtheta).sum(axis = 0)/2
+    
     # Viscosite
     Visc = -((tau_rphi * np.sin(th)[:,None] * weight[:,None]).sum(axis=(0,1))) * r
     
@@ -160,7 +158,14 @@ plt.show()
 
 F = MC + MS + RS + Visc
 plt.figure()
-plt.plot(r,F)
+plt.plot(r,r**2 * F)
+plt.xlabel("r")
+plt.ylabel("Radial flux of angular momentum")
+plt.show()
+
+Fdim = MCdim + MSdim + RSdim + Viscdim
+plt.figure()
+plt.plot(r,r**2 * Fdim)
 plt.xlabel("r")
 plt.ylabel("Radial flux of angular momentum")
 plt.show()
