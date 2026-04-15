@@ -86,10 +86,6 @@ for j in range(1,len(files)+1):
     l_mean = (gr.vphi*r[None,None,:]*np.sin(th)[None,:,None]*dphi).sum(axis=0)/(2*np.pi)
     
     MC = (vr_mean * l_mean *np.sin(th)[:,None] *dtheta).sum(axis = 0)/2
-    l = gr.vphi * r[None,None,:] * np.sin(th)[None,:,None]
-
-    MC1 = (gr.vr * l * weight[:,None]).sum(axis=(0,1)) 
-    print(MC/MC1)
     
     # Viscosite
     Visc = -((tau_rphi * np.sin(th)[:,None] * weight[:,None]).sum(axis=(0,1))) * r
@@ -126,8 +122,10 @@ eta = nu/Pm
 temp, rho, drho = anelprof(r, strat = Nrho, polind = n, g0=g0, g1=g1, g2=g2)
 rho0 = rho[-1]
 rho = rho / rho0
-B0car = rho0 * mu0 * eta * om
+B0car = rho0 * eta * om
 print(B0car)
+print(r.min(), r.max())
+print(1/(1-ki))
 
 F = (MC + MS + RS + Visc)/t_total
 plt.figure()
@@ -140,7 +138,7 @@ plt.show()
 #print(f"attendu         = {np.exp(Nrho):.4f}")
 
 RS = RS / t_total * rho * L**3 / tau**2
-MS = MS / t_total * L * B0car / mu0
+MS = MS / t_total * L * B0car
 Visc = Visc / t_total * rho * L**3 / tau**2 
 MC = MC / t_total * rho * L**3 / tau**2
 
