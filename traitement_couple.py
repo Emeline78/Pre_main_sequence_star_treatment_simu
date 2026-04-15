@@ -127,6 +127,7 @@ temp, rho, drho = anelprof(r, strat = Nrho, polind = n, g0=g0, g1=g1, g2=g2)
 rho0 = rho[-1]
 rho = rho / rho0
 B0car = rho0 * mu0 * eta * om
+print(B0car)
 
 F = (MC + MS + RS + Visc)/t_total
 plt.figure()
