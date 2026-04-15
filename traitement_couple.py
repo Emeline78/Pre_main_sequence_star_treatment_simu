@@ -131,7 +131,7 @@ rho = rho / rho0
 B0car = eta * om * mu0 	* rho0
 
 print(B0car/mu0, rho[30]/ tau**2)
-
+"""
 plt.figure() 
 plt.subplot(2,1,1)
 plt.plot(r,RS/t_total, label = "Reynolds stress")  
@@ -145,7 +145,7 @@ plt.xlabel("r")
 plt.ylabel("Stresses") 
 plt.legend() 
 plt.show()
-
+"""
 #print(f"rho(ri)/rho(ro) = {rho.max()/rho.min():.4f}")
 #print(f"attendu         = {np.exp(Nrho):.4f}")
 
@@ -175,4 +175,4 @@ plt.xlabel("r")
 plt.ylabel("Radial flux of angular momentum")
 plt.show()
 
-print(np.max(np.abs(np.diff(r**2 * F))) / np.mean(np.abs(r**2 * F)))
+print(np.max(np.abs(np.diff(r**2 * F))) / np.mean(np.abs(r**2 * F)), np.max(np.abs(np.diff(r**2 * F))), np.mean(np.abs(r**2 * F)))
