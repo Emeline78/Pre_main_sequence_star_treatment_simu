@@ -127,10 +127,10 @@ tau = L**2/nu		# savoir quoi prendre entre temps visqueux (L**2/nu) ou de rotati
 eta = nu/Pm
 temp, rho, drho = anelprof(r, strat = Nrho, polind = n, g0=g0, g1=g1, g2=g2)
 rho0 = rho[-1]
-rho = rho / rho0
+#rho = rho / rho0
 B0car = rho0 * eta * om	* mu0	# de l'ordre de 1e-4
 
-print(B0car/mu0, rho[30] * L**3 / tau**2	)
+print(B0car/mu0, rho[30]/ tau**2)
 
 plt.figure() 
 plt.subplot(2,1,1)
