@@ -65,13 +65,6 @@ for j in range(1,len(files)+1):
 
     # fluctuations
     vr = gr.vr - gr.vr.mean(axis=0)
-    vr1 = gr.vr - (gr.vr * dphi).sum(axis=0)/(2*np.pi)
-    plt.figure()
-    plt.plot(r,vr[0,0,:])
-    plt.plot(r,vr1[0,0,:])
-    plt.plot(r,vr[0,0,:]/vr1[0,0,:])
-    plt.show()
-    
     vp = gr.vphi - gr.vphi.mean(axis=0)
 
     Br = gr.Br - gr.Br.mean(axis=0)
@@ -126,9 +119,9 @@ L = 1 - ki
 nu = Ek * om * L**2
 tau = L**2/nu
 eta = nu/Pm
-temp0, rho0, drho = anelprof(r, strat = Nrho, polind = n, g0=g0, g1=g1, g2=g2)
-rho = rho0
-B0car = rho * mu0 * eta * om
+temp, rho, drho = anelprof(r, strat = Nrho, polind = n, g0=g0, g1=g1, g2=g2)
+rho0 = rho[-1]
+B0car = rho0 * mu0 * eta * om
 
 #print(f"rho(ri)/rho(ro) = {rho.max()/rho.min():.4f}")
 #print(f"attendu         = {np.exp(Nrho):.4f}")
