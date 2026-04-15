@@ -96,7 +96,7 @@ for j in range(1,len(files)+1):
     
     # Viscosite
     mean_tau = (tau_rphi * w_phi).sum(axis = 0)
-    Visc = - (mean_tau * np.sin(th)[:,None] * w_theta[:,None]).sum(axis=0,1) * r
+    Visc = - (mean_tau * np.sin(th)[:,None] * w_theta[:,None]).sum(axis=0) * r
     
     Visc_snap.append(Visc)
     RS_snap.append(RS)
