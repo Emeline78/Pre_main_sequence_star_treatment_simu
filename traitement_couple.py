@@ -128,7 +128,7 @@ eta = nu/Pm
 temp, rho, drho = anelprof(r, strat = Nrho, polind = n, g0=g0, g1=g1, g2=g2)
 rho0 = rho[-1]
 #rho = rho / rho0  # normaliser ou pas ? 
-B0car = eta * om * mu0 	#* rho0
+B0car = eta * om * mu0 	* rho0
 
 print(B0car/mu0, rho[30]/ tau**2)
 
@@ -175,4 +175,4 @@ plt.xlabel("r")
 plt.ylabel("Radial flux of angular momentum")
 plt.show()
 
-
+print(np.max(np.abs(np.diff(r**2 * F))) / np.mean(np.abs(r**2 * F)))
