@@ -130,7 +130,7 @@ rho0 = rho[-1]
 rho = rho / rho0
 B0car = rho0 * eta * om	* mu0	# de l'ordre de 1e-4
 
-print(B0car*mu0, rho[30] * L**3 / tau**2	)
+print(B0car/mu0, rho[30] * L**3 / tau**2	)
 
 #print(f"rho(ri)/rho(ro) = {rho.max()/rho.min():.4f}")
 #print(f"attendu         = {np.exp(Nrho):.4f}")
