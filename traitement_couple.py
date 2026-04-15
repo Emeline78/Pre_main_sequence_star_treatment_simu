@@ -10,6 +10,12 @@ from magic.libmagic import anelprof
 from matplotlib.ticker import FuncFormatter
 formatter = FuncFormatter(lambda y, _: '{:.16g}'.format(y))
 
+"""
+git add traitement_couple.py
+git commit -m "modifications"
+git push
+"""
+
 matplotlib.rcParams['font.family'] = 'STIXGeneral'
 matplotlib.rcParams['mathtext.fontset'] = 'cm'
 matplotlib.rcParams['font.size'] = 24
@@ -117,7 +123,7 @@ for i in range(len(dt)):
 
 L = 1		# 1 - ki non car r0 n'est pas egale a 1 mais a 1/(1-ki)
 nu = Ek * om * L**2
-tau = L**2/nu
+tau = 1/om		#L**2/nu
 eta = nu/Pm
 temp, rho, drho = anelprof(r, strat = Nrho, polind = n, g0=g0, g1=g1, g2=g2)
 rho0 = rho[-1]
