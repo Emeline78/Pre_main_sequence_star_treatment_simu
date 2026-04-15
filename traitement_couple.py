@@ -126,46 +126,14 @@ B0car = rho * mu0 * eta * om
 #print(f"rho(ri)/rho(ro) = {rho.max()/rho.min():.4f}")
 #print(f"attendu         = {np.exp(Nrho):.4f}")
 
-RS = RS / t_total 
-MS = MS / t_total 
-Visc = Visc / t_total 
-MC = MC / t_total
-
-plt.figure()
-plt.plot(r,RS, label = "Reynolds stress")
-plt.plot(r,MS, label ="Maxwell stress")
-plt.plot(r,MC,label ="Meridional circulation")
-plt.plot(r,Visc, label = "Viscous stress")
-plt.xlabel("r")
-plt.ylabel("Stresses")
-plt.legend()
-plt.show()
-
-RSdim = RS / t_total * rho * L**3 / tau**2
-MSdim = MS / t_total * L * B0car / mu0
-Viscdim = Visc / t_total * rho * L**3 / tau**2 
-MCdim = MC / t_total * rho * L**3 / tau**2
-
-plt.figure()
-plt.plot(r,RSdim, label = "Reynolds stress")
-plt.plot(r,MSdim, label ="Maxwell stress")
-plt.plot(r,MCdim,label ="Meridional circulation")
-plt.plot(r,Viscdim, label = "Viscous stress")
-plt.xlabel("r")
-plt.ylabel("Stresses")
-plt.legend()
-plt.show()
+RS = RS / t_total * rho * L**3 / tau**2
+MS = MS / t_total * L * B0car / mu0
+Visc = Visc / t_total * rho * L**3 / tau**2 
+MC = MC / t_total * rho * L**3 / tau**2
 
 F = MC + MS + RS + Visc
 plt.figure()
 plt.plot(r,r**2 * F)
-plt.xlabel("r")
-plt.ylabel("Radial flux of angular momentum")
-plt.show()
-
-Fdim = MCdim + MSdim + RSdim + Viscdim
-plt.figure()
-plt.plot(r,r**2 * Fdim)
 plt.xlabel("r")
 plt.ylabel("Radial flux of angular momentum")
 plt.show()
