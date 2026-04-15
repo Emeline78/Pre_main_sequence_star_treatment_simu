@@ -149,10 +149,4 @@ plt.xlabel("r")
 plt.ylabel("Radial flux of angular momentum")
 plt.show()
 
-plt.figure()
-plt.semilogy(r, abs(RS), label='RS')
-plt.semilogy(r, abs(MS), label='MS')
-plt.semilogy(r, abs(MC), label='MC')
-plt.semilogy(r, abs(Visc), label='Visc')
-plt.show()
-
+print(MS/RS)
