@@ -115,7 +115,7 @@ for i in range(len(dt)):
     MC += 0.5*(MC_snap[i] + MC_snap[i+1])*dt[i]
     Visc += 0.5*(Visc_snap[i] + Visc_snap[i+1])*dt[i]
 
-L = 1 - ki
+L = 1		# 1 - ki non car r0 n'est pas egale a 1 mais a 1/(1-ki)
 nu = Ek * om * L**2
 tau = L**2/nu
 eta = nu/Pm
@@ -124,8 +124,7 @@ rho0 = rho[-1]
 rho = rho / rho0
 B0car = rho0 * eta * om
 print(B0car)
-print(r.min(), r.max())
-print(1/(1-ki))
+
 
 F = (MC + MS + RS + Visc)/t_total
 plt.figure()
