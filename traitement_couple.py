@@ -126,7 +126,7 @@ plt.figure()
 for i,l in enumerate(l_snap):
      plt.plot(r,l,label = str(i))
 plt.plot(r, np.mean(l_snap, axis = 0),"k", linewidth=3, label= "mean")  
-plt.legend()
+plt.legend(loc = "lower left")
 
 dt = np.diff(times)
 
