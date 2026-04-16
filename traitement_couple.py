@@ -167,7 +167,7 @@ plt.ylabel("Stresses")
 plt.legend() 
 plt.show()
 
-F_norho = 2*np.pi*r**2*(RS_snap.mean(axis=0)* rho * L**3 / tau**2 + MS_snap.mean(axis=0)* L * B0car / mu0 + MC_snap.mean(axis=0)* rho * L**3 / tau**2 + Visc_snap.mean(axis=0)* rho * L**3 / tau**2)
+F_norho = 2*np.pi*r**2*(RS_snap[0]* rho * L**3 / tau**2 + MS_snap[0]* L * B0car / mu0 + MC_snap[0]* rho * L**3 / tau**2 + Visc_snap[0]* rho * L**3 / tau**2)
 plt.figure()
 plt.plot(r, F_norho)
 plt.title("Flux sans densité")
