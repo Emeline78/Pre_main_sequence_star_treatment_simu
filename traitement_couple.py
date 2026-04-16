@@ -67,7 +67,7 @@ for j in range(1,len(files)+1):
         dphi = 2*np.pi/gr.nphi
         dtheta = np.pi/(gr.ntheta-1)
         
-        w_theta = dtheta * sin(th)
+        w_theta = dtheta * np.sin(th)
         w_phi = dphi / (2* np.pi)
 
     # fluctuations
@@ -156,14 +156,10 @@ MS = MS / t_total * L * B0car / mu0
 Visc = Visc / t_total * rho * L**3 / tau**2
 MC = MC / t_total * rho * L**3 / tau**2
 
-plt.figure() 
-plt.subplot(2,1,1)
+plt.figure()
 plt.plot(r,RS, label = "Reynolds stress")  
 plt.plot(r,MC,label ="Meridional circulation") 
 plt.plot(r,Visc, label = "Viscous stress") 
-plt.legend() 
-plt.ylabel("Stresses")
-plt.subplot(2,1,2)
 plt.plot(r,MS, label ="Maxwell stress")
 plt.xlabel("r") 
 plt.ylabel("Stresses") 
