@@ -31,7 +31,7 @@ from magic import *
 mu0 = 4*np.pi*1e-7
 
 a = "/travail/dynconv/multiscale_dyno/anelasticCouette/gr/Nr2p5_Pm4/ra_8e6/om50/"
-a = "/travail/dynconv/multiscale_dyno/anelasticCouette/gr2/xi_p35_pm4/ra_5e6/om50/"
+#a = "/travail/dynconv/multiscale_dyno/anelasticCouette/gr2/xi_p35_pm4/ra_5e6/om50/"
 stp = MagicSetup(datadir = a)
 
 if stp.nRotMa == 0 :	# rotation implicite dans les unites ( = 1 rotation explicite)
