@@ -133,8 +133,8 @@ rho0 = rho[0]
 rho = rho / rho0  
 B0car = eta * om * mu0 	* rho0
 
-print(B0car/mu0, rho[30]/ tau**2)
 """
+print(B0car/mu0, rho[30]/ tau**2)
 plt.figure() 
 plt.subplot(2,1,1)
 plt.plot(r,RS/t_total, label = "Reynolds stress")  
@@ -167,7 +167,7 @@ plt.ylabel("Stresses")
 plt.legend() 
 plt.show()
 
-F_norho = 2*np.pi*r**2*(RS_snap.mean(axis=0) + MS_snap.mean(axis=0) + MC_snap.mean(axis=0) + Visc_snap.mean(axis=0))
+F_norho = 2*np.pi*r**2*(RS_snap.mean(axis=0)* rho * L**3 / tau**2 + MS_snap.mean(axis=0)* L * B0car / mu0 + MC_snap.mean(axis=0)* rho * L**3 / tau**2 + Visc_snap.mean(axis=0)* rho * L**3 / tau**2)
 plt.figure()
 plt.plot(r, F_norho)
 plt.title("Flux sans densité")
