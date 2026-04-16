@@ -81,7 +81,7 @@ for j in range(1,len(files)+1):
     
     # def de tau
     dvphi = np.gradient(gr.vphi, r, axis=2)
-    tau_rphi = dvphi - gr.vphi/r[None,None,:]
+    tau_rphi = dvphi - gr.vphi/r[None,None,:] 
 
     # Reynolds
     prodR = (vr * vp * w_phi).sum(axis=0)	# flux
@@ -101,7 +101,7 @@ for j in range(1,len(files)+1):
     Visc = - (mean_tau * np.sin(th)[:,None] * w_theta[:,None]).sum(axis=0) * r
     
     # moment angulaire
-    l = (r[None,None,:]*np.sin(th)[:,None]*gr.vphi).mean(axis = (0,1,2))
+    l = (r[None,None,:]*np.sin(th)[:,None]*gr.vphi).mean(axis = (0,1))
     l_snap.append(l)
     
     Visc_snap.append(Visc)
@@ -115,11 +115,13 @@ RS_snap = np.array(RS_snap)
 MS_snap = np.array(MS_snap)
 Visc_snap = np.array(Visc_snap)
 MC_snap = np.array(MC_snap)
+l_snap = np.array(l_snap)
 t_total = times[-1] - times[0]
 
 plt.figure()
-plt.plot(times,l_snap)
-plt.show()
+for i,l in enumerate(l_snap):
+     plt.plot(r,l,label = str(i))
+     plt.legend()
 
 dt = np.diff(times)
 
