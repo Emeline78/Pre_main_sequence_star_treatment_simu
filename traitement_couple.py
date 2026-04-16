@@ -51,7 +51,7 @@ g2 = stp.g2
 ts = MagicTs(datadir = a, field='e_kin', all=True) 	# verification que le regime ne change pas dans le temps pour pouvoir faire l'integration en temps 
 print(ts)
 
-files = glob.glob(os.path.join(a,'G_[0-9]*.rot03'))
+files = glob.glob(os.path.join(a,'G_[0-9]*.rot01'))
 files.sort(key=lambda f: int(os.path.basename(f).split('_')[1].split('.')[0]))
 
 times = []
@@ -59,10 +59,12 @@ RS_snap = []
 MS_snap = []
 Visc_snap = []
 MC_snap = []
+MS1_snap = []
 l_snap = []
 
+# pour les moyennes sur phi j'aurais juste pu faire mean vu que c'est espace regulierement
 for j in range(1,len(files)+1): 
-    gr = MagicGraph(datadir=a,tag='rot03',ivar = j)
+    gr = MagicGraph(datadir=a,tag='rot01',ivar = j)
     times.append(gr.time)
 
     if j == 1:
@@ -94,10 +96,15 @@ for j in range(1,len(files)+1):
     prodM = -(Br * Bp * w_phi).sum(axis=0)
     MS = (prodM * np.sin(th)[:,None] * w_theta[:,None]).sum(axis=0) * r  
     
+    # Moy champ mag
+    Br_mean = (gr.Br * w_phi).sum(axis=0)
+    Bphi_mean = (gr.Bphi * w_phi).sum(axis=0)
+    MS1 = (Br_mean * Bphi_mean * np.sin(th)[:,None] * w_theta[:,None]).sum(axis = 0) * r
+    
     # Ecoulement meridional
     vr_mean = (gr.vr * w_phi).sum(axis=0)
     vphi_mean = (gr.vphi * w_phi).sum(axis=0)
-    MC = (vr_mean * vphi_mean * np.sin(th)[:,None] * w_theta[:,None]).sum(axis = 0) * r
+    MC = (vr_mean * (vphi_mean + r[None,:] * np.sin(th)[:,None] * 1/Ek) * np.sin(th)[:,None] * w_theta[:,None]).sum(axis = 0) * r
     
     # Viscosite
     mean_tau = (tau_rphi * w_phi).sum(axis = 0)
@@ -110,34 +117,37 @@ for j in range(1,len(files)+1):
     Visc_snap.append(Visc)
     RS_snap.append(RS)
     MS_snap.append(MS)
+    MS1_snap.append(MS1)
     MC_snap.append(MC)
 
-
 times = np.array(times)
-print(times)
+
 RS_snap = np.array(RS_snap)
 MS_snap = np.array(MS_snap)
+MS1_snap = np.array(MS1_snap)
 Visc_snap = np.array(Visc_snap)
 MC_snap = np.array(MC_snap)
-l_snap = np.array(l_snap)
-t_total = times[-1] - times[0]
 
+t_total = times[-1] - times[0]
+"""
+l_snap = np.array(l_snap)
 plt.figure()
 for i,l in enumerate(l_snap):
      plt.plot(r,l,label = str(i))
 plt.plot(r, np.mean(l_snap, axis = 0),"k", linewidth=3, label= "mean")  
 plt.legend(loc = "lower left")
-
+"""
 dt = np.diff(times)
 
 RS = np.zeros_like(RS_snap[0])
 MS = np.zeros_like(MS_snap[0])
 MC = np.zeros_like(MC_snap[0])
 Visc = np.zeros_like(Visc_snap[0])
-
+MS1 = np.zeros_like(MS1_snap[0])
 for i in range(len(dt)):
     RS += 0.5*(RS_snap[i] + RS_snap[i+1])*dt[i]
     MS += 0.5*(MS_snap[i] + MS_snap[i+1])*dt[i]
+    MS1 += 0.5*(MS1_snap[i] + MS1_snap[i+1])*dt[i]
     MC += 0.5*(MC_snap[i] + MC_snap[i+1])*dt[i]
     Visc += 0.5*(Visc_snap[i] + Visc_snap[i+1])*dt[i]
 
@@ -171,20 +181,23 @@ plt.show()
 
 RS = RS / t_total * rho * L**3 / tau**2 * 2 * np.pi * r**2
 MS = MS / t_total * L * B0car / mu0 * 2 * np.pi * r**2
+MS1 = MS1 / t_total * L * B0car / mu0 * 2 * np.pi * r**2
 Visc = Visc / t_total * rho * L**3 / tau**2 * 2 * np.pi * r**2
 MC = MC / t_total * rho * L**3 / tau**2 * 2 * np.pi * r**2
 
+
 plt.figure()
 plt.plot(r,RS, label = "Reynolds stress")  
-plt.plot(r,MC,label ="Meridional circulation") 
+plt.plot(r,MC,label ="Meridional circulation with Coriolis part") 
 plt.plot(r,Visc, label = "Viscous stress") 
 plt.plot(r,MS, label ="Maxwell stress")
+plt.plot(r,MS1, label ="Contribution from mean of magnetic field")
 plt.xlabel("r") 
 plt.ylabel("Stresses") 
 plt.legend() 
 plt.show()
 
-F = (MC + MS + RS + Visc) 
+F = (MC + MS1 + MS + RS + Visc) 
 plt.figure()
 plt.plot(r,F)
 plt.xlabel("r")
