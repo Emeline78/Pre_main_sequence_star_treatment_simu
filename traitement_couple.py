@@ -56,6 +56,7 @@ RS_snap = []
 MS_snap = []
 Visc_snap = []
 MC_snap = []
+l_snap = []
 
 for j in range(1,len(files)+1): 
     gr = MagicGraph(datadir=a,tag='rot01',ivar = j)
@@ -99,10 +100,15 @@ for j in range(1,len(files)+1):
     mean_tau = (tau_rphi * w_phi).sum(axis = 0)
     Visc = - (mean_tau * np.sin(th)[:,None] * w_theta[:,None]).sum(axis=0) * r
     
+    # moment angulaire
+    l = (r[None,None,:]*np.sin(th)[:,None]*gr.vphi).mean(axis = (0,1,2))
+    l_snap.append(l)
+    
     Visc_snap.append(Visc)
     RS_snap.append(RS)
     MS_snap.append(MS)
     MC_snap.append(MC)
+
 
 times = np.array(times)
 RS_snap = np.array(RS_snap)
@@ -110,6 +116,10 @@ MS_snap = np.array(MS_snap)
 Visc_snap = np.array(Visc_snap)
 MC_snap = np.array(MC_snap)
 t_total = times[-1] - times[0]
+
+plt.figure()
+plt.plot(times,l_snap)
+plt.show()
 
 dt = np.diff(times)
 
@@ -152,10 +162,10 @@ plt.show()
 #print(f"rho(ri)/rho(ro) = {rho.max()/rho.min():.4f}")
 #print(f"attendu         = {np.exp(Nrho):.4f}")
 
-RS = RS / t_total * rho * L**3 / tau**2
-MS = MS / t_total * L * B0car / mu0
-Visc = Visc / t_total * rho * L**3 / tau**2
-MC = MC / t_total * rho * L**3 / tau**2
+RS = RS / t_total * rho * L**3 / tau**2 * 2 * np.pi * r**2
+MS = MS / t_total * L * B0car / mu0 * 2 * np.pi * r**2
+Visc = Visc / t_total * rho * L**3 / tau**2 * 2 * np.pi * r**2
+MC = MC / t_total * rho * L**3 / tau**2 * 2 * np.pi * r**2
 
 plt.figure()
 plt.plot(r,RS, label = "Reynolds stress")  
@@ -167,7 +177,7 @@ plt.ylabel("Stresses")
 plt.legend() 
 plt.show()
 
-F =  (MC + MS + RS + Visc) *2 * np.pi * r**2
+F = (MC + MS + RS + Visc) 
 plt.figure()
 plt.plot(r,F)
 plt.xlabel("r")
