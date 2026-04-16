@@ -7,8 +7,11 @@ import os
 import matplotlib
 matplotlib.interactive(True)
 from magic.libmagic import anelprof
-from matplotlib.ticker import FuncFormatter
-formatter = FuncFormatter(lambda y, _: '{:.16g}'.format(y))
+from matplotlib.ticker import ScalarFormatter
+formatter = ScalarFormatter(useMathText=True)
+formatter.set_scientific(True)
+formatter.set_powerlimits((0, 0))
+
 
 """
 git add traitement_couple.py
@@ -121,7 +124,8 @@ t_total = times[-1] - times[0]
 plt.figure()
 for i,l in enumerate(l_snap):
      plt.plot(r,l,label = str(i))
-     plt.legend()
+plt.plot(r, np.mean(l_snap, axis = 0), linewidth=3, label= "mean")  
+plt.legend()
 
 dt = np.diff(times)
 
