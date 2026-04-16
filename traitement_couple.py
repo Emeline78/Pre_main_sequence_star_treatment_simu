@@ -62,7 +62,7 @@ MC_snap = []
 l_snap = []
 
 for j in range(1,len(files)+1): 
-    gr = MagicGraph(datadir=a,tag='rot01',ivar = j)
+    gr = MagicGraph(datadir=a,tag='rot03',ivar = j)
     times.append(gr.time)
 
     if j == 1:
