@@ -114,6 +114,7 @@ for j in range(1,len(files)+1):
 
 
 times = np.array(times)
+print(times)
 RS_snap = np.array(RS_snap)
 MS_snap = np.array(MS_snap)
 Visc_snap = np.array(Visc_snap)
@@ -124,7 +125,7 @@ t_total = times[-1] - times[0]
 plt.figure()
 for i,l in enumerate(l_snap):
      plt.plot(r,l,label = str(i))
-plt.plot(r, np.mean(l_snap, axis = 0), linewidth=3, label= "mean")  
+plt.plot(r, np.mean(l_snap, axis = 0),"k", linewidth=3, label= "mean")  
 plt.legend()
 
 dt = np.diff(times)
