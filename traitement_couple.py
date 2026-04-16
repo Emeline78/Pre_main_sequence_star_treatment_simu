@@ -46,6 +46,7 @@ g1 = stp.g1
 g2 = stp.g2
 
 ts = MagicTs(datadir = a, field='e_kin', all=True) 	# verification que le regime ne change pas dans le temps pour pouvoir faire l'integration en temps 
+print(ts)
 
 files = glob.glob(os.path.join(a,'G_[0-9]*.rot01'))
 files.sort(key=lambda f: int(os.path.basename(f).split('_')[1].split('.')[0]))
@@ -166,6 +167,12 @@ plt.ylabel("Stresses")
 plt.legend() 
 plt.show()
 
+F_norho = 2*np.pi*r**2*(RS_snap.mean(axis=0) + MS_snap.mean(axis=0) + MC_snap.mean(axis=0) + Visc_snap.mean(axis=0))
+plt.figure()
+plt.plot(r, F_norho)
+plt.title("Flux sans densité")
+plt.show()
+
 F = 2 * np.pi * r**2 *(MC + MS + RS + Visc)
 plt.figure()
 plt.plot(r,F)
@@ -173,5 +180,5 @@ plt.xlabel("r")
 plt.ylabel("Radial flux of angular momentum")
 plt.show()
 
-print(np.max(np.abs(np.diff(F))) / np.mean(np.abs(F)), np.max(np.abs(np.diff(F))), np.std(np.abs(F)))
+print("Relative variation:", (F.max() - F.min()) / np.mean(F))
 
