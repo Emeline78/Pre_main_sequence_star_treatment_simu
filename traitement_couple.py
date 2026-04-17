@@ -34,7 +34,7 @@ from magic import *
 mu0 = 4*np.pi*1e-7
 
 a = "/travail/dynconv/multiscale_dyno/anelasticCouette/gr/Nr2p5_Pm4/ra_8e6/om50/"
-a = "/travail/dynconv/multiscale_dyno/anelasticCouette/gr2/xi_p35_pm4/ra_5e6/om50/"
+#a = "/travail/dynconv/multiscale_dyno/anelasticCouette/gr2/xi_p35_pm4/ra_5e6/om50/"
 stp = MagicSetup(datadir = a)
 
 n = stp.polind
@@ -85,7 +85,8 @@ for j in range(1,len(files)+1):
     
     # def de tau
     dvphi = np.gradient(gr.vphi, r, axis=2)
-    #dvr = 1/(r[None,None,:]*np.sin(th)[None,:,None])*np.gradient(gr.vr,phi,axis = 0)
+    dvr = 1/(r[None,None,:]*np.sin(th)[None,:,None])*np.gradient(gr.vr,phi,axis = 0)
+    print(dvr)
     tau_rphi = dvphi - gr.vphi/r[None,None,:] 
 
     # Reynolds
