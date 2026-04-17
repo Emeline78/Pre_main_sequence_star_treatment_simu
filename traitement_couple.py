@@ -149,12 +149,14 @@ MS = np.zeros_like(MS_snap[0])
 MC = np.zeros_like(MC_snap[0])
 Visc = np.zeros_like(Visc_snap[0])
 MS1 = np.zeros_like(MS1_snap[0])
+l = np.zeros_like(l_snap[0])
 for i in range(len(dt)):
     RS += 0.5*(RS_snap[i] + RS_snap[i+1])*dt[i]
     MS += 0.5*(MS_snap[i] + MS_snap[i+1])*dt[i]
     MS1 += 0.5*(MS1_snap[i] + MS1_snap[i+1])*dt[i]
     MC += 0.5*(MC_snap[i] + MC_snap[i+1])*dt[i]
     Visc += 0.5*(Visc_snap[i] + Visc_snap[i+1])*dt[i]
+    l += 0.5*(l_snap[i] + l_snap[i+1])*dt[i]
 
 L = 1		# pas 1 - ki car r0 n'est pas egale a 1 mais a 1/(1-ki)
 nu = Ek * om * L**2
@@ -182,7 +184,7 @@ plt.plot(r,MC,label ="Meridional circulation with Coriolis part")
 plt.plot(r,Visc, label = "Viscous stress") 
 plt.plot(r, MS, label ="Maxwell stress")
 plt.plot(r,MS1, label ="Contribution from mean of magnetic field")
-#plt.plot(r,np.mean(l_snap, axis = 0)* L**2 / tau**2 * rho, label ="rho dl/dt")
+plt.plot(r,np.gradient(l_snap,times, axis = 0)* L**2 / tau**2 * rho, label ="rho dl/dt")
 plt.xlabel("r") 
 plt.ylabel("Stresses") 
 plt.legend() 
