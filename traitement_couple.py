@@ -95,8 +95,8 @@ for j in range(1,len(files)+1):
     RS = (prodR * np.sin(th)[:,None] * w_theta[:,None]).sum(axis=0) * r # integrated flux over a spherical surface
 
     # Maxwell
-    #prodM = -(Br * Bp * w_phi).sum(axis=0)
-    prodM = -(gr.Br * gr.Bphi * w_phi).sum(axis=0)
+    prodM = -(Br * Bp * w_phi).sum(axis=0)
+    #prodM = -(gr.Br * gr.Bphi * w_phi).sum(axis=0)
     MS = (prodM * np.sin(th)[:,None] * w_theta[:,None]).sum(axis=0) * r  
     
     # Moy champ mag
@@ -190,7 +190,7 @@ plt.show()
 
 F = (MC + MS + RS + Visc)
 plt.figure()
-plt.plot(r,r**2*F)
+plt.plot(r,F)
 plt.xlabel("r")
 plt.ylabel("Radial flux of angular momentum")
 plt.show()
