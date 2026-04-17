@@ -45,7 +45,7 @@ Ek = stp.ek
 g0 = stp.g0
 g1 = stp.g1
 g2 = stp.g2
-om = 1
+om = 1/Ek
 
 ts = MagicTs(datadir = a, field='e_kin', all=True) 	# verification que le regime ne change pas dans le temps pour pouvoir faire l'integration en temps 
 
@@ -129,14 +129,13 @@ Visc_snap = np.array(Visc_snap)
 MC_snap = np.array(MC_snap)
 
 t_total = times[-1] - times[0]
-"""
 l_snap = np.array(l_snap)
 plt.figure()
 for i,l in enumerate(l_snap):
      plt.plot(r,l,label = str(i))
 plt.plot(r, np.mean(l_snap, axis = 0),"k", linewidth=3, label= "mean")  
 plt.legend(loc = "lower left")
-"""
+
 dt = np.diff(times)
 
 RS = np.zeros_like(RS_snap[0])
