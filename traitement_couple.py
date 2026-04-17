@@ -103,7 +103,8 @@ for j in range(1,len(files)+1):
     # Ecoulement meridional
     vr_mean = (gr.vr * w_phi).sum(axis=0)
     vphi_mean = (gr.vphi * w_phi).sum(axis=0)
-    MC = (vr_mean * (vphi_mean + r[None,:] * np.sin(th)[:,None] * 1/Ek) * np.sin(th)[:,None] * w_theta[:,None]).sum(axis = 0) * r
+    #MC = (vr_mean * (vphi_mean + r[None,:] * np.sin(th)[:,None] * 1/Ek) * np.sin(th)[:,None] * w_theta[:,None]).sum(axis = 0) * r
+    MC = (vr_mean * vphi_mean * np.sin(th)[:,None] * w_theta[:,None]).sum(axis = 0) * r
     
     # Viscosite
     mean_tau = (tau_rphi * w_phi).sum(axis = 0)
