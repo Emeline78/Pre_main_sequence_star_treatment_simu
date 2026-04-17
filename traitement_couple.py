@@ -110,7 +110,7 @@ for j in range(1,len(files)+1):
     Visc = - (mean_tau * np.sin(th)[:,None] * w_theta[:,None]).sum(axis=0) * r
     
     # moment angulaire
-    l = (r[None,None,:]*np.sin(th)[:,None]*gr.vphi).mean(axis = (0,1)) * 2 * np.pi * r**2
+    l = (r[None,None,:]*np.sin(th)[:,None]**2*gr.vphi).mean(axis = (0,1)) * 2 * np.pi * r**2
     l_snap.append(l)
     
     Visc_snap.append(Visc)
@@ -126,6 +126,7 @@ MS_snap = np.array(MS_snap)
 MS1_snap = np.array(MS1_snap)
 Visc_snap = np.array(Visc_snap)
 MC_snap = np.array(MC_snap)
+l_snap = np.array(l_snap)
 
 t_total = times[-1] - times[0]
 
