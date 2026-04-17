@@ -172,12 +172,15 @@ Visc = Visc / t_total * rho * L**3 / tau**2 * 2 * np.pi * r**2
 MC = MC / t_total * rho * L**3 / tau**2 * 2 * np.pi * r**2
 
 dl_dt = (l_snap[1:] - l_snap[:-1]) / dt[:,None]
+plt.figure()
+for i,dl_dt in enumerate(dl_dt):
+     plt.plot(r,dl_dt,label = str(i))
+plt.legend(loc = "lower left")
 F_t = (RS_snap * rho * L**3 / tau**2 * 2 * np.pi * r**2 + MS_snap * L * B0car / mu0 * 2 * np.pi * r**2 + MS1_snap * L * B0car / mu0 * 2 * np.pi * r**2 + Visc_snap * rho * L**3 / tau**2 * 2 * np.pi * r**2 + MC_snap * rho * L**3 / tau**2 * 2 * np.pi * r**2)
 tot = dl_dt + F_t[:-1]
 plt.figure()
 for i,tot in enumerate(tot):
-     plt.plot(r,l,label = str(i))
-plt.plot(r, tot,"k", linewidth=3, label= "mean")  
+     plt.plot(r,tot,label = str(i))
 plt.legend(loc = "lower left")
 
 plt.figure()
