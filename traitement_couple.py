@@ -70,8 +70,8 @@ for j in range(1,len(files)+1):
         th = np.linspace(0,np.pi,gr.ntheta)
         phi = np.linspace(0,2*np.pi,gr.nphi-1)
 
-        dphi = 2*np.pi/(gr.nphi-1)
-        dtheta = np.pi/gr.ntheta
+        dphi = 2*np.pi/(gr.nphi-2)
+        dtheta = np.pi/(gr.ntheta-1)
         
         w_theta = dtheta * np.sin(th)
         w_phi = dphi / (2* np.pi)
