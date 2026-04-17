@@ -186,7 +186,7 @@ plt.show()
 
 F = np.gradient((MC + MS1 + MS + RS + Visc),r)
 plt.figure()
-plt.plot(r,F[:-1])
+plt.plot(r[:-3],F[:-3])
 plt.xlabel("r")
 plt.ylabel("Radial flux of angular momentum")
 plt.show()
