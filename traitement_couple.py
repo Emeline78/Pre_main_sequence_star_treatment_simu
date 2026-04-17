@@ -100,9 +100,9 @@ for j in range(1,len(files)+1):
     MS = (prodM * np.sin(th)[:,None] * w_theta[:,None]).sum(axis=0) * r  
     
     # Moy champ mag
-    #Br_mean = (gr.Br * w_phi).sum(axis=0)
-    #Bphi_mean = (gr.Bphi * w_phi).sum(axis=0)
-    #MS1 = -(Br_mean * Bphi_mean * np.sin(th)[:,None] * w_theta[:,None]).sum(axis = 0) * r
+    Br_mean = (gr.Br * w_phi).sum(axis=0)
+    Bphi_mean = (gr.Bphi * w_phi).sum(axis=0)
+    MS1 = -(Br_mean * Bphi_mean * np.sin(th)[:,None] * w_theta[:,None]).sum(axis = 0) * r
     
     # Ecoulement meridional
     vr_mean = (gr.vr * w_phi).sum(axis=0)
