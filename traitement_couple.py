@@ -184,7 +184,7 @@ plt.ylabel("Stresses")
 plt.legend() 
 plt.show()
 
-F = np.gradient((MC + MS1 + MS + RS + Visc),r))
+F = np.gradient((MC + MS1 + MS + RS + Visc),r)
 plt.figure()
 plt.plot(r,F[:-1])
 plt.xlabel("r")
