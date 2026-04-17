@@ -68,10 +68,10 @@ for j in range(1,len(files)+1):
     if j == 1:
         r = gr.radius
         th = np.linspace(0,np.pi,gr.ntheta)
-        phi = np.linspace(0,2*np.pi,gr.nphi)
+        phi = np.linspace(0,2*np.pi,gr.nphi-1)
 
-        dphi = 2*np.pi/gr.nphi
-        dtheta = np.pi/(gr.ntheta-1)
+        dphi = 2*np.pi/(gr.nphi-1)
+        dtheta = np.pi/gr.ntheta
         
         w_theta = dtheta * np.sin(th)
         w_phi = dphi / (2* np.pi)
