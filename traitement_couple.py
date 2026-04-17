@@ -37,8 +37,6 @@ a = "/travail/dynconv/multiscale_dyno/anelasticCouette/gr/Nr2p5_Pm4/ra_8e6/om50/
 #a = "/travail/dynconv/multiscale_dyno/anelasticCouette/gr2/xi_p35_pm4/ra_5e6/om50/"
 stp = MagicSetup(datadir = a)
 
-if stp.nRotMa == 0 :	# rotation implicite dans les unites ( = 1 rotation explicite)
-    om = 1
 n = stp.polind
 Pm = stp.prmag
 ki = stp.radratio
@@ -47,6 +45,7 @@ Ek = stp.ek
 g0 = stp.g0
 g1 = stp.g1
 g2 = stp.g2
+om = 1/Ek
 
 ts = MagicTs(datadir = a, field='e_kin', all=True) 	# verification que le regime ne change pas dans le temps pour pouvoir faire l'integration en temps 
 print(ts)
