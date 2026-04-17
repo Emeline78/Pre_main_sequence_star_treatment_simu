@@ -45,10 +45,9 @@ Ek = stp.ek
 g0 = stp.g0
 g1 = stp.g1
 g2 = stp.g2
-om = 1/Ek
+om = 1
 
 ts = MagicTs(datadir = a, field='e_kin', all=True) 	# verification que le regime ne change pas dans le temps pour pouvoir faire l'integration en temps 
-print(ts)
 
 files = glob.glob(os.path.join(a,'G_[0-9]*.rot01'))
 files.sort(key=lambda f: int(os.path.basename(f).split('_')[1].split('.')[0]))
@@ -69,6 +68,7 @@ for j in range(1,len(files)+1):
     if j == 1:
         r = gr.radius
         th = np.linspace(0,np.pi,gr.ntheta)
+        phi = np.linspace(0,2*np.pi,gr.nphi)
 
         dphi = 2*np.pi/gr.nphi
         dtheta = np.pi/(gr.ntheta-1)
@@ -85,7 +85,8 @@ for j in range(1,len(files)+1):
     
     # def de tau
     dvphi = np.gradient(gr.vphi, r, axis=2)
-    tau_rphi = dvphi - gr.vphi/r[None,None,:] 
+    dvr = 1/(r[None,None,:]*np.sin(th)[None,:,None])*np.gradient(gr.vr,phi,axis = 0)
+    tau_rphi = dvr +dvphi - gr.vphi/r[None,None,:] 
 
     # Reynolds
     prodR = (vr * vp * w_phi).sum(axis=0)	# flux
