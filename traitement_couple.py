@@ -184,9 +184,9 @@ plt.ylabel("Stresses")
 plt.legend() 
 plt.show()
 
-F = np.gradient((MC + MS1 + MS + RS + Visc),r)/L + np.mean(l_snap, axis = 0)* L**2 / tau**2 * rho
+F = np.gradient((MC + MS1 + MS + RS + Visc),r))
 plt.figure()
-plt.plot(r,F)
+plt.plot(r,F[:-1])
 plt.xlabel("r")
 plt.ylabel("Radial flux of angular momentum")
 plt.show()
