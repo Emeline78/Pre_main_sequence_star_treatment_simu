@@ -33,10 +33,11 @@ matplotlib.rcParams['figure.figsize']= [8, 6]
 from magic import *
 mu0 = 4*np.pi*1e-7
 
-a = input("directory : ")
-#a = "/travail/dynconv/multiscale_dyno/anelasticCouette/gr/Nr2p5_Pm4/ra_8e6/om50/"
+#a = input("directory : ")
+a = "/travail/dynconv/multiscale_dyno/anelasticCouette/gr/Nr2p5_Pm4/ra_8e6/om50/"
 #a = "/travail/dynconv/multiscale_dyno/anelasticCouette/gr2/xi_p35_pm4/ra_5e6/om50/"
 #a = "/travail/dynconv/multiscale_dyno/anelasticCouette/gr_gr2_Louis/ra_1p5e7"
+#a = "/travail/dynconv/multiscale_dyno/anelasticCouette/gr2/xi_p2_pm4/ra_1e6"
 stp = MagicSetup(datadir = a)
 
 n = stp.polind
@@ -178,8 +179,8 @@ plt.figure()
 plt.plot(r,RS, label = "Reynolds stress")  
 plt.plot(r,MC,label ="Meridional circulation with Coriolis part") 
 plt.plot(r,Visc, label = "Viscous stress") 
-plt.plot(r,MS, label ="Maxwell stress")
-plt.plot(r,MS1, label ="Contribution from mean of magnetic field")
+plt.plot(r, MS + MS1, label ="Maxwell stress")
+#plt.plot(r,MS1, label ="Contribution from mean of magnetic field")
 #plt.plot(r,np.mean(l_snap, axis = 0)* L**2 / tau**2 * rho, label ="rho dl/dt")
 plt.xlabel("r") 
 plt.ylabel("Stresses") 
