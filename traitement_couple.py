@@ -103,8 +103,7 @@ for j in range(1,len(files)+1):
     # Ecoulement meridional
     vr_mean = (gr.vr * w_phi).sum(axis=0)
     vphi_mean = (gr.vphi * w_phi).sum(axis=0)
-    #MC = (vr_mean * (vphi_mean + r[None,:] * np.sin(th)[:,None] * 1/Ek) * np.sin(th)[:,None] * w_theta[:,None]).sum(axis = 0) * r
-    MC = (vr_mean * vphi_mean * np.sin(th)[:,None] * w_theta[:,None]).sum(axis = 0) * r
+    MC = (vr_mean * (vphi_mean + r[None,:] * np.sin(th)[:,None] * 1/Ek) * np.sin(th)[:,None] * w_theta[:,None]).sum(axis = 0) * r
     
     # Viscosite
     mean_tau = (tau_rphi * w_phi).sum(axis = 0)
@@ -129,13 +128,15 @@ Visc_snap = np.array(Visc_snap)
 MC_snap = np.array(MC_snap)
 
 t_total = times[-1] - times[0]
+
+"""
 l_snap = np.array(l_snap)
 plt.figure()
 for i,l in enumerate(l_snap):
      plt.plot(r,l,label = str(i))
 plt.plot(r, np.mean(l_snap, axis = 0),"k", linewidth=3, label= "mean")  
 plt.legend(loc = "lower left")
-
+"""
 dt = np.diff(times)
 
 RS = np.zeros_like(RS_snap[0])
@@ -159,22 +160,7 @@ rho0 = rho[0]
 rho = rho / rho0  
 B0car = eta * om * mu0 	* rho0
 
-"""
-print(B0car/mu0, rho[30]/ tau**2)
-plt.figure() 
-plt.subplot(2,1,1)
-plt.plot(r,RS/t_total, label = "Reynolds stress")  
-plt.plot(r,MC/t_total,label ="Meridional circulation") 
-plt.plot(r,Visc/t_total, label = "Viscous stress") 
-plt.legend() 
-plt.ylabel("Stresses")
-plt.subplot(2,1,2)
-plt.plot(r,MS/t_total, label ="Maxwell stress")
-plt.xlabel("r") 
-plt.ylabel("Stresses") 
-plt.legend() 
-plt.show()
-"""
+
 #print(f"rho(ri)/rho(ro) = {rho.max()/rho.min():.4f}")
 #print(f"attendu         = {np.exp(Nrho):.4f}")
 
@@ -184,6 +170,14 @@ MS1 = MS1 / t_total * L * B0car / mu0 * 2 * np.pi * r**2
 Visc = Visc / t_total * rho * L**3 / tau**2 * 2 * np.pi * r**2
 MC = MC / t_total * rho * L**3 / tau**2 * 2 * np.pi * r**2
 
+dl_dt = (l_snap[1:] - l_snap[:-1]) / dt
+F_t = (RS_snap * rho * L**3 / tau**2 * 2 * np.pi * r**2 + MS_snap * L * B0car / mu0 * 2 * np.pi * r**2 + MS1_snap * L * B0car / mu0 * 2 * np.pi * r**2 + Visc_snap * rho * L**3 / tau**2 * 2 * np.pi * r**2 + MC_snap * rho * L**3 / tau**2 * 2 * np.pi * r**2)
+tot = dl_dt + F_t[:-1]
+plt.figure()
+for i,tot in enumerate(tot):
+     plt.plot(r,l,label = str(i))
+plt.plot(r, tot,"k", linewidth=3, label= "mean")  
+plt.legend(loc = "lower left")
 
 plt.figure()
 plt.plot(r,RS, label = "Reynolds stress")  
