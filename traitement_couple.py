@@ -85,6 +85,7 @@ for j in range(1,len(files)+1):
     
     # def de tau
     dvphi = np.gradient(gr.vphi, r, axis=2)
+    print(np.shape(gr.vr), np.shape(phi))
     dvr = 1/(r[None,None,:]*np.sin(th)[None,:,None])*np.gradient(gr.vr,phi,axis = 0)
     print(dvr)
     tau_rphi = dvphi - gr.vphi/r[None,None,:] 
