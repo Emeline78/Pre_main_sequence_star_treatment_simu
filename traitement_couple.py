@@ -36,6 +36,7 @@ mu0 = 4*np.pi*1e-7
 a = input("directory : ")
 #a = "/travail/dynconv/multiscale_dyno/anelasticCouette/gr/Nr2p5_Pm4/ra_8e6/om50/"
 #a = "/travail/dynconv/multiscale_dyno/anelasticCouette/gr2/xi_p35_pm4/ra_5e6/om50/"
+#a = "/travail/dynconv/multiscale_dyno/anelasticCouette/gr_gr2_Louis/ra_1p5e7"
 stp = MagicSetup(datadir = a)
 
 n = stp.polind
@@ -187,7 +188,7 @@ plt.show()
 
 F = (MC + MS1 + MS + RS + Visc)
 plt.figure()
-plt.plot(r[r<=1],F[r<=1])
+plt.plot(r,F)
 plt.xlabel("r")
 plt.ylabel("Radial flux of angular momentum")
 plt.show()
