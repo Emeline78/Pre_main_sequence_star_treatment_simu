@@ -188,7 +188,7 @@ plt.ylabel("Stresses")
 plt.legend() 
 plt.show()
 
-F = (MC + MS + RS + Visc)
+F = (MC + MS + RS + Visc + MS1)
 plt.figure()
 plt.plot(r,F)
 plt.xlabel("r")
