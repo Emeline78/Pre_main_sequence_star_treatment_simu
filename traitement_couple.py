@@ -85,8 +85,8 @@ for j in range(1,len(files)+1):
     
     # def de tau
     dvphi = np.gradient(gr.vphi, r, axis=2)
-    dvr = 1/(r[None,None,:]*np.sin(th)[None,:,None])*np.gradient(gr.vr,phi,axis = 0)
-    tau_rphi = dvr +dvphi - gr.vphi/r[None,None,:] 
+    #dvr = 1/(r[None,None,:]*np.sin(th)[None,:,None])*np.gradient(gr.vr,phi,axis = 0)
+    tau_rphi = dvphi - gr.vphi/r[None,None,:] 
 
     # Reynolds
     prodR = (vr * vp * w_phi).sum(axis=0)	# flux
