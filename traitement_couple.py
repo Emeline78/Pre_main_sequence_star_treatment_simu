@@ -189,7 +189,7 @@ plt.show()
 
 F = (MC + MS1 + MS + RS + Visc)
 plt.figure()
-plt.plot(r,F)
+plt.plot(r,r**2*F)
 plt.xlabel("r")
 plt.ylabel("Radial flux of angular momentum")
 plt.show()
