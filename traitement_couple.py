@@ -80,11 +80,11 @@ for j in range(1,len(files)+1):
         w_phi = dphi / (2* np.pi)
 
     # fluctuations
-    vr = gr.vr - gr.vr.mean(axis=0)
-    vp = gr.vphi - gr.vphi.mean(axis=0)
+    vr = gr.vr - (gr.vr * w_phi).sum(axis=0)
+    vp = gr.vphi - (gr.vphi * w_phi).sum(axis=0)
 
-    Br = gr.Br - gr.Br.mean(axis=0)
-    Bp = gr.Bphi - gr.Bphi.mean(axis=0)
+    Br = gr.Br - (gr.Br * w_phi).sum(axis=0)
+    Bp = gr.Bphi - (gr.Bphi * w_phi).sum(axis=0)
     
     # def de tau
     dvphi = np.gradient(gr.vphi, r, axis=2)
@@ -95,13 +95,14 @@ for j in range(1,len(files)+1):
     RS = (prodR * np.sin(th)[:,None] * w_theta[:,None]).sum(axis=0) * r # integrated flux over a spherical surface
 
     # Maxwell
-    prodM = -(Br * Bp * w_phi).sum(axis=0)
+    #prodM = -(Br * Bp * w_phi).sum(axis=0)
+    prodM = -(gr.Br * gr.Bphi * w_phi).sum(axis=0)
     MS = (prodM * np.sin(th)[:,None] * w_theta[:,None]).sum(axis=0) * r  
     
     # Moy champ mag
-    Br_mean = (gr.Br * w_phi).sum(axis=0)
-    Bphi_mean = (gr.Bphi * w_phi).sum(axis=0)
-    MS1 = -(Br_mean * Bphi_mean * np.sin(th)[:,None] * w_theta[:,None]).sum(axis = 0) * r
+    #Br_mean = (gr.Br * w_phi).sum(axis=0)
+    #Bphi_mean = (gr.Bphi * w_phi).sum(axis=0)
+    #MS1 = -(Br_mean * Bphi_mean * np.sin(th)[:,None] * w_theta[:,None]).sum(axis = 0) * r
     
     # Ecoulement meridional
     vr_mean = (gr.vr * w_phi).sum(axis=0)
