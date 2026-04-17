@@ -85,9 +85,6 @@ for j in range(1,len(files)+1):
     
     # def de tau
     dvphi = np.gradient(gr.vphi, r, axis=2)
-    print(np.shape(gr.vr), np.shape(phi))
-    dvr = 1/(r[None,None,:]*np.sin(th)[None,:,None])*np.gradient(gr.vr,phi,axis = 0)
-    print(dvr)
     tau_rphi = dvphi - gr.vphi/r[None,None,:] 
 
     # Reynolds
@@ -113,7 +110,7 @@ for j in range(1,len(files)+1):
     Visc = - (mean_tau * np.sin(th)[:,None] * w_theta[:,None]).sum(axis=0) * r
     
     # moment angulaire
-    l = (r[None,None,:]*np.sin(th)[:,None]*gr.vphi).mean(axis = (0,1))
+    l = (r[None,None,:]*np.sin(th)[:,None]*gr.vphi).mean(axis = (0,1)) * 2 * np.pi * r**2
     l_snap.append(l)
     
     Visc_snap.append(Visc)
