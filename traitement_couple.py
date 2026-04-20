@@ -55,7 +55,7 @@ om = 1/Ek
 
 
 ts = MagicTs(datadir = a, field='e_kin', all=True) 	# verification que le regime ne change pas dans le temps pour pouvoir faire l'integration en temps 
-print(np.std(ts.ekin_pol_axi)/np.min(ts.ekin_pol_axi))
+print(np.std(ts.ekin_pol_axi)/np.mean(ts.ekin_pol_axi))
 result = adfuller(ts.ekin_pol_axi)
 print(f"p-value : {result[1]}")
 slope, intercept, r, p, se = stats.linregress(ts.time, ts.ekin_pol_axi)
