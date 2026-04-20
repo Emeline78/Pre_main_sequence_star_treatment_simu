@@ -72,6 +72,7 @@ all_dirs = (list(Path("/travail/dynconv/multiscale_dyno/anelasticCouette/gr").gl
 
 for path in all_dirs:
 	a = str(path)
+	print(a)
 	stp = MagicSetup(datadir = a)
 
 	n = stp.polind
