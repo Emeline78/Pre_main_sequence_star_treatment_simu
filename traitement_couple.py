@@ -54,10 +54,13 @@ om = 1/Ek
 
 
 ts = MagicTs(datadir = a, field='e_kin', all=True) 	# verification que le regime ne change pas dans le temps pour pouvoir faire l'integration en temps 
-print(np.std(ts.ekin_pol_axi)/np.mean(ts.ekin_pol_axi))
-result = adfuller(ts.ekin_pol_axi)
-print(f"p-value : {result[1]}")
+CV = np.std(ts.ekin_pol) / np.mean(ts.ekin_pol)
+p_adf = adfuller(ts.ekin_pol)[1]
 
+if CV < 0.2 and p_adf < 0.05:
+    print("ekin_pol stationnaire, hypothèse constante valide")
+else:
+    print(f"Attention : CV={CV:.1%}, ADF p={p_adf:.3f}")
 
 files = glob.glob(os.path.join(a,'G_[0-9]*.rot01'))
 files.sort(key=lambda f: int(os.path.basename(f).split('_')[1].split('.')[0]))
@@ -208,6 +211,16 @@ plt.ylabel("Radial flux of angular momentum")
 plt.show()
 """
 
-print(np.std(F)/np.mean(F))
-result = adfuller(F)
-print(f"p-value : {result[1]}")
+print("=== Test constance du flux F(r) ===")
+CV_F = np.std(F) / np.abs(np.mean(F))
+slope, _, _, p_slope, _ = stats.linregress(r, F)
+ecart_max = np.max(np.abs((F - np.mean(F)) / np.mean(F)))
+
+print(f"CV spatial      : {CV_F:.2%}")
+print(f"Écart max/moy   : {ecart_max:.2%}")
+print(f"Pente dF/dr     : {slope:.2e}, p-value : {p_slope:.4f}")
+
+if CV_F < 0.2 and p_slope > 0.05:
+    print(" F constant en r : hypothèse de stationnarité valide")
+else:
+    print(" F varie en r : état non stationnaire ou déséquilibre local")
