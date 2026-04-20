@@ -78,8 +78,8 @@ def make_case_name(path):
 		if part in ["gr", "gr2", "gr_gr2_Louis"]:
 			relevant_parts = parts[i:]
 			break
-		else:
-			raise ValueError("No valid config folder found in path")
+	else:
+		raise ValueError("No valid config folder found in path")
 
 	# enlever slash final implicite et reconstruire
 	case_name = "_".join(relevant_parts)
