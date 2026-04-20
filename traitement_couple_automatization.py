@@ -69,7 +69,7 @@ def extract_params(path):
 
 	return params
 
-def make_case_name(params):
+def make_case_name(path):
 	p = Path(path)
 	parts = list(p.parts)
 
@@ -107,7 +107,7 @@ for path in all_dirs:
 	a = str(path)
 	print(a)
 	params = extract_params(path)
-	case_name = make_case_name(params)
+	case_name = make_case_name(path)
 	snap_file = Path(snap_dir) / f"{case_name}.npz"
 	
 	if snap_file.exists():
