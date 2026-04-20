@@ -200,5 +200,5 @@ plt.xlabel("r")
 plt.ylabel("Radial flux of angular momentum")
 plt.show()
 
-print("Relative variation:", (F.max() - F.min()) / np.mean(F))
+print(np.std(F)/np.mean(F))
 
