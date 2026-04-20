@@ -50,7 +50,7 @@ g1 = stp.g1
 g2 = stp.g2
 om = 1/Ek
 
-ts = MagicTs(datadir = a, field='e_kin', all=True, iplot = False) 	# verification que le regime ne change pas dans le temps pour pouvoir faire l'integration en temps 
+ts = MagicTs(datadir = a, field='e_kin', all=True) 	# verification que le regime ne change pas dans le temps pour pouvoir faire l'integration en temps 
 print("Relative variation:", (ts.ekin_tot.max() - ts.ekin_tot.min()) / np.mean(ts.ekin_tot))
 
 files = glob.glob(os.path.join(a,'G_[0-9]*.rot01'))
