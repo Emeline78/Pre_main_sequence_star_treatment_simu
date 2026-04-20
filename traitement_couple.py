@@ -179,26 +179,28 @@ MS1 = MS1 / t_total * L * B0car / mu0 * 2 * np.pi * r**2
 Visc = Visc / t_total * rho * L**3 / tau**2 * 2 * np.pi * r**2
 MC = MC / t_total * rho * L**3 / tau**2 * 2 * np.pi * r**2
 
-
+F = (MC + MS + RS + Visc + MS1)
 plt.figure()
 plt.plot(r,RS, label = "Reynolds stress")  
 plt.plot(r,MC,label ="Meridional circulation with Coriolis part") 
 plt.plot(r,Visc, label = "Viscous stress") 
 plt.plot(r, MS, label ="Maxwell stress")
 plt.plot(r,MS1, label ="Contribution from mean of magnetic field")
+plt.plot(r,F,"k", linewidth=3,label = "total flux")
 #plt.plot(r,np.mean(np.gradient(l_snap,times, axis = 0),axis = 0)* L**2 / tau**2 * rho, label ="rho dl/dt")
 plt.xlabel("r") 
 plt.ylabel("Stresses") 
 plt.legend() 
 plt.show()
 
-F = (MC + MS + RS + Visc + MS1)
+"""
 plt.figure()
 plt.plot(r,F)
 plt.plot(r,r**2*F)
 plt.xlabel("r")
 plt.ylabel("Radial flux of angular momentum")
 plt.show()
+"""
 
 print(np.std(F)/np.mean(F))
 
