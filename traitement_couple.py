@@ -103,26 +103,26 @@ for j in range(1,len(files)+1):
 
     # Reynolds
     prodR = (vr * vp * w_phi).sum(axis=0)	# flux
-    RS = (prodR * np.sin(th)[:,None] * w_theta[:,None]).sum(axis=0) * r # integrated flux over a spherical surface
+    RS = (prodR * np.sin(th)[:,None] * w_theta[:,None]).sum(axis=0) * r * 2 * np.pi * r**2 # integrated flux over a spherical surface
 
     # Maxwell
     prodM = -(Br * Bp * w_phi).sum(axis=0)
     #prodM = -(gr.Br * gr.Bphi * w_phi).sum(axis=0)
-    MS = (prodM * np.sin(th)[:,None] * w_theta[:,None]).sum(axis=0) * r  
+    MS = (prodM * np.sin(th)[:,None] * w_theta[:,None]).sum(axis=0) * r  * 2 * np.pi * r**2
     
     # Moy champ mag
     Br_mean = (gr.Br * w_phi).sum(axis=0)
     Bphi_mean = (gr.Bphi * w_phi).sum(axis=0)
-    MS1 = -(Br_mean * Bphi_mean * np.sin(th)[:,None] * w_theta[:,None]).sum(axis = 0) * r
+    MS1 = -(Br_mean * Bphi_mean * np.sin(th)[:,None] * w_theta[:,None]).sum(axis = 0) * r* 2 * np.pi * r**2
     
     # Ecoulement meridional
     vr_mean = (gr.vr * w_phi).sum(axis=0)
     vphi_mean = (gr.vphi * w_phi).sum(axis=0)
-    MC = (vr_mean * (vphi_mean + r[None,:] * np.sin(th)[:,None] * 1/Ek) * np.sin(th)[:,None] * w_theta[:,None]).sum(axis = 0) * r
+    MC = (vr_mean * (vphi_mean + r[None,:] * np.sin(th)[:,None] * 1/Ek) * np.sin(th)[:,None] * w_theta[:,None]).sum(axis = 0) * r* 2 * np.pi * r**2
     
     # Viscosite
     mean_tau = (tau_rphi * w_phi).sum(axis = 0)
-    Visc = - (mean_tau * np.sin(th)[:,None] * w_theta[:,None]).sum(axis=0) * r
+    Visc = - (mean_tau * np.sin(th)[:,None] * w_theta[:,None]).sum(axis=0) * r * 2 * np.pi * r**2
     #Visc = - (r[None,:]**2 * np.sin(th)[:,None] * np.gradient(vphi_mean/r[None,:],r,axis =1)* w_theta[:,None]).sum(axis=0)
     
     # moment angulaire
@@ -183,11 +183,11 @@ B0car = eta * om * mu0 	* rho0
 #print(f"rho(ri)/rho(ro) = {rho.max()/rho.min():.4f}")
 #print(f"attendu         = {np.exp(Nrho):.4f}")
 
-RS = RS / t_total * rho * L**3 / tau**2 * 2 * np.pi * r**2
-MS = MS / t_total * L * B0car / mu0 * 2 * np.pi * r**2
-MS1 = MS1 / t_total * L * B0car / mu0 * 2 * np.pi * r**2
-Visc = Visc / t_total * rho * L**3 / tau**2 * 2 * np.pi * r**2
-MC = MC / t_total * rho * L**3 / tau**2 * 2 * np.pi * r**2
+RS = RS / t_total * rho * L**3 / tau**2 
+MS = MS / t_total * L * B0car / mu0 
+MS1 = MS1 / t_total * L * B0car / mu0 
+Visc = Visc / t_total * rho * L**3 / tau**2 
+MC = MC / t_total * rho * L**3 / tau**2 
 
 F = (MC + MS + RS + Visc + MS1)
 plt.figure()
@@ -225,3 +225,28 @@ if CV_F < 0.2 and p_slope > 0.05:
     print(" F constant en r : hypothèse de stationnarité valide")
 else:
     print(" F varie en r : état non stationnaire ou déséquilibre local")
+    
+# Calculer F pour chaque snapshot individuellement
+F_snaps = RS_snap * rho * L**3 / tau**2  + MS_snap * L * B0car / mu0 + MS1_snap * L * B0car / mu0 + Visc_snap * rho * L**3 / tau**2  + MC_snap * rho * L**3 / tau**2 
+
+
+# Moyenne et écart-type sur les snapshots
+F_mean = np.mean(F_snaps, axis=0)
+F_std  = np.std(F_snaps, axis=0)
+F_sem  = F_std / np.sqrt(len(F_snaps))  # erreur sur la moyenne
+
+# Plot avec barres d'erreur
+plt.figure()
+plt.plot(r, F_mean, 'k', linewidth=2, label='F moyen')
+plt.fill_between(r, F_mean - F_sem, F_mean + F_sem, alpha=0.3, label='±1 SEM')
+plt.fill_between(r, F_mean - F_std, F_mean + F_std, alpha=0.15, label='±1 STD')
+plt.axhline(np.mean(F_mean), color='r', linestyle='--', label='constante de référence')
+plt.xlabel('r')
+plt.ylabel('F(r)')
+plt.legend()
+plt.show()
+
+# Test : les variations de F sont-elles dans les barres d'erreur ?
+ratio = np.abs(F_mean - np.mean(F_mean)) / F_sem
+print(f"Max |F - <F>| / SEM = {ratio.max():.2f}")
+# Si < 2 → variations compatibles avec le bruit statistique → F "constant"
