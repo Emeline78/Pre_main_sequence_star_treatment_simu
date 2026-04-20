@@ -88,7 +88,7 @@ for path in all_dirs:
 	case_name = make_case_name(params)
 	snap_file = snap_dir / f"{case_name}.npz"
 
-	ts = MagicTs(datadir = a, field='e_kin', all=True) 	# verification que le regime ne change pas dans le temps pour pouvoir faire l'integration en temps 
+	#ts = MagicTs(datadir = a, field='e_kin', all=True) 	# verification que le regime ne change pas dans le temps pour pouvoir faire l'integration en temps 
 
 	files = glob.glob(os.path.join(a,'G_[0-9]*.rot01'))
 	files.sort(key=lambda f: int(os.path.basename(f).split('_')[1].split('.')[0]))
