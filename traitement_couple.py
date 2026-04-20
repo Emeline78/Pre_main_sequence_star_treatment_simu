@@ -34,8 +34,8 @@ from magic import *
 mu0 = 4*np.pi*1e-7
 
 #a = input("directory : ")
-a = "/travail/dynconv/multiscale_dyno/anelasticCouette/gr/Nr2p5_Pm4/ra_8e6/om50/"
-#a = "/travail/dynconv/multiscale_dyno/anelasticCouette/gr2/xi_p35_pm4/ra_5e6/om50/"
+#a = "/travail/dynconv/multiscale_dyno/anelasticCouette/gr/Nr2p5_Pm4/ra_8e6/om50/"
+a = "/travail/dynconv/multiscale_dyno/anelasticCouette/gr2/xi_p35_pm4/ra_5e6/om50/"
 #a = "/travail/dynconv/multiscale_dyno/anelasticCouette/gr_gr2_Louis/ra_1p5e7"
 #a = "/travail/dynconv/multiscale_dyno/anelasticCouette/gr2/xi_p2_pm4/ra_1e6"
 stp = MagicSetup(datadir = a)
@@ -111,8 +111,8 @@ for j in range(1,len(files)+1):
     
     # Viscosite
     mean_tau = (tau_rphi * w_phi).sum(axis = 0)
-    #Visc = - (mean_tau * np.sin(th)[:,None] * w_theta[:,None]).sum(axis=0) * r
-    Visc = - (r[None,:]**2 * np.sin(th)[:,None] * np.gradient(vphi_mean/r[None,:],r,axis =1)* w_theta[:,None]).sum(axis=0)
+    Visc = - (mean_tau * np.sin(th)[:,None] * w_theta[:,None]).sum(axis=0) * r
+    #Visc = - (r[None,:]**2 * np.sin(th)[:,None] * np.gradient(vphi_mean/r[None,:],r,axis =1)* w_theta[:,None]).sum(axis=0)
     
     # moment angulaire
     l = (r[None,None,:]*np.sin(th)[:,None]**2*gr.vphi).mean(axis = (0,1)) * 2 * np.pi * r**2
@@ -185,7 +185,7 @@ plt.plot(r,MC,label ="Meridional circulation with Coriolis part")
 plt.plot(r,Visc, label = "Viscous stress") 
 plt.plot(r, MS, label ="Maxwell stress")
 plt.plot(r,MS1, label ="Contribution from mean of magnetic field")
-plt.plot(r,np.mean(np.gradient(l_snap,times, axis = 0),axis = 0)* L**2 / tau**2 * rho, label ="rho dl/dt")
+#plt.plot(r,np.mean(np.gradient(l_snap,times, axis = 0),axis = 0)* L**2 / tau**2 * rho, label ="rho dl/dt")
 plt.xlabel("r") 
 plt.ylabel("Stresses") 
 plt.legend() 
