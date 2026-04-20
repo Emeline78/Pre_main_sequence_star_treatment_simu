@@ -47,9 +47,9 @@ def extract_params(path):
 		if p in ["gr", "gr2", "gr_gr2_Louis"]:
 			params["config"] = p
 
-		elif p.startswith("Nr"):
-			val = p[2:] 
-			params["Nr"] = parse_p_number(val)
+		match_nr = re.search(r'Nr([0-9p]+)', p)
+		if match_nr:
+			params["Nr"] = parse_p_number(match_nr.group(1))
 
 		elif p.startswith("xi"):
 			match_xi = re.search(r'xi[_]?([p\d]+)', p)
