@@ -203,6 +203,9 @@ plt.ylabel("Stresses")
 plt.legend() 
 plt.show()
 
+variation = (np.max(F)-np.min(F))/np.abs(np.mean(F))
+print("variation relative =", variation)
+
 """
 plt.figure()
 plt.plot(r,F)
@@ -210,14 +213,7 @@ plt.plot(r,r**2*F)
 plt.xlabel("r")
 plt.ylabel("Radial flux of angular momentum")
 plt.show()
-"""
 
-mask = (r > r[-5]) & (r < r[5])
-dFdr = np.gradient(F,r)
-print(dFdr,dFdr[mask])
-print(np.max(np.abs(dFdr[mask])))
-
-"""  
 # Calculer F pour chaque snapshot individuellement
 F_snaps = RS_snap * rho * L**3 / tau**2  + MS_snap * L * B0car / mu0 + MS1_snap * L * B0car / mu0 + Visc_snap * rho * L**3 / tau**2  + MC_snap * rho * L**3 / tau**2 
 
