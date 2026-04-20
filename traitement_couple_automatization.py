@@ -47,25 +47,25 @@ def extract_params(path):
 		if p in ["gr", "gr2", "gr_gr2_Louis"]:
 			params["config"] = p
 
-	elif p.startswith("Nr"):
-		val = p[2:] 
-		params["Nr"] = parse_p_number(val)
+		elif p.startswith("Nr"):
+			val = p[2:] 
+			params["Nr"] = parse_p_number(val)
 
-	elif p.startswith("xi"):
-		match_xi = re.search(r'xi[_]?([p\d]+)', p)
-		if match_xi:
-			params["xi"] = parse_p_number(match_xi.group(1))
-			
-		match_pm = re.search(r'pm(\d+)', p)
-		if match_pm:
-			params["Pm"] = int(match_pm.group(1))
+		elif p.startswith("xi"):
+			match_xi = re.search(r'xi[_]?([p\d]+)', p)
+			if match_xi:
+				params["xi"] = parse_p_number(match_xi.group(1))
+				
+			match_pm = re.search(r'pm(\d+)', p)
+			if match_pm:
+				params["Pm"] = int(match_pm.group(1))
 
-	elif p.startswith("ra"):
-		val = p.split("_")[1]  # ex: 5e6
-		params["ra"] = float(val)
+		elif p.startswith("ra"):
+			val = p.split("_")[1]  # ex: 5e6
+			params["ra"] = float(val)
 
-	elif p.startswith("om"):
-		params["om"] = int(p[2:])
+		elif p.startswith("om"):
+			params["om"] = int(p[2:])
 
 	return params
 
