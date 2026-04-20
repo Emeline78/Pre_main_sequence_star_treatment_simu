@@ -214,6 +214,7 @@ plt.show()
 
 mask = (r > r[5]) & (r < r[-5])
 dFdr = np.gradient(F,r)
+print(dFdr,dFdr[mask])
 print(np.max(np.abs(dFdr[mask])))
 
 """  
