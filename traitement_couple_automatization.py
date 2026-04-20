@@ -87,7 +87,7 @@ for path in all_dirs:
 	
 	params = extract_params(path)
 	case_name = make_case_name(params)
-	snap_file = snap_dir / f"{case_name}.npz"
+	snap_file = snap_dir + "/" + f"{case_name}.npz"
 
 	#ts = MagicTs(datadir = a, field='e_kin', all=True) 	# verification que le regime ne change pas dans le temps pour pouvoir faire l'integration en temps 
 
