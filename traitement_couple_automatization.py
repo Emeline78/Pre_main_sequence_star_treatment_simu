@@ -62,7 +62,7 @@ def extract_params(path):
 
 		elif p.startswith("ra"):
 			val = p.split("_")[1]  # ex: 5e6
-			params["ra"] = float(val)
+			params["ra"] = float(parse_p_number(val))
 
 		elif p.startswith("om"):
 			params["om"] = int(p[2:])
@@ -230,10 +230,11 @@ for path in all_dirs:
 	MC = MC / t_total * rho * L**3 / tau**2 * 2 * np.pi * r**2
 
 	params = extract_params(path)
-	res = pd.DataFrame({"r": r,"RS": RS, "MC": MC, "MS": MS, "Visc": Visc})
+	res = pd.DataFrame({"r": r,"RS": RS, "MC": MC, "MS": MS, "Visc": Visc,"name": str(case_name)})
 	for key, value in params.items():
         	res[key] = value
 	liste.append(res)
-	
+
+df_final.groupby("name")
 df_final = pd.concat(liste, ignore_index=True)
 df_final.to_parquet("transport_profiles.parquet")
