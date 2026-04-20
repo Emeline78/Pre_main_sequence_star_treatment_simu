@@ -9,6 +9,7 @@ matplotlib.interactive(True)
 from magic.libmagic import anelprof
 from matplotlib.ticker import ScalarFormatter
 from statsmodels.tsa.stattools import adfuller
+from scipy import stats
 
 formatter = ScalarFormatter(useMathText=True)
 formatter.set_scientific(True)
