@@ -51,7 +51,7 @@ g2 = stp.g2
 om = 1/Ek
 
 ts = MagicTs(datadir = a, field='e_kin', all=True) 	# verification que le regime ne change pas dans le temps pour pouvoir faire l'integration en temps 
-print(np.std(ts.ekin_pol)/np.min(ts.ekin_pol))
+print(np.std(ts.ekin_pol_axi)/np.min(ts.ekin_pol_axi))
 
 files = glob.glob(os.path.join(a,'G_[0-9]*.rot01'))
 files.sort(key=lambda f: int(os.path.basename(f).split('_')[1].split('.')[0]))
@@ -195,6 +195,7 @@ plt.show()
 F = (MC + MS + RS + Visc + MS1)
 plt.figure()
 plt.plot(r,F)
+plt.plot(r,r**2*F)
 plt.xlabel("r")
 plt.ylabel("Radial flux of angular momentum")
 plt.show()
