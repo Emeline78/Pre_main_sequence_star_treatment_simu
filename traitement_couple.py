@@ -34,8 +34,8 @@ from magic import *
 mu0 = 4*np.pi*1e-7
 
 #a = input("directory : ")
-#a = "/travail/dynconv/multiscale_dyno/anelasticCouette/gr/Nr2p5_Pm4/ra_8e6/om50/"
-a = "/travail/dynconv/multiscale_dyno/anelasticCouette/gr2/xi_p35_pm4/ra_5e6/om50/"
+a = "/travail/dynconv/multiscale_dyno/anelasticCouette/gr/Nr2p5_Pm4/ra_8e6/om50/"
+#a = "/travail/dynconv/multiscale_dyno/anelasticCouette/gr2/xi_p35_pm4/ra_5e6/om50/"
 #a = "/travail/dynconv/multiscale_dyno/anelasticCouette/gr_gr2_Louis/ra_1p5e7"
 #a = "/travail/dynconv/multiscale_dyno/anelasticCouette/gr2/xi_p2_pm4/ra_1e6"
 stp = MagicSetup(datadir = a)
@@ -50,7 +50,8 @@ g1 = stp.g1
 g2 = stp.g2
 om = 1/Ek
 
-ts = MagicTs(datadir = a, field='e_kin', all=True) 	# verification que le regime ne change pas dans le temps pour pouvoir faire l'integration en temps 
+ts = MagicTs(datadir = a, field='e_kin', all=True, iplot = False) 	# verification que le regime ne change pas dans le temps pour pouvoir faire l'integration en temps 
+print("Relative variation:", (ts.ekin_tot.max() - ts.ekin_tot.min()) / np.mean(ts.ekin_tot))
 
 files = glob.glob(os.path.join(a,'G_[0-9]*.rot01'))
 files.sort(key=lambda f: int(os.path.basename(f).split('_')[1].split('.')[0]))
