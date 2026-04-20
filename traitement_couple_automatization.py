@@ -54,8 +54,7 @@ def make_case_name(params):
 
 
 def save_snapshots(save_dir, case_name, r, times, RS, MS, MC, Visc):
-	save_dir.mkdir(parents=True, exist_ok=True)
-	np.savez(save_dir / f"{case_name}.npz",r=r,times=times,RS=RS,MS=MS,MC=MC,Visc=Visc)
+	np.savez(save_dir + "/"+ f"{case_name}.npz",r=r,times=times,RS=RS,MS=MS,MC=MC,Visc=Visc)
 
 def load_snapshots(file):
 	data = np.load(file)
