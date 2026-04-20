@@ -212,41 +212,40 @@ plt.ylabel("Radial flux of angular momentum")
 plt.show()
 """
 
-print("=== Test constance du flux F(r) ===")
-CV_F = np.std(F) / np.abs(np.mean(F))
-slope, _, _, p_slope, _ = stats.linregress(r, F)
-ecart_max = np.max(np.abs((F - np.mean(F)) / np.mean(F)))
+mask = (r > r[5]) & (r < r[-5])
+dFdr = np.gradient(F,r)
+print(np.max(np.abs(dFdr[mask])))
 
-print(f"CV spatial      : {CV_F:.2%}")
-print(f"Écart max/moy   : {ecart_max:.2%}")
-print(f"Pente dF/dr     : {slope:.2e}, p-value : {p_slope:.4f}")
-
-if CV_F < 0.2 and p_slope > 0.05:
-    print(" F constant en r : hypothèse de stationnarité valide")
-else:
-    print(" F varie en r : état non stationnaire ou déséquilibre local")
-    
+"""  
 # Calculer F pour chaque snapshot individuellement
 F_snaps = RS_snap * rho * L**3 / tau**2  + MS_snap * L * B0car / mu0 + MS1_snap * L * B0car / mu0 + Visc_snap * rho * L**3 / tau**2  + MC_snap * rho * L**3 / tau**2 
-
 
 # Moyenne et écart-type sur les snapshots
 F_mean = np.mean(F_snaps, axis=0)
 F_std  = np.std(F_snaps, axis=0)
 F_sem  = F_std / np.sqrt(len(F_snaps))  # erreur sur la moyenne
 
-# Plot avec barres d'erreur
+ratio = np.abs(F_mean - np.mean(F_mean)) / F_sem
+print(f"Max |F - <F>| / SEM = {ratio.max():.2f}")
+
+mask = ratio > 2
+print(f"r min = {r[mask].min():.3f}, r max = {r[mask].max():.3f}")
+print(f"Nombre de points : {mask.sum()} / {len(r)}")
+
 plt.figure()
-plt.plot(r, F_mean, 'k', linewidth=2, label='F moyen')
-plt.fill_between(r, F_mean - F_sem, F_mean + F_sem, alpha=0.3, label='±1 SEM')
-plt.fill_between(r, F_mean - F_std, F_mean + F_std, alpha=0.15, label='±1 STD')
-plt.axhline(np.mean(F_mean), color='r', linestyle='--', label='constante de référence')
+plt.plot(r, ratio)
+plt.axhline(2, color='r', linestyle='--', label='seuil 2σ')
 plt.xlabel('r')
-plt.ylabel('F(r)')
+plt.ylabel('|F - <F>| / SEM')
 plt.legend()
 plt.show()
 
-# Test : les variations de F sont-elles dans les barres d'erreur ?
-ratio = np.abs(F_mean - np.mean(F_mean)) / F_sem
-print(f"Max |F - <F>| / SEM = {ratio.max():.2f}")
-# Si < 2 → variations compatibles avec le bruit statistique → F "constant"
+# Si < 2, F "constant"
+
+mask_bulk = r > 0.42  # exclure la région problématique
+F_bulk    = F_mean[mask_bulk]
+F_sem_bulk = F_sem[mask_bulk]
+ratio_bulk = np.abs(F_bulk - np.mean(F_bulk)) / F_sem_bulk
+print(f"Max ratio bulk : {ratio_bulk.max():.2f}")
+"""
+
