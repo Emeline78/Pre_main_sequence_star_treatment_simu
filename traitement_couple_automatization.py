@@ -56,9 +56,9 @@ def extract_params(path):
 		if match_xi:
 			params["xi"] = parse_p_number(match_xi.group(1))
 			
-	match_pm = re.search(r'pm(\d+)', p)
-	if match_pm:
-		params["Pm"] = int(match_pm.group(1))
+		match_pm = re.search(r'pm(\d+)', p)
+		if match_pm:
+			params["Pm"] = int(match_pm.group(1))
 
 	elif p.startswith("ra"):
 		val = p.split("_")[1]  # ex: 5e6
