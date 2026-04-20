@@ -116,7 +116,15 @@ for path in all_dirs:
 		r, times, RS_snap, MS_snap, MC_snap, Visc_snap = \
 		load_snapshots(snap_file)
 		stp = MagicSetup(datadir=a)
+		n = stp.polind
+		Pm = stp.prmag
+		ki = stp.radratio
+		Nrho = stp.strat 
 		Ek = stp.ek
+		g0 = stp.g0
+		g1 = stp.g1
+		g2 = stp.g2
+		om = 1/Ek
 	else : 	
 		stp = MagicSetup(datadir = a)
 		
