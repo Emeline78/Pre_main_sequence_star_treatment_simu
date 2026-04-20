@@ -32,25 +32,59 @@ matplotlib.rcParams['xtick.direction']='in'
 matplotlib.rcParams['xtick.top']='True'
 matplotlib.rcParams['figure.figsize']= [8, 6]
 
+def parse_p_number(s):
+	if 'p' in s:
+		if s.startswith('p'):
+	    		return float('0.' + s[1:])
+		else:
+			return float(s.replace('p', '.'))
+	return float(s)
+
 def extract_params(path):
-	match = re.findall(r'(gr2?|gr_gr2_Louis|Nr\d+|xi\d+|ra\d+|om\d+)', str(path))
+	parts = Path(path).parts
 	params = {}
-	for m in match:
-		if m.startswith("gr"):
-			params["config"] = m
-		elif m.startswith("Nr"):
-			params["Nr"] = int(m[2:])
-		elif m.startswith("xi"):
-			params["xi"] = int(m[2:])
-		elif m.startswith("ra"):
-			params["ra"] = int(m[2:])
-		elif m.startswith("om"):
-			params["Ro_sh"] = int(m[2:])/Ek
+	for p in parts:
+		if p in ["gr", "gr2", "gr_gr2_Louis"]:
+			params["config"] = p
+
+	elif p.startswith("Nr"):
+		val = p[2:] 
+		params["Nr"] = parse_p_number(val)
+
+	elif p.startswith("xi"):
+		match_xi = re.search(r'xi[_]?([p\d]+)', p)
+		if match_xi:
+			params["xi"] = parse_p_number(match_xi.group(1))
+			
+	match_pm = re.search(r'pm(\d+)', p)
+	if match_pm:
+		params["Pm"] = int(match_pm.group(1))
+
+	elif p.startswith("ra"):
+		val = p.split("_")[1]  # ex: 5e6
+		params["ra"] = float(val)
+
+	elif p.startswith("om"):
+		params["om"] = int(p[2:])
+
 	return params
 
 def make_case_name(params):
-	keys = ["config","Nr","xi","ra","om"]
-	return "_".join(f"{k}{params[k]}" for k in keys if k in params)
+	p = Path(path)
+	parts = list(p.parts)
+
+	# trouver l'index de "gr", "gr2" ou "gr_gr2_Louis"
+	for i, part in enumerate(parts):
+		if part in ["gr", "gr2", "gr_gr2_Louis"]:
+			relevant_parts = parts[i:]
+			break
+		else:
+			raise ValueError("No valid config folder found in path")
+
+	# enlever slash final implicite et reconstruire
+	case_name = "_".join(relevant_parts)
+
+	return case_name
 
 
 def save_snapshots(save_dir, case_name, r, times, RS, MS, MC, Visc):
@@ -72,93 +106,101 @@ all_dirs = (list(Path("/travail/dynconv/multiscale_dyno/anelasticCouette/gr").gl
 for path in all_dirs:
 	a = str(path)
 	print(a)
-	stp = MagicSetup(datadir = a)
-
-	n = stp.polind
-	Pm = stp.prmag
-	ki = stp.radratio
-	Nrho = stp.strat 
-	Ek = stp.ek
-	g0 = stp.g0
-	g1 = stp.g1
-	g2 = stp.g2
-	om = 1/Ek
-	
 	params = extract_params(path)
 	case_name = make_case_name(params)
-	snap_file = snap_dir + "/" + f"{case_name}.npz"
-
-	#ts = MagicTs(datadir = a, field='e_kin', all=True) 	# verification que le regime ne change pas dans le temps pour pouvoir faire l'integration en temps 
-
-	files = glob.glob(os.path.join(a,'G_[0-9]*.rot01'))
-	files.sort(key=lambda f: int(os.path.basename(f).split('_')[1].split('.')[0]))
-
-	times = []
-	RS_snap = []
-	MS_snap = []
-	Visc_snap = []
-	MC_snap = []
-	l_snap = []
-
-	# pour les moyennes sur phi j'aurais juste pu faire mean vu que c'est espace regulierement
-	for j in range(1,len(files)+1): 
-		gr = MagicGraph(datadir=a,tag='rot01',ivar = j)
-		times.append(gr.time)
-
-		if j == 1:
-			r = gr.radius
-			th = np.linspace(0,np.pi,gr.ntheta)
-			phi = np.linspace(0,2*np.pi,gr.nphi-1)
-
-			dphi = 2*np.pi/(gr.nphi-2)
-			dtheta = np.pi/(gr.ntheta-1)
-
-			w_theta = dtheta * np.sin(th)
-			w_phi = dphi / (2* np.pi)
-
-		# fluctuations
-		vr = gr.vr - gr.vr.mean(axis=0)
-		vp = gr.vphi - gr.vphi.mean(axis=0)
-
-		# def de tau
-		dvphi = np.gradient(gr.vphi, r, axis=2)
-		tau_rphi = dvphi - gr.vphi/r[None,None,:] 
-
-		# Reynolds
-		prodR = (vr * vp * w_phi).sum(axis=0)	# flux
-		RS = (prodR * np.sin(th)[:,None] * w_theta[:,None]).sum(axis=0) * r # integrated flux over a spherical surface
-
-		# Maxwell
-		prodM = -(gr.Br * gr.Bphi * w_phi).sum(axis=0)
-		MS = (prodM * np.sin(th)[:,None] * w_theta[:,None]).sum(axis=0) * r  
-
-		# Ecoulement meridional
-		vr_mean = (gr.vr * w_phi).sum(axis=0)
-		vphi_mean = (gr.vphi * w_phi).sum(axis=0)
-		MC = (vr_mean * (vphi_mean + r[None,:] * np.sin(th)[:,None] * 1/Ek) * np.sin(th)[:,None] * w_theta[:,None]).sum(axis = 0) * r
-
-		# Viscosite
-		mean_tau = (tau_rphi * w_phi).sum(axis = 0)
-		Visc = - (mean_tau * np.sin(th)[:,None] * w_theta[:,None]).sum(axis=0) * r
-
-		# moment angulaire
-		l = (r[None,None,:]*np.sin(th)[:,None]**2*gr.vphi).mean(axis = (0,1)) * 2 * np.pi * r**2
-		l_snap.append(l)
-
-		Visc_snap.append(Visc)
-		RS_snap.append(RS)
-		MS_snap.append(MS)
-		MC_snap.append(MC)
-
-	times = np.array(times)
-
-	RS_snap = np.array(RS_snap)
-	MS_snap = np.array(MS_snap)
-	Visc_snap = np.array(Visc_snap)
-	MC_snap = np.array(MC_snap)
-	l_snap = np.array(l_snap)
+	snap_file = Path(snap_dir) / f"{case_name}.npz"
 	
-	save_snapshots(snap_dir,case_name,r,times,RS_snap,MS_snap,MC_snap,Visc_snap)
+	if snap_file.exists():
+
+		print(f"Loading {case_name}")
+		r, times, RS_snap, MS_snap, MC_snap, Visc_snap = \
+		load_snapshots(snap_file)
+		stp = MagicSetup(datadir=a)
+		Ek = stp.ek
+	else : 	
+		stp = MagicSetup(datadir = a)
+		
+		n = stp.polind
+		Pm = stp.prmag
+		ki = stp.radratio
+		Nrho = stp.strat 
+		Ek = stp.ek
+		g0 = stp.g0
+		g1 = stp.g1
+		g2 = stp.g2
+		om = 1/Ek
+
+		#ts = MagicTs(datadir = a, field='e_kin', all=True) 	# verification que le regime ne change pas dans le temps pour pouvoir faire l'integration en temps 
+
+		files = glob.glob(os.path.join(a,'G_[0-9]*.rot01'))
+		files.sort(key=lambda f: int(os.path.basename(f).split('_')[1].split('.')[0]))
+
+		times = []
+		RS_snap = []
+		MS_snap = []
+		Visc_snap = []
+		MC_snap = []
+		l_snap = []
+
+		# pour les moyennes sur phi j'aurais juste pu faire mean vu que c'est espace regulierement
+		for j in range(1,len(files)+1): 
+			gr = MagicGraph(datadir=a,tag='rot01',ivar = j)
+			times.append(gr.time)
+
+			if j == 1:
+				r = gr.radius
+				th = np.linspace(0,np.pi,gr.ntheta)
+				phi = np.linspace(0,2*np.pi,gr.nphi-1)
+
+				dphi = 2*np.pi/(gr.nphi-2)
+				dtheta = np.pi/(gr.ntheta-1)
+
+				w_theta = dtheta * np.sin(th)
+				w_phi = dphi / (2* np.pi)
+
+			# fluctuations
+			vr = gr.vr - gr.vr.mean(axis=0)
+			vp = gr.vphi - gr.vphi.mean(axis=0)
+
+			# def de tau
+			dvphi = np.gradient(gr.vphi, r, axis=2)
+			tau_rphi = dvphi - gr.vphi/r[None,None,:] 
+
+			# Reynolds
+			prodR = (vr * vp * w_phi).sum(axis=0)	# flux
+			RS = (prodR * np.sin(th)[:,None] * w_theta[:,None]).sum(axis=0) * r # integrated flux over a spherical surface
+
+			# Maxwell
+			prodM = -(gr.Br * gr.Bphi * w_phi).sum(axis=0)
+			MS = (prodM * np.sin(th)[:,None] * w_theta[:,None]).sum(axis=0) * r  
+
+			# Ecoulement meridional
+			vr_mean = (gr.vr * w_phi).sum(axis=0)
+			vphi_mean = (gr.vphi * w_phi).sum(axis=0)
+			MC = (vr_mean * (vphi_mean + r[None,:] * np.sin(th)[:,None] * 1/Ek) * np.sin(th)[:,None] * w_theta[:,None]).sum(axis = 0) * r
+
+			# Viscosite
+			mean_tau = (tau_rphi * w_phi).sum(axis = 0)
+			Visc = - (mean_tau * np.sin(th)[:,None] * w_theta[:,None]).sum(axis=0) * r
+
+			# moment angulaire
+			l = (r[None,None,:]*np.sin(th)[:,None]**2*gr.vphi).mean(axis = (0,1)) * 2 * np.pi * r**2
+			l_snap.append(l)
+
+			Visc_snap.append(Visc)
+			RS_snap.append(RS)
+			MS_snap.append(MS)
+			MC_snap.append(MC)
+
+		times = np.array(times)
+
+		RS_snap = np.array(RS_snap)
+		MS_snap = np.array(MS_snap)
+		Visc_snap = np.array(Visc_snap)
+		MC_snap = np.array(MC_snap)
+		l_snap = np.array(l_snap)
+	
+		save_snapshots(snap_dir,case_name,r,times,RS_snap,MS_snap,MC_snap,Visc_snap)
 
 	t_total = times[-1] - times[0]
 	dt = np.diff(times)
