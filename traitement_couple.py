@@ -112,7 +112,7 @@ for j in range(1,len(files)+1):
     # Viscosite
     mean_tau = (tau_rphi * w_phi).sum(axis = 0)
     #Visc = - (mean_tau * np.sin(th)[:,None] * w_theta[:,None]).sum(axis=0) * r
-    Visc = - r**2 * np.sin(th) * np.gradient(vphi_mean/r[None,:],r,axis =1)
+    Visc = - r[None,:]**2 * np.sin(th)[:,None] * np.gradient(vphi_mean/r[None,:],r,axis =1)
     
     # moment angulaire
     l = (r[None,None,:]*np.sin(th)[:,None]**2*gr.vphi).mean(axis = (0,1)) * 2 * np.pi * r**2
