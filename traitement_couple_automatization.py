@@ -59,14 +59,14 @@ def extract_params(path):
 				
 			match_pm = re.search(r'pm(\d+)', p)
 			if match_pm:
-				params["Pm"] = int(match_pm.group(1))
+				params["Pm"] = float(match_pm.group(1))
 
 		elif p.startswith("ra"):
 			val = p.split("_")[1]  # ex: 5e6
 			params["ra"] = float(parse_p_number(val))
 
 		elif p.startswith("om"):
-			params["om"] = int(p[2:])
+			params["om"] = float(p[2:])
 
 	return params
 
@@ -169,7 +169,6 @@ for path in all_dirs:
 		MS_snap = []
 		Visc_snap = []
 		MC_snap = []
-		l_snap = []
 
 		# pour les moyennes sur phi j'aurais juste pu faire mean vu que c'est espace regulierement
 		for j in range(1,len(files)+1): 
@@ -212,10 +211,6 @@ for path in all_dirs:
 			mean_tau = (tau_rphi * w_phi).sum(axis = 0)
 			Visc = - (mean_tau * np.sin(th)[:,None] * w_theta[:,None]).sum(axis=0) * r
 
-			# moment angulaire
-			l = (r[None,None,:]*np.sin(th)[:,None]**2*gr.vphi).mean(axis = (0,1)) * 2 * np.pi * r**2
-			l_snap.append(l)
-
 			Visc_snap.append(Visc)
 			RS_snap.append(RS)
 			MS_snap.append(MS)
@@ -223,11 +218,10 @@ for path in all_dirs:
 
 		times = np.array(times)
 
-		RS_snap = np.array(RS_snap)
-		MS_snap = np.array(MS_snap)
-		Visc_snap = np.array(Visc_snap)
-		MC_snap = np.array(MC_snap)
-		l_snap = np.array(l_snap)
+		RS_snap = np.array(RS_snap) * rho * L**3 / tau**2 * 2 * np.pi * r**2
+		MS_snap = np.array(MS_snap) * L * B0car / mu0 * 2 * np.pi * r**2
+		Visc_snap = np.array(Visc_snap) * rho * L**3 / tau**2 * 2 * np.pi * r**2
+		MC_snap = np.array(MC_snap) * rho * L**3 / tau**2 * 2 * np.pi * r**2
 	
 		save_snapshots(snap_dir,case_name,r,times,RS_snap,MS_snap,MC_snap,Visc_snap)
 
