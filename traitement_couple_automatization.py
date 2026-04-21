@@ -14,6 +14,7 @@ formatter = ScalarFormatter(useMathText=True)
 formatter.set_scientific(True)
 formatter.set_powerlimits((0, 0))
 from pathlib import Path
+from statsmodels.tsa.stattools import adfuller
 
 """
 git add traitement_couple_automatization.py
