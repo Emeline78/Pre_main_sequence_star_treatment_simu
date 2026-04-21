@@ -33,7 +33,7 @@ for i,namefile in enumerate(names):
 	data = np.load("snapshots/"+namefile+".npz")
 	MS_snap = data["MS"]
 	x = np.mean(MS_snap,axis = 1)
-	print(np.mean(x),)
+	print(np.mean(x),MS_mean[i])
 	plt.figure()
 	plt.plot(x)
 	plt.axhline(MS_mean[i], color='r', linestyle='--')
