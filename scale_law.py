@@ -93,8 +93,11 @@ MS_max_dist = np.full(len(names),np.nan)
 for i,namefile in enumerate(names): 
 	data = np.load("snapshots/"+namefile+".npz")
 	MS_snap = data["MS"]
-	MS_mean_dist[i] = np.std(np.mean(MS_snap,axis = 1), mean = np.array(MS_mean[i]))
-	MS_max_dist[i] = np.std(np.max(MS_snap,axis = 1), mean = np.array(MS_max[i]))
+	x = np.mean(MS_snap,axis = 1)
+	MS_mean_dist[i] = np.sqrt(np.mean((x - MS_mean[i])**2))
+	
+	x = np.max(MS_snap,axis = 1)
+	MS_max_dist[i] = np.sqrt(np.mean((x - MS_max[i])**2))
 
 plt.figure()
 plt.errorbar(Ro_conv[mask], MS_mean[mask], yerr=MS_mean_dist, fmt='o')
@@ -105,7 +108,7 @@ plt.figure()
 plt.errorbar(Ro_conv[mask], MS_max[mask], yerr=MS_max_dist, fmt='o')
 plt.xlabel("Rossby convectif")
 plt.ylabel("Radial max of the Maxwell stress of each run")
-
+plt.show()
 """
 plt.figure()
 plt.scatter(Ra, Ro_sh, c=MS_mean, cmap='viridis')
