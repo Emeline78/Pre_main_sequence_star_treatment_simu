@@ -13,7 +13,7 @@ df = pd.read_parquet("transport_profiles.parquet")
 MS_mean = (df.groupby("name")["MS"].mean()).to_numpy()
 names = (df.groupby("name")["name"].unique()).to_numpy()
 
-Ra = (df.groupby("name")["Ra"].unique()).to_numpy()
+Ra = (df.groupby("name")["ra"].unique()).to_numpy()
 g = (df.groupby("name")["config_code"].unique()).to_numpy()
 Ro_sh = (df.groupby("name")["om"].unique()).to_numpy() / 1e-4
 
