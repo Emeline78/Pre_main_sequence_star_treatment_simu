@@ -101,15 +101,20 @@ liste = []
 index = []
 snap_dir = "snapshots"
 
-all_dirs = []
-for base in [
-    "/travail/dynconv/multiscale_dyno/anelasticCouette/gr",
-    "/travail/dynconv/multiscale_dyno/anelasticCouette/gr2",
-    "/travail/dynconv/multiscale_dyno/anelasticCouette/gr_gr2_Louis"
-]:
-	for path in Path(base).rglob("om*"):
-		if re.fullmatch(r'om\d+', path.name):
-			all_dirs.append(path)
+all_dirs = (list(Path("/travail/dynconv/multiscale_dyno/anelasticCouette/gr").glob("Nr*/ra*/om*")) +list(Path("/travail/dynconv/multiscale_dyno/anelasticCouette/gr2").glob("xi*/ra*/om*")) +list(Path("/travail/dynconv/multiscale_dyno/anelasticCouette/gr_gr2_Louis").glob("ra*/om*")))
+
+valid_dirs = []
+
+for path in all_dirs:
+    last_part = Path(path).name
+    
+    # accepte uniquement "om" suivi uniquement de chiffres
+    if re.fullmatch(r'om\d+', last_part):
+        valid_dirs.append(path)
+    else:
+        print(f"Skipping invalid case: {last_part}")
+
+all_dirs = valid_dirs
 
 for path in all_dirs:
 	a = str(path)
