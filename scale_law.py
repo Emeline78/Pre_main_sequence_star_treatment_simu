@@ -19,8 +19,8 @@ Ro_sh = (df.groupby("name")["om"].unique()).to_numpy() / 1e-4
 
 MS_min = np.full(len(names),np.nan)
 MS_max = np.full(len(names),np.nan)
-for i,a in enumerate(names): 
-	data = np.load(file)
+for i,namefile in enumerate(names): 
+	data = np.load("snapshots"+namefile)
 	MS_snap = data["MS"]
 	MS_min[i] = np.min(np.mean(MS_snaps,axis = 1))
 	MS_max[i] = np.max(np.mean(MS_snaps,axis = 1))
