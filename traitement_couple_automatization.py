@@ -247,10 +247,10 @@ for path in all_dirs:
 		MC += 0.5*(MC_snap[i] + MC_snap[i+1])*dt[i]
 		Visc += 0.5*(Visc_snap[i] + Visc_snap[i+1])*dt[i]
 
-	RS = RS / t_total * rho * L**3 / tau**2 * 2 * np.pi * r**2
-	MS = MS / t_total * L * B0car / mu0 * 2 * np.pi * r**2
-	Visc = Visc / t_total * rho * L**3 / tau**2 * 2 * np.pi * r**2
-	MC = MC / t_total * rho * L**3 / tau**2 * 2 * np.pi * r**2
+	RS = RS / t_total 
+	MS = MS / t_total 
+	Visc = Visc / t_total 
+	MC = MC / t_total 
 
 	params = extract_params(path)
 	res = pd.DataFrame({"r": r,"RS": RS, "MC": MC, "MS": MS, "Visc": Visc,"name": str(case_name), "status": status})
