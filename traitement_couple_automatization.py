@@ -128,10 +128,10 @@ for path in all_dirs:
 	CV = np.std(ts.ekin_pol) / np.mean(ts.ekin_pol)
 	p_adf = adfuller(ts.ekin_pol)[1]
 
-	if CV < 0.2 and p_adf < 0.05:
-	    print("ekin_pol stationnaire, hypothèse constante valide")
+	if CV < 0.3 and p_adf < 0.05:
+	    status = True
 	else:
-	    print(f"Attention : CV={CV:.1%}, ADF p={p_adf:.3f}")
+	    status = False
 	
 	if snap_file.exists():
 
@@ -259,11 +259,10 @@ for path in all_dirs:
 	MC = MC / t_total * rho * L**3 / tau**2 * 2 * np.pi * r**2
 
 	params = extract_params(path)
-	res = pd.DataFrame({"r": r,"RS": RS, "MC": MC, "MS": MS, "Visc": Visc,"name": str(case_name)})
+	res = pd.DataFrame({"r": r,"RS": RS, "MC": MC, "MS": MS, "Visc": Visc,"name": str(case_name), "status": status})
 	for key, value in params.items():
         	res[key] = value
 	liste.append(res)
 
-df_final.groupby("name")
 df_final = pd.concat(liste, ignore_index=True)
 df_final.to_parquet("transport_profiles.parquet")
