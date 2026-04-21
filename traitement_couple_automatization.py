@@ -123,6 +123,15 @@ for path in all_dirs:
 	case_name = make_case_name(path)
 	snap_file = Path(snap_dir) / f"{case_name}.npz"
 	
+	ts = MagicTs(datadir = a, field='e_kin', all=True, iplot = False) 	# verification que le regime ne change pas dans le temps pour pouvoir faire l'integration en temps 
+	CV = np.std(ts.ekin_pol) / np.mean(ts.ekin_pol)
+	p_adf = adfuller(ts.ekin_pol)[1]
+
+	if CV < 0.2 and p_adf < 0.05:
+	    print("ekin_pol stationnaire, hypothèse constante valide")
+	else:
+	    print(f"Attention : CV={CV:.1%}, ADF p={p_adf:.3f}")
+	
 	if snap_file.exists():
 
 		print(f"Loading {case_name}")
@@ -150,8 +159,6 @@ for path in all_dirs:
 		g1 = stp.g1
 		g2 = stp.g2
 		om = 1/Ek
-
-		#ts = MagicTs(datadir = a, field='e_kin', all=True) 	# verification que le regime ne change pas dans le temps pour pouvoir faire l'integration en temps 
 
 		files = glob.glob(os.path.join(a,'G_[0-9]*.rot01'))
 		files.sort(key=lambda f: int(os.path.basename(f).split('_')[1].split('.')[0]))
