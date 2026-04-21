@@ -33,20 +33,11 @@ for i,namefile in enumerate(names):
 	data = np.load("snapshots/"+namefile+".npz")
 	MS_snap = data["MS"]
 	x = np.mean(MS_snap,axis = 1)
-	print(np.mean(x),MS_mean[i])
-	plt.figure()
-	plt.plot(x)
-	plt.axhline(MS_mean[i], color='r', linestyle='--')
-	plt.show()
-	
+	print("df mean:", MS_mean[i])
+	print("snap mean(radial then time):", np.mean(np.mean(MS_snap,axis=1)))
 	MS_mean_dist[i] = np.sqrt(np.mean((x - MS_mean[i])**2)) / np.sqrt(len(x))
 	
 	x = np.max(np.abs(MS_snap),axis = 1)
-	print(np.mean(x),MS_max[i])
-	plt.figure()
-	plt.plot(x)
-	plt.axhline(MS_max[i], color='r', linestyle='--')
-	plt.show()
 	MS_max_dist[i] = np.sqrt(np.mean((x - MS_max[i])**2)) / np.sqrt(len(x))
 
 plt.figure()
