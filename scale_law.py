@@ -6,61 +6,112 @@ import matplotlib.pyplot as plt
 git add scale_law.py
 git commit -m "modifications"
 git push
+
+mapping = {
+    "gr_Nr2p5_Pm4_ra1p6e7": 2500,
+    "gr_Nr2p5_Pm4_ra8e6": 250,
+    "gr_Nr2p5_Pm6_ra8e6": 1,
+    "gr2_xi_p2_pm4_ra1e6": 350,
+    "gr2_xi_p2_pm6_ra1p5e6": 175,
+    "gr2_xi_p1_pm4_ra5e5": 850,
+    "gr2_xi_p1_pm6_ra5p5e6": 355,
+    "gr2_xi_p35_pm4_ra2e6": 42.5,
+    "gr2_xi_p35_pm4_ra5e6": 135,
+    "gr2_xi_p35_pm6_ra1p5e6": 17.5,
+    "gr_gr2_Louis_ra1p5e7": 125,
+    "gr_gr2_Louis_ra1e7": 87.5,
+}
+
+df["om_lim"] = np.nan
+
+for pattern, value in mapping.items():
+    mask = df["name"].str.startswith(pattern)
+    df.loc[mask, "om_lim"] = value
+    
+mapping = {
+    "gr_Nr2p5_Pm4_ra1p6e7": 0.062,
+    "gr_Nr2p5_Pm4_ra8e6": 0.029,
+    "gr2_xi_p2_pm4_ra1e6": 0.025,
+    "gr2_xi_p2_pm6_ra1p5e6": 0.040,
+    "gr2_xi_p1_pm4_ra5e5": 0.015,
+    "gr2_xi_p1_pm6_ra5p5e6": 0.016,
+    "gr2_xi_p35_pm4_ra2e6": 0.044,
+    "gr2_xi_p35_pm4_ra5e6": 0.127,
+    "gr2_xi_p35_pm6_ra1p5e6": 0.026,
+    "gr_gr2_Louis_ra1p5e7": 0.121,
+    "gr_gr2_Louis_ra1e7": 0.084,
+}
+
+df["Ro_conv"] = np.nan
+
+for pattern, value in mapping.items():
+    mask = df["name"].str.startswith(pattern)
+    df.loc[mask, "Ro_conv"] = value
+    
+mapping = {
+    "gr_Nr2p5_Pm4_ra1p6e7": 15.09,
+    "gr_Nr2p5_Pm4_ra8e6": 1.44,
+    "gr2_xi_p2_pm4_ra1e6": 1.68,
+    "gr2_xi_p2_pm6_ra1p5e6": 19.93,
+    "gr2_xi_p1_pm4_ra5e5": 1.49,
+    "gr2_xi_p1_pm6_ra5p5e6": 1.49,
+    "gr2_xi_p35_pm4_ra2e6": 9.35,
+    "gr2_xi_p35_pm4_ra5e6": 29.58,
+    "gr2_xi_p35_pm6_ra1p5e6": 9.75,
+    "gr_gr2_Louis_ra1p5e7": 31.42,
+    "gr_gr2_Louis_ra1e7": 20.06,
+}
+
+df["Elsasser"] = np.nan
+
+for pattern, value in mapping.items():
+    mask = df["name"].str.startswith(pattern)
+    df.loc[mask, "Elsasser"] = value
 """
+
 
 df = pd.read_parquet("transport_profiles.parquet")
 
 MS_mean = (df.groupby("name")["MS"].mean()).to_numpy()
+RS_mean = (df.groupby("name")["RS"].mean()).to_numpy()
+MS_max = (df.groupby("name")["MS"].max()).to_numpy()
+RS_max = (df.groupby("name")["RS"].max()).to_numpy()
+
 names = df.groupby("name").mean().index.to_numpy()
 
 Ra = (df.groupby("name")["ra"].first()).to_numpy()
 g = (df.groupby("name")["config_code"].first()).to_numpy()
-Ro_sh = (df.groupby("name")["om"].first()).to_numpy() * 1e-4
+om = (df.groupby("name")["om"].first()).to_numpy()
+om_lim = (df.groupby("name")["om_lim"].first()).to_numpy()
+Els = (df.groupby("name")["Elsasser"].first()).to_numpy()
+Ro_conv = (df.groupby("name")["Ro_conv"].first()).to_numpy()
+mask = om < om_lim
+#mask = (df.groupby("name")["status"].first()).to_numpy()
 
-MS_min = np.full(len(names),np.nan)
-MS_max = np.full(len(names),np.nan)
+MS_mean_dist = np.full(len(names),np.nan)
+MS_max_dist = np.full(len(names),np.nan)
 for i,namefile in enumerate(names): 
 	data = np.load("snapshots/"+namefile+".npz")
 	MS_snap = data["MS"]
-	MS_min[i] = np.min(np.mean(MS_snap,axis = 1))
-	MS_max[i] = np.max(np.mean(MS_snap,axis = 1))
+	MS_mean_dist[i] = np.std(np.mean(MS_snap,axis = 1), mean = np.array(MS_mean[i]))
+	MS_max_dist[i] = np.std(np.max(MS_snap,axis = 1), mean = np.array(MS_max[i]))
 
 plt.figure()
-plt.errorbar(Ra, MS_mean, yerr=[MS_min, MS_max], fmt='o')
-plt.xlabel("Rayleigh number")
+plt.errorbar(Ro_conv[mask], MS_mean[mask], yerr=MS_mean_dist, fmt='o')
+plt.xlabel("Rossby convectif")
 plt.ylabel("Radial mean of the Maxwell stress of each run")
 
 plt.figure()
-plt.errorbar(g, MS_mean, yerr=[MS_min, MS_max], fmt='o')
-plt.xlabel("Gravity configuration")
-plt.ylabel("Radial mean of the Maxwell stress of each run")
+plt.errorbar(Ro_conv[mask], MS_max[mask], yerr=MS_max_dist, fmt='o')
+plt.xlabel("Rossby convectif")
+plt.ylabel("Radial max of the Maxwell stress of each run")
 
-plt.figure()
-plt.errorbar(Ro_sh, MS_mean, yerr=[MS_min, MS_max], fmt='o')
-plt.xlabel("Rossby shear number")
-plt.ylabel("Radial mean of the Maxwell stress of each run")
-
-plt.figure()
-plt.scatter(Ra, g, c=MS_mean, cmap='viridis')
-plt.colorbar(label='Radial mean of the Maxwell stress of each run')
-plt.xlabel('Rayleigh number')
-plt.ylabel('Gravity configuration')
-
+"""
 plt.figure()
 plt.scatter(Ra, Ro_sh, c=MS_mean, cmap='viridis')
 plt.colorbar(label='Radial mean of the Maxwell stress of each run')
 plt.xlabel('Rayleigh number')
 plt.ylabel('Rossby shear number')
+"""
 
-plt.figure()
-plt.scatter(Ro_sh, MS_mean, c=g, cmap='viridis')
-plt.colorbar(label='Gravity configuration')
-plt.xlabel('Rossby shear number')
-plt.ylabel('Radial mean of the Maxwell stress of each run')
 
-plt.figure()
-plt.scatter(Ra, MS_mean, c=g, cmap='viridis')
-plt.colorbar(label='Gravity configuration')
-plt.xlabel('Rayleigh number')
-plt.ylabel('Radial mean of the Maxwell stress of each run')
-plt.show()
