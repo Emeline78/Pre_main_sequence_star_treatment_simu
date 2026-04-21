@@ -94,9 +94,11 @@ for i,namefile in enumerate(names):
 	data = np.load("snapshots/"+namefile+".npz")
 	MS_snap = data["MS"]
 	x = np.mean(MS_snap,axis = 1)
-	MS_mean_dist[i] = np.sqrt(np.mean((x - MS_mean[i])**2))
+	print(np.mean(x),MS_mean[i])
+	MS_mean_dist[i] = np.sqrt(np.mean((x - MS_mean[i])**2)) / np.sqrt(len(x))
 	
-	x = np.max(MS_snap,axis = 1)
+	x = np.max(np.abs(MS_snap),axis = 1)
+	print(np.mean(x),MS_max[i])
 	MS_max_dist[i] = np.sqrt(np.mean((x - MS_max[i])**2))
 
 plt.figure()
