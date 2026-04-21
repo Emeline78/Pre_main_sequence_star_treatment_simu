@@ -74,7 +74,7 @@ df = pd.read_parquet("transport_profiles.parquet")
 
 MS_mean = (df.groupby("name")["MS"].mean()).to_numpy()
 RS_mean = (df.groupby("name")["RS"].mean()).to_numpy()
-MS_max = (df.groupby("name")["MS"].abs().max()).to_numpy()
+MS_max = df["MS"].abs().groupby(df["name"]).max().to_numpy()
 RS_max = (df.groupby("name")["RS"].max()).to_numpy()
 
 names = df.groupby("name").mean().index.to_numpy()
