@@ -74,7 +74,7 @@ df = pd.read_parquet("transport_profiles.parquet")
 
 MS_mean = (df.groupby("name")["MS"].mean()).to_numpy()
 RS_mean = (df.groupby("name")["RS"].mean()).to_numpy()
-MS_max = (df.groupby("name")["MS"].max()).to_numpy()
+MS_max = (df.groupby("name")["MS"].abs().max()).to_numpy()
 RS_max = (df.groupby("name")["RS"].max()).to_numpy()
 
 names = df.groupby("name").mean().index.to_numpy()
@@ -94,12 +94,21 @@ for i,namefile in enumerate(names):
 	data = np.load("snapshots/"+namefile+".npz")
 	MS_snap = data["MS"]
 	x = np.mean(MS_snap,axis = 1)
-	print(np.mean(x),MS_mean[i])
+	print(np.mean(x),)
+	plt.figure()
+	plt.plot(x)
+	plt.axhline(MS_mean[i], color='r', linestyle='--')
+	plt.show()
+	
 	MS_mean_dist[i] = np.sqrt(np.mean((x - MS_mean[i])**2)) / np.sqrt(len(x))
 	
 	x = np.max(np.abs(MS_snap),axis = 1)
 	print(np.mean(x),MS_max[i])
-	MS_max_dist[i] = np.sqrt(np.mean((x - MS_max[i])**2))
+	plt.figure()
+	plt.plot(x)
+	plt.axhline(MS_max[i], color='r', linestyle='--')
+	plt.show()
+	MS_max_dist[i] = np.sqrt(np.mean((x - MS_max[i])**2)) / np.sqrt(len(x))
 
 plt.figure()
 plt.errorbar(Ro_conv[mask], MS_mean[mask], yerr=MS_mean_dist[mask], fmt='o')
