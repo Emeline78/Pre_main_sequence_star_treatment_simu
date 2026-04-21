@@ -51,4 +51,4 @@ plt.scatter(Ra, Ro_sh, c=MS_mean, cmap='viridis')
 plt.colorbar(label='Radial mean of the Maxwell stress of each run')
 plt.xlabel('Rayleigh number')
 plt.ylabel('Rossby shear number')
-	
+plt.show()
