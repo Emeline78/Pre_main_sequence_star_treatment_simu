@@ -259,4 +259,83 @@ for path in all_dirs:
 	liste.append(res)
 
 df_final = pd.concat(liste, ignore_index=True)
+
+df_final.loc[df_final["name"].str.startswith("gr_"), "xi"] = 0.2
+df_final.loc[df_final["name"].str.startswith("gr_gr2_Louis"), "xi"] = 0.35
+
+df_final.loc[df_final["name"].str.startswith("gr_gr2_Louis"), "Pm"] =4
+
+def encode_config(name):
+     if "gr_gr2_Louis" in name:
+         return 2
+     elif "gr2" in name:
+         return 1
+     elif "gr" in name:
+         return 0
+     else:
+         return -1
+
+df_final["config_code"] = df_final["config"].apply(encode_config)
+
+mapping = {
+    "gr_Nr2p5_Pm4_ra_1p6e7": 2500,
+    "gr_Nr2p5_Pm4_ra_8e6": 250,
+    "gr_Nr2p5_Pm6_ra_8e6": 1,
+    "gr2_xi_p2_pm4_ra_1e6": 350,
+    "gr2_xi_p2_pm6_ra_1p5e6": 175,
+    "gr2_xi_p1_pm4_ra_5e5": 850,
+    "gr2_xi_p1_pm6_ra_5p5e6": 355,
+    "gr2_xi_p35_pm4_ra_2e6": 42.5,
+    "gr2_xi_p35_pm4_ra_5e6": 135,
+    "gr2_xi_p35_pm6_ra_1p5e6": 17.5,
+    "gr_gr2_Louis_ra_1p5e7": 125,
+    "gr_gr2_Louis_ra_1e7": 87.5,
+}
+
+df_final["om_lim"] = np.nan
+
+for pattern, value in mapping.items():
+    mask = df_final["name"].str.startswith(pattern)
+    df_final.loc[mask, "om_lim"] = value
+    
+mapping = {
+    "gr_Nr2p5_Pm4_ra_1p6e7": 0.062,
+    "gr_Nr2p5_Pm4_ra_8e6": 0.029,
+    "gr2_xi_p2_pm4_ra_1e6": 0.025,
+    "gr2_xi_p2_pm6_ra_1p5e6": 0.040,
+    "gr2_xi_p1_pm4_ra_5e5": 0.015,
+    "gr2_xi_p1_pm6_ra_5p5e6": 0.016,
+    "gr2_xi_p35_pm4_ra_2e6": 0.044,
+    "gr2_xi_p35_pm4_ra_5e6": 0.127,
+    "gr2_xi_p35_pm6_ra_1p5e6": 0.026,
+    "gr_gr2_Louis_ra_1p5e7": 0.121,
+    "gr_gr2_Louis_ra_1e7": 0.084,
+}
+
+df_final["Ro_conv"] = np.nan
+
+for pattern, value in mapping.items():
+    mask = df_final["name"].str.startswith(pattern)
+    df_final.loc[mask, "Ro_conv"] = value
+    
+mapping = {
+    "gr_Nr2p5_Pm4_ra_1p6e7": 15.09,
+    "gr_Nr2p5_Pm4_ra_8e6": 1.44,
+    "gr2_xi_p2_pm4_ra_1e6": 1.68,
+    "gr2_xi_p2_pm6_ra_1p5e6": 19.93,
+    "gr2_xi_p1_pm4_ra_5e5": 1.49,
+    "gr2_xi_p1_pm6_ra_5p5e6": 1.49,
+    "gr2_xi_p35_pm4_ra_2e6": 9.35,
+    "gr2_xi_p35_pm4_ra_5e6": 29.58,
+    "gr2_xi_p35_pm6_ra_1p5e6": 9.75,
+    "gr_gr2_Louis_ra_1p5e7": 31.42,
+    "gr_gr2_Louis_ra_1e7": 20.06,
+}
+
+df_final["Elsasser"] = np.nan
+
+for pattern, value in mapping.items():
+    mask = df_final["name"].str.startswith(pattern)
+    df_final.loc[mask, "Elsasser"] = value
+
 df_final.to_parquet("transport_profiles.parquet")
