@@ -22,8 +22,8 @@ MS_max = np.full(len(names),np.nan)
 for i,namefile in enumerate(names): 
 	data = np.load("snapshots/"+namefile+".npz")
 	MS_snap = data["MS"]
-	MS_min[i] = np.min(np.mean(MS_snaps,axis = 1))
-	MS_max[i] = np.max(np.mean(MS_snaps,axis = 1))
+	MS_min[i] = np.min(np.mean(MS_snap,axis = 1))
+	MS_max[i] = np.max(np.mean(MS_snap,axis = 1))
 
 plt.figure()
 plt.errorbar(Ra, MS_mean, yerr=[MS_min, MS_max], fmt='o')
