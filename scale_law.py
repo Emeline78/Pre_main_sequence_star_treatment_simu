@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
+import matplotlib.colors as mcolors
 """
 git add scale_law.py
 git commit -m "modifications"
@@ -47,89 +48,99 @@ for i,namefile in enumerate(names):
 	MS_max_dist[i] = np.sqrt(np.mean((x - MS_max[i])**2)) / np.sqrt(len(x))
 
 
+cmap1 = mcolors.ListedColormap(cm.inferno([0.2, 0.55, 0.9]))
+cmap2 = mcolors.ListedColormap(cm.cool([0.1, 0.5, 0.9]))
 
+norm_discrete = mcolors.BoundaryNorm(boundaries=[-0.5, 0.5, 1.5, 2.5], ncolors=3)
 color_values = g[mask]
-norm = plt.Normalize(vmin=color_values.min(), vmax=color_values.max())
-cmap1 = cm.inferno  
-colors1 = cmap1(norm(color_values))
 
-cmap2 = cm.cool  
-colors2 = cmap2(norm(color_values))
+g_labels = {0: r"$g \propto r$", 1: r"$g \propto 1/r^2$", 2: "CESAM 2k20"}
 
+def add_colorbar(sc, label="Gravity configuration"):
+    cb = plt.colorbar(sc, label=label, ticks=[0, 1, 2])
+    cb.ax.set_yticklabels([g_labels[0], g_labels[1], g_labels[2]])
+
+colors1 = cmap1(norm_discrete(color_values))
+colors2 = cmap2(norm_discrete(color_values))
+
+# --- Figure 1 : Rossby convectif ---
 plt.figure()
 plt.subplot(1,2,1)
-plt.errorbar(Ro_conv[mask], MS_mean[mask],yerr=MS_mean_dist[mask],fmt='none',ecolor=colors1)
-sc = plt.scatter(Ro_conv[mask], MS_mean[mask],c=color_values, cmap='inferno', norm=norm,zorder=5)
-plt.colorbar(sc, label="Gravity configuration")
+plt.errorbar(Ro_conv[mask], MS_mean[mask], yerr=MS_mean_dist[mask], fmt='none', ecolor=colors1)
+sc = plt.scatter(Ro_conv[mask], MS_mean[mask], c=color_values, cmap=cmap1, norm=norm_discrete, zorder=5)
+add_colorbar(sc)
 plt.xlabel("Rossby convectif")
 plt.ylabel("MS mean")
-plt.title("Radial mean of MS of each run as a function of the convective Rossby")
+plt.title("Radial mean of MS as a function of the convective Rossby")
 plt.grid()
 
 plt.subplot(1,2,2)
-plt.errorbar(Ro_conv[mask], MS_max[mask],yerr=MS_max_dist[mask],fmt='none',ecolor=colors2)
-sc = plt.scatter(Ro_conv[mask], MS_max[mask],c=color_values, cmap='cool', norm=norm,zorder=5)
-plt.colorbar(sc, label="Gravity configuration")
+plt.errorbar(Ro_conv[mask], MS_max[mask], yerr=MS_max_dist[mask], fmt='none', ecolor=colors2)
+sc = plt.scatter(Ro_conv[mask], MS_max[mask], c=color_values, cmap=cmap2, norm=norm_discrete, zorder=5)
+add_colorbar(sc)
 plt.xlabel("Rossby convectif")
 plt.ylabel("MS max")
-plt.title("Radial max of MS of each run as a function of the convective Rossby")
+plt.title("Radial max of MS as a function of the convective Rossby")
 plt.grid()
 
+# --- Figure 2 : Elsasser ---
 plt.figure()
 plt.subplot(1,2,1)
-plt.errorbar(Els[mask], MS_mean[mask],yerr=MS_mean_dist[mask],fmt='none',ecolor=colors1)
-sc = plt.scatter(Els[mask], MS_mean[mask],c=color_values, cmap='inferno', norm=norm,zorder=5)
-plt.colorbar(sc, label="Gravity configuration")
+plt.errorbar(Els[mask], MS_mean[mask], yerr=MS_mean_dist[mask], fmt='none', ecolor=colors1)
+sc = plt.scatter(Els[mask], MS_mean[mask], c=color_values, cmap=cmap1, norm=norm_discrete, zorder=5)
+add_colorbar(sc)
 plt.xlabel("Elsasser number")
 plt.ylabel("MS mean")
-plt.title("Radial mean of MS of each run as a function of the Elsasser number")
+plt.title("Radial mean of MS as a function of the Elsasser number")
 plt.grid()
 
 plt.subplot(1,2,2)
-plt.errorbar(Els[mask], MS_max[mask],yerr=MS_max_dist[mask],fmt='none',ecolor=colors2)
-sc = plt.scatter(Els[mask], MS_max[mask],c=color_values, cmap='cool', norm=norm,zorder=5, label="Radial max")
-plt.colorbar(sc, label="Gravity configuration")
+plt.errorbar(Els[mask], MS_max[mask], yerr=MS_max_dist[mask], fmt='none', ecolor=colors2)
+sc = plt.scatter(Els[mask], MS_max[mask], c=color_values, cmap=cmap2, norm=norm_discrete, zorder=5)
+add_colorbar(sc)
 plt.xlabel("Elsasser number")
 plt.ylabel("MS max")
-plt.title("Radial max of MS of each run as a function of the Elsasser number")
+plt.title("Radial max of MS as a function of the Elsasser number")
 plt.grid()
 
+# --- Figure 3 : Rossby shear ---
 plt.figure()
 plt.subplot(1,2,1)
-plt.errorbar(Ro_sh[mask], MS_mean[mask],yerr=MS_mean_dist[mask],fmt='none',ecolor=colors1)
-sc = plt.scatter(Ro_sh[mask], MS_mean[mask],c=color_values, cmap='inferno', norm=norm,zorder=5)
-plt.colorbar(sc, label="Gravity configuration")
+plt.errorbar(Ro_sh[mask], MS_mean[mask], yerr=MS_mean_dist[mask], fmt='none', ecolor=colors1)
+sc = plt.scatter(Ro_sh[mask], MS_mean[mask], c=color_values, cmap=cmap1, norm=norm_discrete, zorder=5)
+add_colorbar(sc)
 plt.xlabel("Rossby shear")
 plt.ylabel("MS mean")
-plt.title("Radial mean of MS of each run as a function of the Rossby shear")
+plt.title("Radial mean of MS as a function of the Rossby shear")
 plt.grid()
 
 plt.subplot(1,2,2)
-plt.errorbar(Ro_sh[mask], MS_max[mask],yerr=MS_max_dist[mask],fmt='none',ecolor=colors2)
-sc = plt.scatter(Ro_sh[mask], MS_max[mask],c=color_values, cmap='cool', norm=norm,zorder=5)
-plt.colorbar(sc, label="Gravity configuration")
+plt.errorbar(Ro_sh[mask], MS_max[mask], yerr=MS_max_dist[mask], fmt='none', ecolor=colors2)
+sc = plt.scatter(Ro_sh[mask], MS_max[mask], c=color_values, cmap=cmap2, norm=norm_discrete, zorder=5)
+add_colorbar(sc)
 plt.xlabel("Rossby shear")
 plt.ylabel("MS max")
-plt.title("Radial max of MS of each run as a function of the Rossby shear")
+plt.title("Radial max of MS as a function of the Rossby shear")
 plt.grid()
 
+# --- Figure 4 : Reynolds magnétique ---
 plt.figure()
 plt.subplot(1,2,1)
-plt.errorbar(Rm[mask], MS_mean[mask],yerr=MS_mean_dist[mask],fmt='none',ecolor=colors1)
-sc = plt.scatter(Rm[mask], MS_mean[mask],c=color_values, cmap='inferno', norm=norm,zorder=5)
-plt.colorbar(sc, label="Gravity configuration")
+plt.errorbar(Rm[mask], MS_mean[mask], yerr=MS_mean_dist[mask], fmt='none', ecolor=colors1)
+sc = plt.scatter(Rm[mask], MS_mean[mask], c=color_values, cmap=cmap1, norm=norm_discrete, zorder=5)
+add_colorbar(sc)
 plt.xlabel("Reynolds magnetic")
 plt.ylabel("MS mean")
-plt.title("Radial mean of MS of each run as a function of the Reynolds magnetic")
+plt.title("Radial mean of MS as a function of the Reynolds magnetic")
 plt.grid()
 
 plt.subplot(1,2,2)
-plt.errorbar(Rm[mask], MS_max[mask],yerr=MS_max_dist[mask],fmt='none',ecolor=colors2)
-sc = plt.scatter(Rm[mask], MS_max[mask],c=color_values, cmap='cool', norm=norm,zorder=5)
-plt.colorbar(sc, label="Gravity configuration")
+plt.errorbar(Rm[mask], MS_max[mask], yerr=MS_max_dist[mask], fmt='none', ecolor=colors2)
+sc = plt.scatter(Rm[mask], MS_max[mask], c=color_values, cmap=cmap2, norm=norm_discrete, zorder=5)
+add_colorbar(sc)
 plt.xlabel("Reynolds magnetic")
 plt.ylabel("MS max")
-plt.title("Radial max of MS of each run as a function of the Reynolds magnetic")
+plt.title("Radial max of MS as a function of the Reynolds magnetic")
 plt.grid()
 
 """
