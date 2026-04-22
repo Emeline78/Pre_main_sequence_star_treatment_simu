@@ -86,5 +86,31 @@ plt.colorbar(label='Radial mean of the Maxwell stress of each run')
 plt.xlabel('Rayleigh number')
 plt.ylabel('Rossby shear number')
 """
+target = "gr_Nr2p5_Pm4_ra_8e6_om100"
+sim = df[df["name"] == target]
+ 
+r    = sim["r"].values
+RS   = sim["RS"].values
+MC   = sim["MC"].values
+Visc = sim["Visc"].values
+MS   = sim["MS"].values
+
+F = RS + MS + MC + Visc
+plt.figure()
+plt.plot(r, RS,   label="Reynolds stress")
+plt.plot(r, MC,   label="Meridional circulation with Coriolis part")
+plt.plot(r, Visc, label="Viscous stress")
+plt.plot(r,MS, label = "Maxwell stress")
+plt.plot(r, F, label = "Radial flux")
+plt.axhline(0, color='k', linewidth=0.8, linestyle='--')
+plt.xlabel(r"$r$")
+plt.ylabel(r"Torque")
+plt.title(target)
+plt.grid()
+plt.legend()
+plt.tight_layout()
+plt.show()
+
+
 
 
