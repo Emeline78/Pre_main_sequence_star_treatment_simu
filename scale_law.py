@@ -24,6 +24,8 @@ om = (df.groupby("name")["om"].first()).to_numpy()
 om_lim = (df.groupby("name")["om_lim"].first()).to_numpy()
 Els = (df.groupby("name")["Elsasser"].first()).to_numpy()
 Ro_conv = (df.groupby("name")["Ro_conv"].first()).to_numpy()
+Rm = (df.groupby("name")["rm"].mean()).to_numpy()
+Ro_sh = om*1e-4
 mask = om < om_lim
 #mask = (df.groupby("name")["status"].first()).to_numpy()
 
@@ -49,6 +51,7 @@ plt.errorbar(Ro_conv[mask], MS_mean[mask], yerr=MS_mean_dist[mask], fmt='o', lab
 plt.errorbar(Ro_conv[mask], MS_max[mask], yerr=MS_max_dist[mask], fmt='o', label = "Radial max")
 plt.xlabel("Rossby convectif")
 plt.ylabel("MS of each run")
+plt.legend()
 plt.show()
 
 plt.figure()
@@ -56,6 +59,23 @@ plt.errorbar(Els[mask], MS_mean[mask], yerr=MS_mean_dist[mask], fmt='o', label =
 plt.errorbar(Els[mask], MS_max[mask], yerr=MS_max_dist[mask], fmt='o', label = "Radial max")
 plt.xlabel("Elsasser number")
 plt.ylabel("MS of each run")
+plt.legend()
+plt.show()
+
+plt.figure()
+plt.errorbar(Ro_sh[mask], MS_mean[mask], yerr=MS_mean_dist[mask], fmt='o', label = "Radial mean")
+plt.errorbar(Ro_sh[mask], MS_max[mask], yerr=MS_max_dist[mask], fmt='o', label = "Radial max")
+plt.xlabel("Rossby shear")
+plt.ylabel("MS of each run")
+plt.legend()
+plt.show()
+
+plt.figure()
+plt.errorbar(Rm[mask], MS_mean[mask], yerr=MS_mean_dist[mask], fmt='o', label = "Radial mean")
+plt.errorbar(Rm[mask], MS_max[mask], yerr=MS_max_dist[mask], fmt='o', label = "Radial max")
+plt.xlabel("Reynolds magnetic")
+plt.ylabel("MS of each run")
+plt.legend()
 plt.show()
 
 
