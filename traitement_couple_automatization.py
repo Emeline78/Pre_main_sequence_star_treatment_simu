@@ -133,8 +133,8 @@ for path in all_dirs:
 	else:
 	    status = False
 	    
-	ts = MagicTs(datadir = a,field='par', all=True)
-	Rm = ts.rm
+	ts = MagicTs(datadir = a,field='par', all=True, iplot = False)
+	Rm = np.mean(ts.rm)
 
 	
 	if snap_file.exists():
