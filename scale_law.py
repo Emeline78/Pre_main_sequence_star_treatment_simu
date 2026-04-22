@@ -50,54 +50,60 @@ for i,namefile in enumerate(names):
 
 color_values = g[mask]
 norm = plt.Normalize(vmin=color_values.min(), vmax=color_values.max())
-cmap = cm.viridis  
-colors = cmap(norm(color_values))
+cmap1 = cm.inferno  
+colors1 = cmap1(norm(color_values))
 
-
-plt.errorbar(Ro_conv[mask], MS_mean[mask],yerr=MS_mean_dist[mask],fmt='none',ecolor=colors,alpha=0.7)
-sc = plt.scatter(Ro_conv[mask], MS_mean[mask],c=color_values, cmap='viridis', norm=norm,zorder=5, label="Radial mean")
-plt.colorbar(sc, label="Gravity configuration")
-
+cmap2 = cm.cool  
+colors2 = cmap(norm(color_values))
 
 plt.figure()
-plt.errorbar(Ro_conv[mask], MS_mean[mask],yerr=MS_mean_dist[mask],fmt='none',ecolor=colors,alpha=0.7)
-sc = plt.scatter(Ro_conv[mask], MS_mean[mask],c=color_values, cmap='viridis', norm=norm,zorder=5, label="Radial mean")
-plt.colorbar(sc)
-
-cmap = cm.inferno  
-colors = cmap(norm(color_values))
-plt.errorbar(Ro_conv[mask], MS_max[mask],yerr=MS_max_dist[mask],fmt='none',ecolor=colors,alpha=0.7)
-sc = plt.scatter(Ro_conv[mask], MS_max[mask],c=color_values, cmap='inferno', norm=norm,zorder=5, label="Radial max")
+plt.errorbar(Ro_conv[mask], MS_mean[mask],yerr=MS_mean_dist[mask],fmt='none',ecolor=colors1)
+sc = plt.scatter(Ro_conv[mask], MS_mean[mask],c=color_values, cmap='inferno', norm=norm,zorder=5, label="Radial mean")
 plt.colorbar(sc, label="Gravity configuration")
+
+plt.errorbar(Ro_conv[mask], MS_max[mask],yerr=MS_max_dist[mask],fmt='none',ecolor=colors2)
+sc = plt.scatter(Ro_conv[mask], MS_max[mask],c=color_values, cmap='cool', norm=norm,zorder=5, label="Radial max")
+plt.colorbar(sc)
 
 plt.xlabel("Rossby convectif")
 plt.ylabel("MS of each run")
 plt.legend()
-plt.show()
 
 plt.figure()
-plt.errorbar(Els[mask], MS_mean[mask], yerr=MS_mean_dist[mask], fmt='o', label = "Radial mean")
-plt.errorbar(Els[mask], MS_max[mask], yerr=MS_max_dist[mask], fmt='o', label = "Radial max")
+plt.errorbar(Els[mask], MS_mean[mask],yerr=MS_mean_dist[mask],fmt='none',ecolor=colors1)
+sc = plt.scatter(Els[mask], MS_mean[mask],c=color_values, cmap='inferno', norm=norm,zorder=5, label="Radial mean")
+plt.colorbar(sc, label="Gravity configuration")
+
+plt.errorbar(Els[mask], MS_max[mask],yerr=MS_max_dist[mask],fmt='none',ecolor=colors2)
+sc = plt.scatter(Els[mask], MS_max[mask],c=color_values, cmap='cool', norm=norm,zorder=5, label="Radial max")
+plt.colorbar(sc)
 plt.xlabel("Elsasser number")
 plt.ylabel("MS of each run")
 plt.legend()
-plt.show()
 
 plt.figure()
-plt.errorbar(Ro_sh[mask], MS_mean[mask], yerr=MS_mean_dist[mask], fmt='o', label = "Radial mean")
-plt.errorbar(Ro_sh[mask], MS_max[mask], yerr=MS_max_dist[mask], fmt='o', label = "Radial max")
+plt.errorbar(Ro_sh[mask], MS_mean[mask],yerr=MS_mean_dist[mask],fmt='none',ecolor=colors1)
+sc = plt.scatter(Ro_sh[mask], MS_mean[mask],c=color_values, cmap='inferno', norm=norm,zorder=5, label="Radial mean")
+plt.colorbar(sc, label="Gravity configuration")
+
+plt.errorbar(Ro_sh[mask], MS_max[mask],yerr=MS_max_dist[mask],fmt='none',ecolor=colors2)
+sc = plt.scatter(Ro_sh[mask], MS_max[mask],c=color_values, cmap='cool', norm=norm,zorder=5, label="Radial max")
+plt.colorbar(sc)
 plt.xlabel("Rossby shear")
 plt.ylabel("MS of each run")
 plt.legend()
-plt.show()
 
 plt.figure()
-plt.errorbar(Rm[mask], MS_mean[mask], yerr=MS_mean_dist[mask], fmt='o', label = "Radial mean")
-plt.errorbar(Rm[mask], MS_max[mask], yerr=MS_max_dist[mask], fmt='o', label = "Radial max")
+plt.errorbar(Rm[mask], MS_mean[mask],yerr=MS_mean_dist[mask],fmt='none',ecolor=colors1)
+sc = plt.scatter(Rm[mask], MS_mean[mask],c=color_values, cmap='inferno', norm=norm,zorder=5, label="Radial mean")
+plt.colorbar(sc, label="Gravity configuration")
+
+plt.errorbar(Rm[mask], MS_max[mask],yerr=MS_max_dist[mask],fmt='none',ecolor=colors2)
+sc = plt.scatter(Rm[mask], MS_max[mask],c=color_values, cmap='cool', norm=norm,zorder=5, label="Radial max")
+plt.colorbar(sc)
 plt.xlabel("Reynolds magnetic")
 plt.ylabel("MS of each run")
 plt.legend()
-plt.show()
 
 
 """
