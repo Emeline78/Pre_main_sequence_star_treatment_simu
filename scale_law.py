@@ -17,7 +17,7 @@ MS_mean = (df.groupby("name")["MS"].mean()).to_numpy()
 MS_max = df.groupby("name")["MS"].apply(lambda x: x.iloc[x.abs().argmax()]).to_numpy()
 #RS_max = (df.groupby("name")["RS"].max()).to_numpy()
 
-names = df.groupby("name").mean().index.to_numpy()
+names = df.groupby("name").first().index.to_numpy()
 
 Ra = (df.groupby("name")["ra"].first()).to_numpy()
 g = (df.groupby("name")["config_code"].first()).to_numpy()
@@ -27,6 +27,8 @@ Els = (df.groupby("name")["Elsasser"].first()).to_numpy()
 Ro_conv = (df.groupby("name")["Ro_conv"].first()).to_numpy()
 Rm = (df.groupby("name")["rm"].first()).to_numpy()
 Ro_sh = om*1e-4
+
+mask_wrong = 
 #mask = (om < om_lim) & (df.groupby("name")["status"].first()).to_numpy()
 mask = (om > om_lim) & (df.groupby("name")["status"].first().to_numpy()) & (np.char.find(names, "wrong") == -1)
 
