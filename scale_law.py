@@ -27,8 +27,8 @@ Els = (df.groupby("name")["Elsasser"].first()).to_numpy()
 Ro_conv = (df.groupby("name")["Ro_conv"].first()).to_numpy()
 Rm = (df.groupby("name")["rm"].first()).to_numpy()
 Ro_sh = om*1e-4
-mask = (om < om_lim) & (df.groupby("name")["status"].first()).to_numpy()
-#mask = (om > om_lim) & (df.groupby("name")["status"].first()).to_numpy()
+#mask = (om < om_lim) & (df.groupby("name")["status"].first()).to_numpy()
+mask = (om > om_lim) & (df.groupby("name")["status"].first()).to_numpy()
 
 MS_mean_dist = np.full(len(names),np.nan)
 MS_max_dist = np.full(len(names),np.nan)
