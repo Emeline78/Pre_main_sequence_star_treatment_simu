@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-
+import matplotlib.cm as cm
 """
 git add scale_law.py
 git commit -m "modifications"
@@ -39,11 +39,11 @@ for i,namefile in enumerate(names):
 	
 	x = np.mean(MS_snap, axis=1)
 	MS_snap_mean = np.trapz(x, times) / (times[-1]-times[0])
-	print(MS_snap_mean,MS_mean[i])
+	#print(MS_snap_mean,MS_mean[i])
 	MS_mean_dist[i] = np.sqrt(np.mean((x - MS_mean[i])**2)) / np.sqrt(len(x))
 	
 	x = MS_snap[np.arange(len(MS_snap)), np.abs(MS_snap).argmax(axis=1)]
-	print(np.mean(x),MS_max[i])
+	#print(np.mean(x),MS_max[i])
 	MS_max_dist[i] = np.sqrt(np.mean((x - MS_max[i])**2)) / np.sqrt(len(x))
 
 
