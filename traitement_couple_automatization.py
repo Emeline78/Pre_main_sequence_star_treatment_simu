@@ -218,19 +218,10 @@ for path in all_dirs:
 
 		times = np.array(times)
 		
-		L = 1		# pas 1 - ki car r0 n'est pas egale a 1 mais a 1/(1-ki)
-		nu = Ek * om * L**2
-		tau = L**2/nu
-		eta = nu/Pm
-		temp, rho, drho = anelprof(r, strat = Nrho, polind = n, g0=g0, g1=g1, g2=g2)
-		rho0 = rho[0]
-		rho = rho / rho0  
-		B0car = eta * om * mu0 	* rho0
-		
-		RS_snap = np.array(RS_snap) * rho * L**3 / tau**2 * 2 * np.pi * r**2
-		MS_snap = np.array(MS_snap) * L * B0car / mu0 * 2 * np.pi * r**2
-		Visc_snap = np.array(Visc_snap) * rho * L**3 / tau**2 * 2 * np.pi * r**2
-		MC_snap = np.array(MC_snap) * rho * L**3 / tau**2 * 2 * np.pi * r**2
+		RS_snap = np.array(RS_snap) 
+		MS_snap = np.array(MS_snap) 
+		Visc_snap = np.array(Visc_snap) 
+		MC_snap = np.array(MC_snap) 
 	
 		save_snapshots(snap_dir,case_name,r,times,RS_snap,MS_snap,MC_snap,Visc_snap)
 
@@ -246,11 +237,20 @@ for path in all_dirs:
 		MS += 0.5*(MS_snap[i] + MS_snap[i+1])*dt[i]
 		MC += 0.5*(MC_snap[i] + MC_snap[i+1])*dt[i]
 		Visc += 0.5*(Visc_snap[i] + Visc_snap[i+1])*dt[i]
-
-	RS = RS / t_total 
-	MS = MS / t_total 
-	Visc = Visc / t_total 
-	MC = MC / t_total 
+	
+	L = 1		# pas 1 - ki car r0 n'est pas egale a 1 mais a 1/(1-ki)
+	nu = Ek * om * L**2
+	tau = L**2/nu
+	eta = nu/Pm
+	temp, rho, drho = anelprof(r, strat = Nrho, polind = n, g0=g0, g1=g1, g2=g2)
+	rho0 = rho[0]
+	rho = rho / rho0  
+	B0car = eta * om * mu0 	* rho0
+	
+	RS = RS / t_total * rho * L**3 / tau**2 * 2 * np.pi * r**2
+	MS = MS / t_total * L * B0car / mu0 * 2 * np.pi * r**2
+	Visc = Visc / t_total * rho * L**3 / tau**2 * 2 * np.pi * r**2
+	MC = MC / t_total * rho * L**3 / tau**2 * 2 * np.pi * r**2
 
 	params = extract_params(path)
 	res = pd.DataFrame({"r": r,"RS": RS, "MC": MC, "MS": MS, "Visc": Visc,"name": str(case_name), "status": status})
@@ -338,4 +338,4 @@ for pattern, value in mapping.items():
     mask = df_final["name"].str.startswith(pattern)
     df_final.loc[mask, "Elsasser"] = value
 
-df_final.to_parquet("transport_profiles.parquet")
+df_final.to_parquet("transport_profiles1.parquet")
