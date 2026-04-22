@@ -35,7 +35,7 @@ for i,namefile in enumerate(names):
 	times = data["times"]
 	r = data["r"]
 
-	MS_snap_mean = np.trapz(np.mean(MS_snap, axis=1), times) / (times[-1]-times[0]) * MS_fact
+	MS_snap_mean = np.trapz(np.mean(MS_snap, axis=1), times) / (times[-1]-times[0])
 	print(MS_snap_mean,MS_mean[i])
 	MS_mean_dist[i] = np.sqrt(np.mean((x - MS_mean[i])**2)) / np.sqrt(len(x))
 	
