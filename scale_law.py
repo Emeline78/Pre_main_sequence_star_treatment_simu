@@ -56,8 +56,8 @@ color_values = g[mask]
 
 g_labels = {0: r"$g \propto r$", 1: r"$g \propto 1/r^2$", 2: "CESAM 2k20"}
 
-def add_colorbar(sc, label="Gravity configuration"):
-    cb = plt.colorbar(sc, label=label, ticks=[0, 1, 2])
+def add_colorbar(sc):
+    cb = plt.colorbar(sc, ticks=[0, 1, 2])
     cb.ax.set_yticklabels([g_labels[0], g_labels[1], g_labels[2]])
 
 colors1 = cmap1(norm_discrete(color_values))
@@ -167,7 +167,7 @@ plt.plot(r, Visc, label="Viscous stress")
 plt.plot(r,MS, label = "Maxwell stress")
 plt.plot(r, F,"k", label = "Radial flux", linewidth=3)
 plt.xlabel(r"$r$")
-plt.ylabel(r"Torque")
+plt.ylabel(r"Fluxes")
 plt.title(target)
 plt.grid()
 plt.legend()
