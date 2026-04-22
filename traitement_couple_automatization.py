@@ -100,7 +100,7 @@ mu0 = 4*np.pi*1e-7
 
 liste = []
 index = []
-snap_dir = "snapshots"
+snap_dir = "snapshots1"
 
 all_dirs = (list(Path("/travail/dynconv/multiscale_dyno/anelasticCouette/gr").glob("Nr*/ra*/om*")) +list(Path("/travail/dynconv/multiscale_dyno/anelasticCouette/gr2").glob("xi*/ra*/om*")) +list(Path("/travail/dynconv/multiscale_dyno/anelasticCouette/gr_gr2_Louis").glob("ra*/om*")))
 
