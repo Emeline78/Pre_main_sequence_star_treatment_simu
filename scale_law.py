@@ -54,7 +54,7 @@ cmap1 = cm.inferno
 colors1 = cmap1(norm(color_values))
 
 cmap2 = cm.cool  
-colors2 = cmap(norm(color_values))
+colors2 = cmap2(norm(color_values))
 
 plt.figure()
 plt.errorbar(Ro_conv[mask], MS_mean[mask],yerr=MS_mean_dist[mask],fmt='none',ecolor=colors1)
