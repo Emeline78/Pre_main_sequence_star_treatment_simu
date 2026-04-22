@@ -46,9 +46,28 @@ for i,namefile in enumerate(names):
 	print(np.mean(x),MS_max[i])
 	MS_max_dist[i] = np.sqrt(np.mean((x - MS_max[i])**2)) / np.sqrt(len(x))
 
+
+
+color_values = g[mask]
+norm = plt.Normalize(vmin=color_values.min(), vmax=color_values.max())
+cmap = cm.viridis  
+colors = cmap(norm(color_values))
+
+
+plt.errorbar(Ro_conv[mask], MS_mean[mask],yerr=MS_mean_dist[mask],fmt='none',ecolor=colors,alpha=0.7)
+sc = plt.scatter(Ro_conv[mask], MS_mean[mask],c=color_values, cmap='viridis', norm=norm,zorder=5, label="Radial mean")
+plt.colorbar(sc, label="Gravity configuration")
+
+
 plt.figure()
-plt.errorbar(Ro_conv[mask], MS_mean[mask], yerr=MS_mean_dist[mask], fmt='o', label = "Radial mean")
-plt.errorbar(Ro_conv[mask], MS_max[mask], yerr=MS_max_dist[mask], fmt='o', label = "Radial max")
+plt.errorbar(Ro_conv[mask], MS_mean[mask],yerr=MS_mean_dist[mask],fmt='none',ecolor=colors,alpha=0.7)
+sc = plt.scatter(Ro_conv[mask], MS_mean[mask],c=color_values, cmap='viridis', norm=norm,zorder=5, label="Radial mean")
+plt.colorbar(sc)
+cmap = cm.inferno  
+colors = cmap(norm(color_values))
+plt.errorbar(Ro_conv[mask], MS_max[mask],yerr=MS_max_dist[mask],fmt='none',ecolor=colors,alpha=0.7)
+sc = plt.scatter(Ro_conv[mask], MS_max[mask],c=color_values, cmap='viridis', norm=norm,zorder=5, label="Radial max")
+plt.colorbar(sc, label="Gravity configuration")
 plt.xlabel("Rossby convectif")
 plt.ylabel("MS of each run")
 plt.legend()
