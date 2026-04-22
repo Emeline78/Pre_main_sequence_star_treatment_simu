@@ -132,6 +132,10 @@ for path in all_dirs:
 	    status = True
 	else:
 	    status = False
+	    
+	ts = MagicTs(datadir = a,field='par', all=True)
+	Rm = ts.rm
+
 	
 	if snap_file.exists():
 
@@ -253,7 +257,7 @@ for path in all_dirs:
 	MC = MC / t_total 
 
 	params = extract_params(path)
-	res = pd.DataFrame({"r": r,"RS": RS, "MC": MC, "MS": MS, "Visc": Visc,"name": str(case_name), "status": status})
+	res = pd.DataFrame({"r": r,"RS": RS, "MC": MC, "MS": MS, "Visc": Visc,"name": str(case_name), "status": status, "rm" : Rm})
 	for key, value in params.items():
         	res[key] = value
 	liste.append(res)
