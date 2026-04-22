@@ -253,7 +253,7 @@ for path in all_dirs:
 	MC = MC / t_total * rho * L**3 / tau**2 * 2 * np.pi * r**2
 
 	params = extract_params(path)
-	res = pd.DataFrame({"r": r,"RS": RS, "MC": MC, "MS": MS, "Visc": Visc,"name": str(case_name), "status": status})
+	res = pd.DataFrame({"r": r,"RS": RS, "MC": MC, "MS": MS, "Visc": Visc, "rho" : rho,"name": str(case_name), "status": status})
 	for key, value in params.items():
         	res[key] = value
 	liste.append(res)
