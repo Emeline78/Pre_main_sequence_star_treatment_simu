@@ -203,6 +203,7 @@ y = np.array(y_new)
 yerr = np.array(yerr_new)
 
 n = 500
+x_new = np.linspace(x.min(), x.max(), 200)
 y_samples = []
 
 for i in range(n):
