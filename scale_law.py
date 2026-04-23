@@ -3,6 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 import matplotlib.colors as mcolors
+from scipy.interpolate import CubicSpline
 """
 git add scale_law.py
 git commit -m "modifications"
@@ -150,8 +151,9 @@ plt.scatter(Ra, Ro_sh, c=MS_mean, cmap='viridis')
 plt.colorbar(label='Radial mean of the Maxwell stress of each run')
 plt.xlabel('Rayleigh number')
 plt.ylabel('Rossby shear number')
-"""
+
 target = "gr_Nr2p5_Pm4_ra_8e6_om100"
+
 sim = df[df["name"] == target]
  
 r    = sim["r"].values
@@ -174,7 +176,36 @@ plt.grid()
 plt.legend()
 plt.tight_layout()
 plt.show()
+"""
 
+x = Ro_conv[mask]
+y = MS_mean[mask]
+yerr = MS_mean_dist[mask]
 
+idx = np.argsort(x)
+x, y, yerr = x[idx], y[idx], yerr[idx]
+
+x_new = np.linspace(x.min(), x.max(), 200)
+
+n = 500
+y_samples = []
+
+for i in range(n_sim):
+	y_rand = np.random.normal(y, yerr)
+	cs = CubicSpline(x, y_rand)
+	y_samples.append(cs(x_new))
+
+y_samples = np.array(y_samples)
+
+y_mean_interp = y_samples.mean(axis=0)
+y_std_interp = y_samples.std(axis=0)
+
+plt.figure()
+plt.plot(x_new, y_mean_interp, color='black')
+plt.fill_between(x_new,y_mean_interp - y_std_interp,y_mean_interp + y_std_interp,alpha=0.3)
+plt.xlabel("Rossby convectif")
+plt.ylabel("MS mean")
+plt.title("Radial mean of MS as a function of the convective Rossby (Monte-Carlo)")
+plt.show()
 
 
