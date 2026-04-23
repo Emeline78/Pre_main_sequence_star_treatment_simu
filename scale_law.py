@@ -187,7 +187,7 @@ yerr = MS_mean_dist[mask]
 def linear_model(x, a, b):
 	return a * x + b
     
-def interp(x,y,yerr)
+def interp(x,y,yerr):
 	valid = (x > 0) & (y > 0)
 	x, y, yerr = x[valid], y[valid], yerr[valid]
 
