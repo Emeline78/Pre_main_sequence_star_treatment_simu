@@ -145,6 +145,7 @@ plt.xlabel("Reynolds magnetic")
 plt.ylabel("MS max")
 plt.title("Radial max of MS as a function of the Reynolds magnetic")
 plt.grid()
+plt.show()
 
 """
 plt.figure()
@@ -183,57 +184,81 @@ x = Ro_conv[mask]
 y = MS_mean[mask]
 yerr = MS_mean_dist[mask]
 
-valid = (x > 0) & (y > 0)
-x, y, yerr = x[valid], y[valid], yerr[valid]
-
-logx = np.log10(x)
-logy = np.log10(y)
-
-logy_err = yerr / (y * np.log(10))
-
 def linear_model(x, a, b):
-    return a * x + b
+	return a * x + b
+    
+def interp(x,y,yerr)
+	valid = (x > 0) & (y > 0)
+	x, y, yerr = x[valid], y[valid], yerr[valid]
 
-params, cov = curve_fit(linear_model, logx, logy, sigma=logy_err)
-a_mean, b_mean = params
+	logx = np.log10(x)
+	logy = np.log10(y)
+	logy_err = yerr / (y * np.log(10))
 
-x_plot = np.logspace(np.log10(x.min()), np.log10(x.max()), 200)
-y_plot = 10**b_mean * x_plot**a_mean
+	params, cov = curve_fit(linear_model, logx, logy, sigma=logy_err)
+	a, b = params
 
+	x_plot = np.logspace(np.log10(x.min()), np.log10(x.max()), 200)
+	y_plot = 10**b * x_plot**a
+	return(a,b,x_plot,y_plot)
+
+# ======================== ROSSBY CONVECTIF =========================
+a_mean,b_mean,x_plot,y_plot = interp(Ro_conv[mask],MS_mean[mask],MS_mean_dist[mask])
 plt.figure()
-plt.errorbar(x, y, yerr=yerr, fmt='o')
+plt.errorbar(Ro_conv[mask],MS_mean[mask], yerr=MS_mean_dist[mask], fmt='o')
 plt.plot(x_plot, y_plot, color='black')
-plt.xlabel("Rossby convectif")
+plt.xlabel("Convective Rossby")
 plt.ylabel("MS mean")
+plt.grid()
 plt.title(rf"$MS_{{mean}} = 10^{{{b_mean:.2f}}} \cdot Ro_{{sh}}^{{{a_mean:.2f}}}$")
 
-x = Ro_conv[mask]
-y = MS_max[mask]
-yerr = MS_max_dist[mask]
-
-valid = (x > 0) & (y > 0)
-x, y, yerr = x[valid], y[valid], yerr[valid]
-
-logx = np.log10(x)
-logy = np.log10(y)
-
-logy_err = yerr / (y * np.log(10))
-
-def linear_model(x, a, b):
-    return a * x + b
-
-params, cov = curve_fit(linear_model, logx, logy, sigma=logy_err)
-a_max, b_max = params
-
-x_plot = np.logspace(np.log10(x.min()), np.log10(x.max()), 200)
-y_plot = 10**b_max * x_plot**a_max
-
+a_max,b_max,x_plot,y_plot = interp(Ro_conv[mask],MS_max[mask],MS_max_dist[mask])
 plt.figure()
-plt.errorbar(x, y, yerr=yerr, fmt='o')
+plt.errorbar(Ro_conv[mask],MS_max[mask], yerr=MS_max_dist[mask], fmt='o')
 plt.plot(x_plot, y_plot, color='black')
-plt.xlabel("Rossby convectif")
-plt.ylabel("MS mean")
+plt.xlabel("Convective Rossby")
+plt.ylabel("MS max")
 plt.title(rf"$MS_{{max}} = 10^{{{b_max:.2f}}} \cdot Ro_{{sh}}^{{{a_max:.2f}}}$")
+plt.grid()
 plt.show()
 
+# ======================== ELSASSER =========================
+a_mean,b_mean,x_plot,y_plot = interp(Els[mask],MS_mean[mask],MS_mean_dist[mask])
+plt.figure()
+plt.errorbar(Els[mask],MS_mean[mask], yerr=MS_mean_dist[mask], fmt='o')
+plt.plot(x_plot, y_plot, color='black')
+plt.xlabel("Elsasser number")
+plt.ylabel("MS mean")
+plt.grid()
+plt.title(rf"$MS_{{mean}} = 10^{{{b_mean:.2f}}} \cdot \Lambda^{{{a_mean:.2f}}}$")
+
+a_max,b_max,x_plot,y_plot = interp(Els[mask],MS_max[mask],MS_max_dist[mask])
+plt.figure()
+plt.errorbar(Ro_conv[mask],MS_max[mask], yerr=MS_max_dist[mask], fmt='o')
+plt.plot(x_plot, y_plot, color='black')
+plt.xlabel("Elsasser number")
+plt.ylabel("MS max")
+plt.title(rf"$MS_{{max}} = 10^{{{b_max:.2f}}} \cdot \Lambda^{{{a_max:.2f}}}$")
+plt.grid()
+plt.show()
+
+# ======================== ELSASSER =========================
+a_mean,b_mean,x_plot,y_plot = interp(Rm[mask],MS_mean[mask],MS_mean_dist[mask])
+plt.figure()
+plt.errorbar(Rm[mask],MS_mean[mask], yerr=MS_mean_dist[mask], fmt='o')
+plt.plot(x_plot, y_plot, color='black')
+plt.xlabel("Reynolds magnetic")
+plt.ylabel("MS mean")
+plt.grid()
+plt.title(rf"$MS_{{mean}} = 10^{{{b_mean:.2f}}} \cdot Rm^{{{a_mean:.2f}}}$")
+
+a_max,b_max,x_plot,y_plot = interp(Rm[mask],MS_max[mask],MS_max_dist[mask])
+plt.figure()
+plt.errorbar(Rm[mask],MS_max[mask], yerr=MS_max_dist[mask], fmt='o')
+plt.plot(x_plot, y_plot, color='black')
+plt.xlabel("Reynolds magnetic")
+plt.ylabel("MS max")
+plt.title(rf"$MS_{{max}} = 10^{{{b_max:.2f}}} \cdot Rm^{{{a_max:.2f}}}$")
+plt.grid()
+plt.show()
 
