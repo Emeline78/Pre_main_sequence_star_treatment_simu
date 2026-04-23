@@ -205,7 +205,7 @@ plt.errorbar(x, y, yerr=yerr, fmt='o')
 plt.plot(x_plot, y_plot, color='black')
 plt.xlabel("Rossby convectif")
 plt.ylabel("MS mean")
-plt.title("Radial mean of MS as a function of the convective Rossby (fit loi de puissance)")
+plt.title(rf"$MS_{mean} = 10^{b_mean} \cdot Ro_{sh}^{a_mean}$")
 
 x = Ro_conv[mask]
 y = MS_max[mask]
@@ -233,8 +233,7 @@ plt.errorbar(x, y, yerr=yerr, fmt='o')
 plt.plot(x_plot, y_plot, color='black')
 plt.xlabel("Rossby convectif")
 plt.ylabel("MS mean")
-plt.title("Radial mean of MS as a function of the convective Rossby (fit loi de puissance)")
+plt.title(r"$MS_{max} = 10^{b_max} \cdot Ro_{sh}^{a_max}$")
 plt.show()
 
-print(rf"$MS_{{max}} = 10^{{{b_max:.2f}}} \cdot Ro\_sh^{{{a_max:.2f}}}$")
-print(rf"$MS_{{mean}} = 10^{{{b_mean:.2f}}} \cdot Ro\_sh^{{{a_mean:.2f}}}$")
+
