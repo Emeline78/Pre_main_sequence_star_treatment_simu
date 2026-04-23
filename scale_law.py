@@ -236,5 +236,5 @@ plt.ylabel("MS mean")
 plt.title("Radial mean of MS as a function of the convective Rossby (fit loi de puissance)")
 plt.show()
 
-print(f"MS_max = 10^{b_max:.2f} * Ro_sh^{a_max:.2f}")
-print(f"MS_mean = 10^{b_mean:.2f} * Ro_sh^{a_mean:.2f}")
+print(rf"$MS_{{max}} = 10^{{{b_max:.2f}}} \cdot Ro\_sh^{{{a_max:.2f}}}$")
+print(rf"$MS_{{mean}} = 10^{{{b_mean:.2f}}} \cdot Ro\_sh^{{{a_mean:.2f}}}$")
