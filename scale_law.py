@@ -205,7 +205,7 @@ plt.errorbar(x, y, yerr=yerr, fmt='o')
 plt.plot(x_plot, y_plot, color='black')
 plt.xlabel("Rossby convectif")
 plt.ylabel("MS mean")
-plt.title(rf"$MS_{{mean}} = 10^{{{b_mean}}} \cdot Ro_{{sh}}^{{{a_mean}}}$")
+plt.title(rf"$MS_{{mean}} = 10^{{{b_mean:.2f}}} \cdot Ro_{{sh}}^{{{a_mean:.2f}}}$")
 
 x = Ro_conv[mask]
 y = MS_max[mask]
@@ -233,7 +233,7 @@ plt.errorbar(x, y, yerr=yerr, fmt='o')
 plt.plot(x_plot, y_plot, color='black')
 plt.xlabel("Rossby convectif")
 plt.ylabel("MS mean")
-plt.title(rf"$MS_{{max}} = 10^{{{b_max}}} \cdot Ro_{{sh}}^{{{a_max}}}$")
+plt.title(rf"$MS_{{max}} = 10^{{{b_max:.2f}}} \cdot Ro_{{sh}}^{{{a_max:.2f}}}$")
 plt.show()
 
 
