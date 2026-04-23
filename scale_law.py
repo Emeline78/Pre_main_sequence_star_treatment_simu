@@ -183,52 +183,6 @@ x = Ro_conv[mask]
 y = MS_mean[mask]
 yerr = MS_mean_dist[mask]
 
-x_unique = np.unique(x)
-
-y_new = []
-yerr_new = []
-
-for val in x_unique:
-    mask_val = x == val
-    weights = 1 / yerr[mask_val]**2
-    
-    y_avg = np.sum(weights * y[mask_val]) / np.sum(weights)
-    err_avg = np.sqrt(1 / np.sum(weights))
-    
-    y_new.append(y_avg)
-    yerr_new.append(err_avg)
-
-x = x_unique
-y = np.array(y_new)
-yerr = np.array(yerr_new)
-
-n = 500
-x_new = np.linspace(x.min(), x.max(), 200)
-y_samples = []
-
-for i in range(n):
-	y_rand = np.random.normal(y, yerr)
-	cs = CubicSpline(x, y_rand)
-	y_samples.append(cs(x_new))
-
-y_samples = np.array(y_samples)
-
-y_mean_interp = y_samples.mean(axis=0)
-y_std_interp = y_samples.std(axis=0)
-
-plt.figure()
-plt.plot(x_new, y_mean_interp, color='black')
-plt.fill_between(x_new,y_mean_interp - y_std_interp,y_mean_interp + y_std_interp,alpha=0.3)
-plt.xlabel("Rossby convectif")
-plt.ylabel("MS mean")
-plt.title("Radial mean of MS as a function of the convective Rossby (Monte-Carlo)")
-
-
-# ============== AUTRES METHODE =============================
-x = Ro_conv[mask]
-y = MS_mean[mask]
-yerr = MS_mean_dist[mask]
-
 valid = (x > 0) & (y > 0)
 x, y, yerr = x[valid], y[valid], yerr[valid]
 
@@ -249,8 +203,6 @@ y_plot = 10**b * x_plot**a
 plt.figure()
 plt.errorbar(x, y, yerr=yerr, fmt='o')
 plt.plot(x_plot, y_plot, color='black')
-plt.xscale('log')
-plt.yscale('log')
 plt.xlabel("Rossby convectif")
 plt.ylabel("MS mean")
 plt.title("Radial mean of MS as a function of the convective Rossby (fit loi de puissance)")
