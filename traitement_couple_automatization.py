@@ -238,6 +238,7 @@ for path in all_dirs:
 	
 		save_snapshots(snap_dir,case_name,r,times,RS_snap,MS_snap,MC_snap,Visc_snap)
 
+	print(np.shape(MS_snap))
 	t_total = times[-1] - times[0]
 	dt = np.diff(times)
 
