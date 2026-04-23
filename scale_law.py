@@ -190,7 +190,7 @@ x_new = np.linspace(x.min(), x.max(), 200)
 n = 500
 y_samples = []
 
-for i in range(n_sim):
+for i in range(n):
 	y_rand = np.random.normal(y, yerr)
 	cs = CubicSpline(x, y_rand)
 	y_samples.append(cs(x_new))
