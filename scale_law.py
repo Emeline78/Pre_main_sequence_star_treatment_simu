@@ -206,5 +206,33 @@ plt.plot(x_plot, y_plot, color='black')
 plt.xlabel("Rossby convectif")
 plt.ylabel("MS mean")
 plt.title("Radial mean of MS as a function of the convective Rossby (fit loi de puissance)")
+
+x = Ro_conv[mask]
+y = MS_max[mask]
+yerr = MS_max_dist[mask]
+
+valid = (x > 0) & (y > 0)
+x, y, yerr = x[valid], y[valid], yerr[valid]
+
+logx = np.log10(x)
+logy = np.log10(y)
+
+logy_err = yerr / (y * np.log(10))
+
+def linear_model(x, a, b):
+    return a * x + b
+
+params, cov = curve_fit(linear_model, logx, logy, sigma=logy_err)
+a, b = params
+
+x_plot = np.logspace(np.log10(x.min()), np.log10(x.max()), 200)
+y_plot = 10**b * x_plot**a
+
+plt.figure()
+plt.errorbar(x, y, yerr=yerr, fmt='o')
+plt.plot(x_plot, y_plot, color='black')
+plt.xlabel("Rossby convectif")
+plt.ylabel("MS mean")
+plt.title("Radial mean of MS as a function of the convective Rossby (fit loi de puissance)")
 plt.show()
 
