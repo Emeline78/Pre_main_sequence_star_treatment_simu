@@ -195,10 +195,10 @@ def linear_model(x, a, b):
     return a * x + b
 
 params, cov = curve_fit(linear_model, logx, logy, sigma=logy_err)
-a, b = params
+a_mean, b_mean = params
 
 x_plot = np.logspace(np.log10(x.min()), np.log10(x.max()), 200)
-y_plot = 10**b * x_plot**a
+y_plot = 10**b_mean * x_plot**a_mean
 
 plt.figure()
 plt.errorbar(x, y, yerr=yerr, fmt='o')
@@ -223,10 +223,10 @@ def linear_model(x, a, b):
     return a * x + b
 
 params, cov = curve_fit(linear_model, logx, logy, sigma=logy_err)
-a, b = params
+a_max, b_max = params
 
 x_plot = np.logspace(np.log10(x.min()), np.log10(x.max()), 200)
-y_plot = 10**b * x_plot**a
+y_plot = 10**b_max * x_plot**a_max
 
 plt.figure()
 plt.errorbar(x, y, yerr=yerr, fmt='o')
@@ -236,3 +236,5 @@ plt.ylabel("MS mean")
 plt.title("Radial mean of MS as a function of the convective Rossby (fit loi de puissance)")
 plt.show()
 
+print(f"MS_max = 10^{b_max:.2f} * Ro_sh^{a_max:.2f}")
+print(f"MS_mean = 10^{b_mean:.2f} * Ro_sh^{a_mean:.2f}")
