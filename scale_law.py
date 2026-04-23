@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 import matplotlib.colors as mcolors
 from scipy.interpolate import CubicSpline
+from scipy.optimize import curve_fit
 """
 git add scale_law.py
 git commit -m "modifications"
@@ -182,10 +183,24 @@ x = Ro_conv[mask]
 y = MS_mean[mask]
 yerr = MS_mean_dist[mask]
 
-idx = np.argsort(x)
-x, y, yerr = x[idx], y[idx], yerr[idx]
+x_unique = np.unique(x)
 
-x_new = np.linspace(x.min(), x.max(), 200)
+y_new = []
+yerr_new = []
+
+for val in x_unique:
+    mask_val = x == val
+    weights = 1 / yerr[mask_val]**2
+    
+    y_avg = np.sum(weights * y[mask_val]) / np.sum(weights)
+    err_avg = np.sqrt(1 / np.sum(weights))
+    
+    y_new.append(y_avg)
+    yerr_new.append(err_avg)
+
+x = x_unique
+y = np.array(y_new)
+yerr = np.array(yerr_new)
 
 n = 500
 y_samples = []
@@ -206,6 +221,37 @@ plt.fill_between(x_new,y_mean_interp - y_std_interp,y_mean_interp + y_std_interp
 plt.xlabel("Rossby convectif")
 plt.ylabel("MS mean")
 plt.title("Radial mean of MS as a function of the convective Rossby (Monte-Carlo)")
-plt.show()
 
+
+# ============== AUTRES METHODE =============================
+x = Ro_conv[mask]
+y = MS_mean[mask]
+yerr = MS_mean_dist[mask]
+
+valid = (x > 0) & (y > 0)
+x, y, yerr = x[valid], y[valid], yerr[valid]
+
+logx = np.log10(x)
+logy = np.log10(y)
+
+logy_err = yerr / (y * np.log(10))
+
+def linear_model(x, a, b):
+    return a * x + b
+
+params, cov = curve_fit(linear_model, logx, logy, sigma=logy_err)
+a, b = params
+
+x_plot = np.logspace(np.log10(x.min()), np.log10(x.max()), 200)
+y_plot = 10**b * x_plot**a
+
+plt.figure()
+plt.errorbar(x, y, yerr=yerr, fmt='o')
+plt.plot(x_plot, y_plot, color='black')
+plt.xscale('log')
+plt.yscale('log')
+plt.xlabel("Rossby convectif")
+plt.ylabel("MS mean")
+plt.title("Radial mean of MS as a function of the convective Rossby (fit loi de puissance)")
+plt.show()
 
