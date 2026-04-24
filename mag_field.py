@@ -43,6 +43,7 @@ git push
 """
 
 a = input("directory : ")
+idx = int(input("index sur r : "))
 #a = "/travail/dynconv/multiscale_dyno/anelasticCouette/gr/Nr2p5_Pm4/ra_8e6/om50/"
 #a = "/travail/dynconv/multiscale_dyno/anelasticCouette/gr/Nr2p5_Pm6/ra_8e6/om50/"
 #a = "/travail/dynconv/multiscale_dyno/anelasticCouette/gr2/xi_p35_pm4/ra_5e6/om50/"
@@ -85,9 +86,9 @@ for j in range(1,len(files)+1):
     #Bp = np.mean(gr.Bphi,axis = 2)
     #Bth = np.mean(gr.Btheta,axis = 2)
     
-    Br = gr.Br[:,:,32]
-    Bp = gr.Bphi[:,:,32]
-    Bth = gr.Btheta[:,:,32]
+    Br = gr.Br[:,:,idx]
+    Bp = gr.Bphi[:,:,idx]
+    Bth = gr.Btheta[:,:,idx]
     
     
     B_mean = Br**2 + Bp**2 + Bth**2
@@ -115,5 +116,5 @@ for i in range(len(dt)):
     B_tot += 0.5*(B[i] + B[i+1])*dt[i]
 
 B_tot = B_tot / t_total 
-print(B_tot * 1e4," G")
+print(B_tot * 1e4,"G")
 
