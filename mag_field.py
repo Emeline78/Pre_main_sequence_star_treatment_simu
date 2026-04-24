@@ -87,8 +87,8 @@ for j in range(1,len(files)+1):
     
     
     B_mean = np.sqrt(Br**2 + Bp**2 + Bth**2)
-    B = (B_mean * w_phi * w_theta[None,:]).sum(axis=(0,1)) * 1/2 * r[0]**2
-    B.append(B)
+    B_snap = (B_mean * w_phi * w_theta[None,:]).sum(axis=(0,1)) * 1/2 * r[0]**2
+    B.append(B_snap)
 
 times = np.array(times)
 
