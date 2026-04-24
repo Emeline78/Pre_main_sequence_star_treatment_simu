@@ -81,7 +81,7 @@ for j in range(1,len(files)+1):
         w_theta = dtheta * np.sin(th)
         w_phi = dphi / (2* np.pi)
 	
-    idx = np.argmax(gr.Br, axis = 2)
+    idx = 0
     Br = gr.Br[:,:,idx]
     Bp = gr.Bphi[:,:,idx]
     Bth = gr.Btheta[:,:,idx]
