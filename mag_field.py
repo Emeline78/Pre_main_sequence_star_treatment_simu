@@ -43,7 +43,7 @@ git push
 """
 
 a = input("directory : ")
-idx = int(input("index sur r : "))
+idx = [0,32]
 #a = "/travail/dynconv/multiscale_dyno/anelasticCouette/gr/Nr2p5_Pm4/ra_8e6/om50/"
 #a = "/travail/dynconv/multiscale_dyno/anelasticCouette/gr/Nr2p5_Pm6/ra_8e6/om50/"
 #a = "/travail/dynconv/multiscale_dyno/anelasticCouette/gr2/xi_p35_pm4/ra_5e6/om50/"
@@ -64,57 +64,58 @@ om = 1/Ek
 files = glob.glob(os.path.join(a,'G_[0-9]*.rot01'))
 files.sort(key=lambda f: int(os.path.basename(f).split('_')[1].split('.')[0]))
 
-times = []
-B = []
+for i in idx:
+	times = []
+	B = []
 
-for j in range(1,len(files)+1): 
-    gr = MagicGraph(datadir=a,tag='rot01',ivar = j)
-    times.append(gr.time)
+	for j in range(1,len(files)+1): 
+	    gr = MagicGraph(datadir=a,tag='rot01',ivar = j)
+	    times.append(gr.time)
 
-    if j == 1:
-        r = gr.radius
-        th = np.linspace(0,np.pi,gr.ntheta)
-        phi = np.linspace(0,2*np.pi,gr.nphi-1)
+	    if j == 1:
+		r = gr.radius
+		th = np.linspace(0,np.pi,gr.ntheta)
+		phi = np.linspace(0,2*np.pi,gr.nphi-1)
 
-        dphi = 2*np.pi/(gr.nphi-2)
-        dtheta = np.pi/(gr.ntheta-1)
-        
-        w_theta = dtheta * np.sin(th)
-        w_phi = dphi / (2* np.pi)
-	
-    #Br = np.mean(gr.Br,axis = 2)
-    #Bp = np.mean(gr.Bphi,axis = 2)
-    #Bth = np.mean(gr.Btheta,axis = 2)
-    
-    Br = gr.Br[:,:,idx]
-    Bp = gr.Bphi[:,:,idx]
-    Bth = gr.Btheta[:,:,idx]
-    
-    
-    B_mean = Br**2 + Bp**2 + Bth**2
-    B_snap = np.sqrt((B_mean * w_phi * w_theta[None,:]).sum(axis=(0,1)) * 1/2)
-    B.append(B_snap)
+		dphi = 2*np.pi/(gr.nphi-2)
+		dtheta = np.pi/(gr.ntheta-1)
+		
+		w_theta = dtheta * np.sin(th)
+		w_phi = dphi / (2* np.pi)
+		
+	    #Br = np.mean(gr.Br,axis = 2)
+	    #Bp = np.mean(gr.Bphi,axis = 2)
+	    #Bth = np.mean(gr.Btheta,axis = 2)
+	    
+	    Br = gr.Br[:,:,idx]
+	    Bp = gr.Bphi[:,:,idx]
+	    Bth = gr.Btheta[:,:,idx]
+	    
+	    
+	    B_mean = Br**2 + Bp**2 + Bth**2
+	    B_snap = np.sqrt((B_mean * w_phi * w_theta[None,:]).sum(axis=(0,1)) * 1/2)
+	    B.append(B_snap)
 
-times = np.array(times)
+	times = np.array(times)
 
-L = 1		# pas 1 - ki car r0 n'est pas egale a 1 mais a 1/(1-ki)
-nu = Ek * om * L**2
-tau = L**2/nu		# savoir quoi prendre entre temps visqueux (L**2/nu) ou de rotation (1/om)
-eta = nu/Pm
-temp, rho, drho = anelprof(r, strat = Nrho, polind = n, g0=g0, g1=g1, g2=g2)
-rho0 = rho[0]
-rho = rho / rho0  
-B0car = eta * om * mu0 	* rho0
+	L = 1		# pas 1 - ki car r0 n'est pas egale a 1 mais a 1/(1-ki)
+	nu = Ek * om * L**2
+	tau = L**2/nu		# savoir quoi prendre entre temps visqueux (L**2/nu) ou de rotation (1/om)
+	eta = nu/Pm
+	temp, rho, drho = anelprof(r, strat = Nrho, polind = n, g0=g0, g1=g1, g2=g2)
+	rho0 = rho[0]
+	rho = rho / rho0  
+	B0car = eta * om * mu0 	* rho0
 
 
-B = np.array(B) * np.sqrt(B0car)
-t_total = times[-1] - times[0]
-dt = np.diff(times)
+	B = np.array(B) * np.sqrt(B0car)
+	t_total = times[-1] - times[0]
+	dt = np.diff(times)
 
-B_tot = np.zeros_like(B[0])
-for i in range(len(dt)):
-    B_tot += 0.5*(B[i] + B[i+1])*dt[i]
+	B_tot = np.zeros_like(B[0])
+	for i in range(len(dt)):
+	    B_tot += 0.5*(B[i] + B[i+1])*dt[i]
 
-B_tot = B_tot / t_total 
-print(B_tot * 1e4,"G")
+	B_tot = B_tot / t_total 
+	print(B_tot * 1e4,"G")
 
