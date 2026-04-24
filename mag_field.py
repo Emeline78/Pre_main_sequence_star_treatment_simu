@@ -87,9 +87,9 @@ for i in idx:
 		#Bp = np.mean(gr.Bphi,axis = 2)
 		#Bth = np.mean(gr.Btheta,axis = 2)
 
-		Br = gr.Br[:,:,idx]
-		Bp = gr.Bphi[:,:,idx]
-		Bth = gr.Btheta[:,:,idx]
+		Br = gr.Br[:,:,i]
+		Bp = gr.Bphi[:,:,i]
+		Bth = gr.Btheta[:,:,i]
 
 
 		B_mean = Br**2 + Bp**2 + Bth**2
