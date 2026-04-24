@@ -110,6 +110,6 @@ B_tot = np.zeros_like(B[0])
 for i in range(len(dt)):
     B_tot += 0.5*(B[i] + B[i+1])*dt[i]
 
-B = B / t_total 
-print(B)
+B_tot = B_tot / t_total 
+print(B_tot)
 
