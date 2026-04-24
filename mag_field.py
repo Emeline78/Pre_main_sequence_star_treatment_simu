@@ -80,10 +80,11 @@ for j in range(1,len(files)+1):
         
         w_theta = dtheta * np.sin(th)
         w_phi = dphi / (2* np.pi)
-
-    Br = gr.Br[:,:,0]
-    Bp = gr.Bphi[:,:,0]
-    Bth = gr.Btheta[:,:,0]
+	
+    idx = np.argmax(gr.Br, axis = 1)
+    Br = gr.Br[:,:,idx]
+    Bp = gr.Bphi[:,:,idx]
+    Bth = gr.Btheta[:,:,idx]
     
     
     B_mean = np.sqrt(Br**2 + Bp**2 + Bth**2)
