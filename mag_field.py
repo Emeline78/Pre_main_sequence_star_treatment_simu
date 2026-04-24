@@ -69,32 +69,32 @@ for i in idx:
 	B = []
 
 	for j in range(1,len(files)+1): 
-	    gr = MagicGraph(datadir=a,tag='rot01',ivar = j)
-	    times.append(gr.time)
+		gr = MagicGraph(datadir=a,tag='rot01',ivar = j)
+		times.append(gr.time)
 
-	    if j == 1:
-		r = gr.radius
-		th = np.linspace(0,np.pi,gr.ntheta)
-		phi = np.linspace(0,2*np.pi,gr.nphi-1)
+		if j == 1:
+			r = gr.radius
+			th = np.linspace(0,np.pi,gr.ntheta)
+			phi = np.linspace(0,2*np.pi,gr.nphi-1)
 
-		dphi = 2*np.pi/(gr.nphi-2)
-		dtheta = np.pi/(gr.ntheta-1)
-		
-		w_theta = dtheta * np.sin(th)
-		w_phi = dphi / (2* np.pi)
-		
-	    #Br = np.mean(gr.Br,axis = 2)
-	    #Bp = np.mean(gr.Bphi,axis = 2)
-	    #Bth = np.mean(gr.Btheta,axis = 2)
-	    
-	    Br = gr.Br[:,:,idx]
-	    Bp = gr.Bphi[:,:,idx]
-	    Bth = gr.Btheta[:,:,idx]
-	    
-	    
-	    B_mean = Br**2 + Bp**2 + Bth**2
-	    B_snap = np.sqrt((B_mean * w_phi * w_theta[None,:]).sum(axis=(0,1)) * 1/2)
-	    B.append(B_snap)
+			dphi = 2*np.pi/(gr.nphi-2)
+			dtheta = np.pi/(gr.ntheta-1)
+
+			w_theta = dtheta * np.sin(th)
+			w_phi = dphi / (2* np.pi)
+
+		#Br = np.mean(gr.Br,axis = 2)
+		#Bp = np.mean(gr.Bphi,axis = 2)
+		#Bth = np.mean(gr.Btheta,axis = 2)
+
+		Br = gr.Br[:,:,idx]
+		Bp = gr.Bphi[:,:,idx]
+		Bth = gr.Btheta[:,:,idx]
+
+
+		B_mean = Br**2 + Bp**2 + Bth**2
+		B_snap = np.sqrt((B_mean * w_phi * w_theta[None,:]).sum(axis=(0,1)) * 1/2)
+		B.append(B_snap)
 
 	times = np.array(times)
 
