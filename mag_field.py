@@ -111,5 +111,5 @@ for i in range(len(dt)):
     B_tot += 0.5*(B[i] + B[i+1])*dt[i]
 
 B_tot = B_tot / t_total 
-print(B_tot)
+print(B_tot * 1e4," G")
 
