@@ -81,9 +81,13 @@ for j in range(1,len(files)+1):
         w_theta = dtheta * np.sin(th)
         w_phi = dphi / (2* np.pi)
 	
-    Br = np.mean(gr.Br,axis = 2)
-    Bp = np.mean(gr.Bphi,axis = 2)
-    Bth = np.mean(gr.Btheta,axis = 2)
+    #Br = np.mean(gr.Br,axis = 2)
+    #Bp = np.mean(gr.Bphi,axis = 2)
+    #Bth = np.mean(gr.Btheta,axis = 2)
+    
+    Br = gr.Br[:,:,32]
+    Bp = gr.Bphi[:,:,32]
+    Bth = gr.Btheta[:,:,32]
     
     
     B_mean = Br**2 + Bp**2 + Bth**2
