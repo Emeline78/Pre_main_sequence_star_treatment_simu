@@ -260,8 +260,9 @@ plt.xlabel("Reynolds magnetic")
 plt.ylabel("MS max")
 plt.title(rf"$MS_{{max}} = 10^{{{b_max:.2f}}} \cdot Rm^{{{a_max:.2f}}}$")
 plt.grid()
-#plt.show()
+plt.show()
 
+"""
 #=======================================================================================================
 df = pd.read_parquet("transport_profiles1.parquet")
 
@@ -485,5 +486,5 @@ plt.ylabel("MS max")
 plt.title(rf"$MS_{{max}} = 10^{{{b_max:.2f}}} \cdot Rm^{{{a_max:.2f}}}$")
 plt.grid()
 plt.show()
-
+"""
 
