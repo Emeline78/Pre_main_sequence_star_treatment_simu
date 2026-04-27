@@ -15,7 +15,7 @@ git push
 df = pd.read_parquet("transport_profiles.parquet")
 
 r_phys = 1e9
-Omega_phys = 1e-5
+Omega_phys = 1e-6
 rho_ref = 1e-7
 mu0 = 4*np.pi*1e-7
 L_phys = r_phys * (1-df["xi"])
