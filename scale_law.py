@@ -195,7 +195,7 @@ def interp(x,y,yerr):
 	logy = np.log10(y)
 	logy_err = yerr / (y * np.log(10))
 
-	params, cov = curve_fit(linear_model, logx, logy, sigma=logy_err)
+	params, cov = curve_fit(linear_model, logx, logy) #, sigma=logy_err)
 	a, b = params
 
 	x_plot = np.logspace(np.log10(x.min()), np.log10(x.max()), 200)
