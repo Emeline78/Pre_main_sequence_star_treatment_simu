@@ -34,7 +34,6 @@ matplotlib.rcParams['xtick.top']='True'
 matplotlib.rcParams['figure.figsize']= [8, 6]
 
 from magic import *
-mu0 = 4*np.pi*1e-7
 
 """
 git add mag_field.py
@@ -100,7 +99,7 @@ for i in idx:
 
 	r_phys = 1e9
 	om = 1e-5
-	rho_ref = 1e-8
+	rho_ref = 1e-4
 	mu0 = 4*np.pi*1e-7
 	L = r_phys * (1-ki)		
 	nu = Ek * om * L**2
