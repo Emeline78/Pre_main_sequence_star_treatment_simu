@@ -59,7 +59,7 @@ Ek = stp.ek
 g0 = stp.g0
 g1 = stp.g1
 g2 = stp.g2
-om = 1/Ek
+
 
 files = glob.glob(os.path.join(a,'G_[0-9]*.rot01'))
 files.sort(key=lambda f: int(os.path.basename(f).split('_')[1].split('.')[0]))
@@ -98,15 +98,19 @@ for i in idx:
 
 	times = np.array(times)
 
-	L = 1		# pas 1 - ki car r0 n'est pas egale a 1 mais a 1/(1-ki)
+	r_phys = 1e9
+	om = 1e-5
+	rho_ref = 1e-8
+	mu0 = 4*np.pi*1e-7
+	L = r_phys * (1-ki)		
 	nu = Ek * om * L**2
-	tau = L**2/nu		# savoir quoi prendre entre temps visqueux (L**2/nu) ou de rotation (1/om)
+	tau = L**2/nu
 	eta = nu/Pm
 	temp, rho, drho = anelprof(r, strat = Nrho, polind = n, g0=g0, g1=g1, g2=g2)
+	rho = rho * rho_ref
 	rho0 = rho[0]
 	rho = rho / rho0  
 	B0car = eta * om * mu0 	* rho0
-
 
 	B = np.array(B) * np.sqrt(B0car)
 	t_total = times[-1] - times[0]
