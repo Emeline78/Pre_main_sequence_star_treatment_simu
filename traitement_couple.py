@@ -38,6 +38,7 @@ mu0 = 4*np.pi*1e-7
 
 a = input("directory : ")
 #a = "/travail/dynconv/multiscale_dyno/anelasticCouette/gr/Nr2p5_Pm4/ra_8e6/om50/"
+#a = "/travail/dynconv/multiscale_dyno/anelasticCouette/gr/Nr2p5_Pm6/ra_8e6/om50/"
 #a = "/travail/dynconv/multiscale_dyno/anelasticCouette/gr2/xi_p35_pm4/ra_5e6/om50/"
 #a = "/travail/dynconv/multiscale_dyno/anelasticCouette/gr_gr2_Louis/ra_1p5e7"
 #a = "/travail/dynconv/multiscale_dyno/anelasticCouette/gr2/xi_p2_pm4/ra_1e6"
@@ -113,7 +114,7 @@ for j in range(1,len(files)+1):
     # Moy champ mag
     Br_mean = (gr.Br * w_phi).sum(axis=0)
     Bphi_mean = (gr.Bphi * w_phi).sum(axis=0)
-    MS1 = -(Br_mean * Bphi_mean * np.sin(th)[:,None] * w_theta[:,None]).sum(axis = 0) * r* 2 * np.pi * r**2
+    MS1 = -(Br_mean * Bphi_mean * np.sin(th)[:,None] * w_theta[:,None]).sum(axis = 0) * r * 2 * np.pi * r**2
     
     # Ecoulement meridional
     vr_mean = (gr.vr * w_phi).sum(axis=0)
@@ -137,11 +138,20 @@ for j in range(1,len(files)+1):
 
 times = np.array(times)
 
-RS_snap = np.array(RS_snap)
-MS_snap = np.array(MS_snap)
-MS1_snap = np.array(MS1_snap)
-Visc_snap = np.array(Visc_snap)
-MC_snap = np.array(MC_snap)
+L = 1		# pas 1 - ki car r0 n'est pas egale a 1 mais a 1/(1-ki)
+nu = Ek * om * L**2
+tau = L**2/nu		# savoir quoi prendre entre temps visqueux (L**2/nu) ou de rotation (1/om)
+eta = nu/Pm
+temp, rho, drho = anelprof(r, strat = Nrho, polind = n, g0=g0, g1=g1, g2=g2)
+rho0 = rho[0]
+rho = rho / rho0  
+B0car = eta * om * mu0 	* rho0
+
+RS_snap = np.array(RS_snap) * rho * L**3 / tau**2 
+MS_snap = np.array(MS_snap) * L * B0car / mu0 
+MS1_snap = np.array(MS1_snap) * L * B0car / mu0 
+Visc_snap = np.array(Visc_snap)* rho * L**3 / tau**2 
+MC_snap = np.array(MC_snap)* rho * L**3 / tau**2 
 l_snap = np.array(l_snap)
 
 t_total = times[-1] - times[0]
@@ -170,24 +180,15 @@ for i in range(len(dt)):
     Visc += 0.5*(Visc_snap[i] + Visc_snap[i+1])*dt[i]
     l += 0.5*(l_snap[i] + l_snap[i+1])*dt[i]
 
-L = 1		# pas 1 - ki car r0 n'est pas egale a 1 mais a 1/(1-ki)
-nu = Ek * om * L**2
-tau = L**2/nu		# savoir quoi prendre entre temps visqueux (L**2/nu) ou de rotation (1/om)
-eta = nu/Pm
-temp, rho, drho = anelprof(r, strat = Nrho, polind = n, g0=g0, g1=g1, g2=g2)
-rho0 = rho[0]
-rho = rho / rho0  
-B0car = eta * om * mu0 	* rho0
-
 
 #print(f"rho(ri)/rho(ro) = {rho.max()/rho.min():.4f}")
 #print(f"attendu         = {np.exp(Nrho):.4f}")
 
-RS = RS / t_total * rho * L**3 / tau**2 
-MS = MS / t_total * L * B0car / mu0 
-MS1 = MS1 / t_total * L * B0car / mu0 
-Visc = Visc / t_total * rho * L**3 / tau**2 
-MC = MC / t_total * rho * L**3 / tau**2 
+RS = RS / t_total 
+MS = MS / t_total 
+MS1 = MS1 / t_total 
+Visc = Visc / t_total 
+MC = MC / t_total
 
 F = (MC + MS + RS + Visc + MS1)
 plt.figure()
