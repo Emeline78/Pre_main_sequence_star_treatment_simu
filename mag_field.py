@@ -99,18 +99,18 @@ for i in idx:
 	times = np.array(times)
 
 	r_phys = 1.5e11
-        om = 1e-5
-        rho_ref = 1e-6
-        mu0 = 4*np.pi*1e-7
-        L = r_phys * (1-ki)             
-        nu = Ek * om * L**2
-        tau = L**2/nu
-        eta = nu/Pm
-        temp, rho, drho = anelprof(r, strat = Nrho, polind = n, g0=g0, g1=g1, g2=g2)
-        rho = rho * rho_ref
-        rho0 = rho[0]
-        rho = rho / rho0  
-        B0car = eta * om * mu0  * rho0
+	om = 1e-5
+	rho_ref = 1e-6
+	mu0 = 4*np.pi*1e-7
+	L = r_phys * (1-ki)             
+	nu = Ek * om * L**2
+	tau = L**2/nu
+	eta = nu/Pm
+	temp, rho, drho = anelprof(r, strat = Nrho, polind = n, g0=g0, g1=g1, g2=g2)
+	rho = rho * rho_ref
+	rho0 = rho[0]
+	rho = rho / rho0  
+	B0car = eta * om * mu0  * rho0
 
 
 	B = np.array(B) * np.sqrt(B0car)
