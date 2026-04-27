@@ -286,14 +286,14 @@ r_phys = 1e9
 Omega_phys = 1e-6
 rho_ref = 1e-7
 mu0 = 4*np.pi*1e-7
-L_phys = r_phys * (1-df["xi"])
+L_phys = r_phys * (1-(df.groupby("name")["xi"].first()).to_numpy())
 scale = rho_ref * Omega_phys**2 * L_phys**5
 
 MS_mean_dist = np.full(len(names),np.nan)
 MS_max_dist = np.full(len(names),np.nan)
 for i,namefile in enumerate(names): 
 	data = np.load("snapshots/"+namefile+".npz")
-	MS_snap = data["MS"] * scale
+	MS_snap = data["MS"] * scale[i]
 	times = data["times"]
 	r = data["r"]
 	
