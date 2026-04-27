@@ -145,7 +145,7 @@ plt.xlabel("Reynolds magnetic")
 plt.ylabel("MS max")
 plt.title("Radial max of MS as a function of the Reynolds magnetic")
 plt.grid()
-plt.show()
+#plt.show()
 
 """
 plt.figure()
@@ -220,7 +220,7 @@ plt.xlabel("Convective Rossby")
 plt.ylabel("MS max")
 plt.title(rf"$MS_{{max}} = 10^{{{b_max:.2f}}} \cdot Ro_{{conv}}^{{{a_max:.2f}}}$")
 plt.grid()
-plt.show()
+#plt.show()
 
 # ======================== ELSASSER =========================
 a_mean,b_mean,x_plot,y_plot = interp(Els[mask],MS_mean[mask],MS_mean_dist[mask])
@@ -240,7 +240,7 @@ plt.xlabel("Elsasser number")
 plt.ylabel("MS max")
 plt.title(rf"$MS_{{max}} = 10^{{{b_max:.2f}}} \cdot \Lambda^{{{a_max:.2f}}}$")
 plt.grid()
-plt.show()
+#plt.show()
 
 # ======================== RM =========================
 a_mean,b_mean,x_plot,y_plot = interp(Rm[mask],MS_mean[mask],MS_mean_dist[mask])
@@ -260,7 +260,7 @@ plt.xlabel("Reynolds magnetic")
 plt.ylabel("MS max")
 plt.title(rf"$MS_{{max}} = 10^{{{b_max:.2f}}} \cdot Rm^{{{a_max:.2f}}}$")
 plt.grid()
-plt.show()
+#plt.show()
 
 #=======================================================================================================
 df = pd.read_parquet("transport_profiles1.parquet")
@@ -293,11 +293,11 @@ MS_mean_dist = np.full(len(names),np.nan)
 MS_max_dist = np.full(len(names),np.nan)
 for i,namefile in enumerate(names): 
 	data = np.load("snapshots/"+namefile+".npz")
-	MS_snap = data["MS"] * scale[i]
+	MS_snap = data["MS"] 
 	times = data["times"]
 	r = data["r"]
 	
-	x = np.mean(MS_snap, axis=1)
+	x = np.mean(MS_snap, axis=1)* scale[i]
 	MS_snap_mean = np.trapz(x, times) / (times[-1]-times[0])
 	#print(MS_snap_mean,MS_mean[i])
 	MS_mean_dist[i] = np.sqrt(np.mean((x - MS_mean[i])**2)) / np.sqrt(len(x))
@@ -401,7 +401,7 @@ plt.xlabel("Reynolds magnetic")
 plt.ylabel("MS max")
 plt.title("Radial max of MS as a function of the Reynolds magnetic")
 plt.grid()
-plt.show()
+#plt.show()
 
 
 x = Ro_conv[mask]
@@ -444,7 +444,7 @@ plt.xlabel("Convective Rossby")
 plt.ylabel("MS max")
 plt.title(rf"$MS_{{max}} = 10^{{{b_max:.2f}}} \cdot Ro_{{conv}}^{{{a_max:.2f}}}$")
 plt.grid()
-plt.show()
+#plt.show()
 
 # ======================== ELSASSER =========================
 a_mean,b_mean,x_plot,y_plot = interp(Els[mask],MS_mean[mask],MS_mean_dist[mask])
@@ -464,7 +464,7 @@ plt.xlabel("Elsasser number")
 plt.ylabel("MS max")
 plt.title(rf"$MS_{{max}} = 10^{{{b_max:.2f}}} \cdot \Lambda^{{{a_max:.2f}}}$")
 plt.grid()
-plt.show()
+#plt.show()
 
 # ======================== RM =========================
 a_mean,b_mean,x_plot,y_plot = interp(Rm[mask],MS_mean[mask],MS_mean_dist[mask])
