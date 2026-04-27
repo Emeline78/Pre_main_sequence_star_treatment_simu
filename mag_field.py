@@ -101,7 +101,7 @@ for i in idx:
 	r_phys = 1.5e11
 	om = 1e-5
 	rho_ref = 1e-6
-	mu0 = 4*np.pi*1e-7
+	mu0 = 4*np.pi
 	L = r_phys * (1-ki)             
 	nu = Ek * om * L**2
 	tau = L**2/nu
