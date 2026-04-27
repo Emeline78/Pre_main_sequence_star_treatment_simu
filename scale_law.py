@@ -260,10 +260,10 @@ plt.xlabel("Reynolds magnetic")
 plt.ylabel("MS max")
 plt.title(rf"$MS_{{max}} = 10^{{{b_max:.2f}}} \cdot Rm^{{{a_max:.2f}}}$")
 plt.grid()
-#plt.show()
+plt.show()
 
 #=======================================================================================================
-df = pd.read_parquet("transport_profiles.parquet")
+df = pd.read_parquet("transport_profiles1.parquet")
 
 MS_mean = (df.groupby("name")["MS_SI"].mean()).to_numpy()
 MS_max = df.groupby("name")["MS_SI"].apply(lambda x: x.iloc[x.abs().argmax()]).to_numpy()
