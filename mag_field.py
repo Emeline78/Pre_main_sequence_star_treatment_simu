@@ -34,6 +34,7 @@ matplotlib.rcParams['xtick.top']='True'
 matplotlib.rcParams['figure.figsize']= [8, 6]
 
 from magic import *
+mu0 = 4*np.pi*1e-7
 
 """
 git add mag_field.py
@@ -58,7 +59,7 @@ Ek = stp.ek
 g0 = stp.g0
 g1 = stp.g1
 g2 = stp.g2
-
+#om = 1/Ek
 
 files = glob.glob(os.path.join(a,'G_[0-9]*.rot01'))
 files.sort(key=lambda f: int(os.path.basename(f).split('_')[1].split('.')[0]))
@@ -97,19 +98,20 @@ for i in idx:
 
 	times = np.array(times)
 
-	r_phys = 1e9
-	om = 1e-5
-	rho_ref = 1e-4
-	mu0 = 4*np.pi*1e-7
-	L = r_phys * (1-ki)		
-	nu = Ek * om * L**2
-	tau = L**2/nu
-	eta = nu/Pm
-	temp, rho, drho = anelprof(r, strat = Nrho, polind = n, g0=g0, g1=g1, g2=g2)
-	rho = rho * rho_ref
-	rho0 = rho[0]
-	rho = rho / rho0  
-	B0car = eta * om * mu0 	* rho0
+	r_phys = 1.5e11
+        om = 1e-5
+        rho_ref = 1e-6
+        mu0 = 4*np.pi*1e-7
+        L = r_phys * (1-ki)             
+        nu = Ek * om * L**2
+        tau = L**2/nu
+        eta = nu/Pm
+        temp, rho, drho = anelprof(r, strat = Nrho, polind = n, g0=g0, g1=g1, g2=g2)
+        rho = rho * rho_ref
+        rho0 = rho[0]
+        rho = rho / rho0  
+        B0car = eta * om * mu0  * rho0
+
 
 	B = np.array(B) * np.sqrt(B0car)
 	t_total = times[-1] - times[0]
@@ -120,5 +122,5 @@ for i in idx:
 	    B_tot += 0.5*(B[i] + B[i+1])*dt[i]
 
 	B_tot = B_tot / t_total 
-	print(B_tot * 1e4,"G")
+	print(B_tot ,"G")
 
