@@ -180,7 +180,7 @@ for i in range(len(dt)):
     MC += 0.5*(MC_snap[i] + MC_snap[i+1])*dt[i]
     Visc += 0.5*(Visc_snap[i] + Visc_snap[i+1])*dt[i]
     l += 0.5*(l_snap[i] + l_snap[i+1])*dt[i]
-print(RS[25])
+print(RS[25]/t_total)
 
 #print(f"rho(ri)/rho(ro) = {rho.max()/rho.min():.4f}")
 #print(f"attendu         = {np.exp(Nrho):.4f}")
