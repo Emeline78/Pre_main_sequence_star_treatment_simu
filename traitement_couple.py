@@ -104,7 +104,7 @@ for j in range(1,len(files)+1):
 
     # Reynolds
     prodR = (vr * vp * w_phi).sum(axis=0)	# flux
-    RS = (prodR * np.sin(th)[:,None] * w_theta[:,None]).sum(axis=0) * r * 2 * np.pi * r**2 # integrated flux over a spherical surface
+    RS = (prodR * np.sin(th)[:,None] * w_theta[:,None]).sum(axis=0) * r # integrated flux over a spherical surface
 
     # Maxwell
     prodM = -(Br * Bp * w_phi).sum(axis=0)
