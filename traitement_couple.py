@@ -147,11 +147,11 @@ rho0 = rho[0]
 rho = rho / rho0  
 B0car = eta * om * mu0 	* rho0
 
-RS_snap = np.array(RS_snap) * rho * L**3 / tau**2 
-MS_snap = np.array(MS_snap) * L * B0car / mu0 
-MS1_snap = np.array(MS1_snap) * L * B0car / mu0 
-Visc_snap = np.array(Visc_snap)* rho * L**3 / tau**2 
-MC_snap = np.array(MC_snap)* rho * L**3 / tau**2 
+RS_snap = np.array(RS_snap) 
+MS_snap = np.array(MS_snap) 
+MS1_snap = np.array(MS1_snap) 
+Visc_snap = np.array(Visc_snap) 
+MC_snap = np.array(MC_snap)
 l_snap = np.array(l_snap)
 
 t_total = times[-1] - times[0]
@@ -184,11 +184,11 @@ for i in range(len(dt)):
 #print(f"rho(ri)/rho(ro) = {rho.max()/rho.min():.4f}")
 #print(f"attendu         = {np.exp(Nrho):.4f}")
 
-RS = RS / t_total 
-MS = MS / t_total 
-MS1 = MS1 / t_total 
-Visc = Visc / t_total 
-MC = MC / t_total
+RS = RS / t_total * rho * L**3 / tau**2 
+MS = MS / t_total * L * B0car / mu0 
+MS1 = MS1 / t_total * L * B0car / mu0 
+Visc = Visc / t_total * rho * L**3 / tau**2 
+MC = MC / t_total* rho * L**3 / tau**2 
 
 F = (MC + MS + RS + Visc + MS1)
 plt.figure()
@@ -207,7 +207,7 @@ plt.show()
 variation = (np.max(F)-np.min(F))/np.abs(np.mean(F))
 print("variation relative =", variation)
 
-MS_snaps =  MS_snap * L * B0car / mu0 + MS1_snap * L * B0car / mu0 
+MS_snaps =  MS_snap  + MS1_snap 
 MS_median = np.median(MS_snaps,axis = 1)
 MS_mean = np.mean(MS_snaps,axis = 1)
 MS_min = np.min(MS_snaps,axis = 1)
