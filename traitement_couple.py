@@ -109,25 +109,25 @@ for j in range(1,len(files)+1):
     # Maxwell
     prodM = -(Br * Bp * w_phi).sum(axis=0)
     #prodM = -(gr.Br * gr.Bphi * w_phi).sum(axis=0)
-    MS = (prodM * np.sin(th)[:,None] * w_theta[:,None]).sum(axis=0) * r  * 2 * np.pi * r**2
+    MS = (prodM * np.sin(th)[:,None] * w_theta[:,None]).sum(axis=0) * r  
     
     # Moy champ mag
     Br_mean = (gr.Br * w_phi).sum(axis=0)
     Bphi_mean = (gr.Bphi * w_phi).sum(axis=0)
-    MS1 = -(Br_mean * Bphi_mean * np.sin(th)[:,None] * w_theta[:,None]).sum(axis = 0) * r * 2 * np.pi * r**2
+    MS1 = -(Br_mean * Bphi_mean * np.sin(th)[:,None] * w_theta[:,None]).sum(axis = 0) * r *
     
     # Ecoulement meridional
     vr_mean = (gr.vr * w_phi).sum(axis=0)
     vphi_mean = (gr.vphi * w_phi).sum(axis=0)
-    MC = (vr_mean * (vphi_mean + r[None,:] * np.sin(th)[:,None] * 1/Ek) * np.sin(th)[:,None] * w_theta[:,None]).sum(axis = 0) * r* 2 * np.pi * r**2
+    MC = (vr_mean * (vphi_mean + r[None,:] * np.sin(th)[:,None] * 1/Ek) * np.sin(th)[:,None] * w_theta[:,None]).sum(axis = 0) * r
     
     # Viscosite
     mean_tau = (tau_rphi * w_phi).sum(axis = 0)
-    Visc = - (mean_tau * np.sin(th)[:,None] * w_theta[:,None]).sum(axis=0) * r * 2 * np.pi * r**2
+    Visc = - (mean_tau * np.sin(th)[:,None] * w_theta[:,None]).sum(axis=0) * r 
     #Visc = - (r[None,:]**2 * np.sin(th)[:,None] * np.gradient(vphi_mean/r[None,:],r,axis =1)* w_theta[:,None]).sum(axis=0)
     
     # moment angulaire
-    l = (r[None,None,:]*np.sin(th)[:,None]**2*gr.vphi).mean(axis = (0,1)) * 2 * np.pi * r**2
+    l = (r[None,None,:]*np.sin(th)[:,None]**2*gr.vphi).mean(axis = (0,1)) 
     l_snap.append(l)
     
     Visc_snap.append(Visc)
@@ -156,6 +156,7 @@ l_snap = np.array(l_snap)
 
 t_total = times[-1] - times[0]
 
+print(RS_snap[:,25])
 """
 l_snap = np.array(l_snap)
 plt.figure()
@@ -179,16 +180,16 @@ for i in range(len(dt)):
     MC += 0.5*(MC_snap[i] + MC_snap[i+1])*dt[i]
     Visc += 0.5*(Visc_snap[i] + Visc_snap[i+1])*dt[i]
     l += 0.5*(l_snap[i] + l_snap[i+1])*dt[i]
-
+print(RS)
 
 #print(f"rho(ri)/rho(ro) = {rho.max()/rho.min():.4f}")
 #print(f"attendu         = {np.exp(Nrho):.4f}")
 
-RS = RS / t_total * rho * L**3 / tau**2 
-MS = MS / t_total * L * B0car / mu0 
-MS1 = MS1 / t_total * L * B0car / mu0 
-Visc = Visc / t_total * rho * L**3 / tau**2 
-MC = MC / t_total* rho * L**3 / tau**2 
+RS = RS / t_total * rho * L**3 / tau**2 * 2 * np.pi * r**2
+MS = MS / t_total * L * B0car / mu0 * 2 * np.pi * r**2
+MS1 = MS1 / t_total * L * B0car / mu0 * 2 * np.pi * r**2
+Visc = Visc / t_total * rho * L**3 / tau**2 * 2 * np.pi * r**2
+MC = MC / t_total* rho * L**3 / tau**2 * 2 * np.pi * r**2
 
 F = (MC + MS + RS + Visc + MS1)
 plt.figure()
