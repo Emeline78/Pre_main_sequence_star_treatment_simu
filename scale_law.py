@@ -179,11 +179,12 @@ plt.legend()
 plt.tight_layout()
 plt.show()
 """
+from scipy.optimize import least_squares
 
-x = Ro_conv[mask]
-y = MS_mean[mask]
-yerr = MS_mean_dist[mask]
-
+def residuals(params, x, y, err):
+    a, b = params
+    return (y - linear_model(x, a, b)) / err
+    
 def linear_model(x, a, b):
 	return a * x + b
     
@@ -195,12 +196,19 @@ def interp(x,y,yerr):
 	logy = np.log10(y)
 	logy_err = yerr / (y * np.log(10))
 
-	params, cov = curve_fit(linear_model, logx, logy) #, sigma=logy_err)
-	a, b = params
+	#params, cov = curve_fit(linear_model, logx, logy) #, sigma=logy_err)
+	#a, b = params
+	
+	res = least_squares(residuals,x0=[1, 0],args=(logx, logy, logy_err),loss='soft_l1')
+	a, b = res.x
 
 	x_plot = np.logspace(np.log10(x.min()), np.log10(x.max()), 200)
 	y_plot = 10**b * x_plot**a
 	return(a,b,x_plot,y_plot)
+	
+
+
+
 
 # ======================== ROSSBY CONVECTIF =========================
 a_mean,b_mean,x_plot,y_plot = interp(Ro_conv[mask],MS_mean[mask],MS_mean_dist[mask])
