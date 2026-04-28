@@ -11,10 +11,9 @@ git commit -m "modifications"
 git push
 """
 
-
 df = pd.read_parquet("transport_profiles.parquet")
 
-MS_mean = (df.groupby("name")["MS"].mean()).to_numpy()
+MS_mean = (df.groupby("name")["MS"].median()).to_numpy()
 #RS_mean = (df.groupby("name")["RS"].mean()).to_numpy()
 MS_max = df.groupby("name")["MS"].apply(lambda x: x.iloc[x.abs().argmax()]).to_numpy()
 #RS_max = (df.groupby("name")["RS"].max()).to_numpy()
@@ -206,9 +205,6 @@ def interp(x,y,yerr):
 	y_plot = 10**b * x_plot**a
 	return(a,b,x_plot,y_plot)
 	
-
-
-
 
 # ======================== ROSSBY CONVECTIF =========================
 a_mean,b_mean,x_plot,y_plot = interp(Ro_conv[mask],MS_mean[mask],MS_mean_dist[mask])
