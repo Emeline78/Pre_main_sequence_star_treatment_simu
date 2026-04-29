@@ -11,7 +11,7 @@ git commit -m "modifications"
 git push
 """
 
-df = pd.read_parquet("transport_profiles1.parquet")
+df = pd.read_parquet("transport_profiles.parquet")
 
 MS_mean = (df.groupby("name")["MS"].median()).to_numpy()
 #RS_mean = (df.groupby("name")["RS"].mean()).to_numpy()
