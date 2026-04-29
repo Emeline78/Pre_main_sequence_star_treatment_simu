@@ -41,7 +41,9 @@ for t,r_phys,rho_ref in param:
 	MC   = sim["MC_SI"].values
 	Visc = sim["Visc_SI"].values
 	MS   = sim["MS_SI"].values
-
+	
+	print(r_phys,r[0])
+	
 	F = RS + MS + MC + Visc
 	plt.figure()
 	plt.plot(r, RS,   label="Reynolds stress")
