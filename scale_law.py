@@ -10,7 +10,7 @@ git add scale_law.py
 git commit -m "modifications"
 git push
 """
-"""
+
 df = pd.read_parquet("transport_profiles1.parquet")
 
 MS_mean = (df.groupby("name")["MS"].median()).to_numpy()
@@ -146,7 +146,7 @@ plt.title("Radial max of MS as a function of the Reynolds magnetic")
 plt.grid()
 #plt.show()
 
-
+"""
 plt.figure()
 plt.scatter(Ra, Ro_sh, c=MS_mean, cmap='viridis')
 plt.colorbar(label='Radial mean of the Maxwell stress of each run')
@@ -177,7 +177,7 @@ plt.grid()
 plt.legend()
 plt.tight_layout()
 plt.show()
-
+"""
 from scipy.optimize import least_squares
 
 def residuals(params, x, y, err):
@@ -494,4 +494,4 @@ for date, df in df_tot.groupby('date'):
 	plt.title(rf"$MS_{{max}} = 10^{{{b_max:.2f}}} \cdot Rm^{{{a_max:.2f}}}$")
 	plt.grid()
 	plt.show()
-
+"""
