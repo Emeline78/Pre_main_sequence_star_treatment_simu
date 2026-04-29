@@ -3,8 +3,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 import matplotlib.colors as mcolors
-from scipy.interpolate import CubicSpline
-from scipy.optimize import curve_fit
 
 """
 git add res_phys.py
@@ -18,6 +16,7 @@ param = np.loadtxt("0.55msun.dat", skiprows=1)		#Age [Myrs]   R [Rsun]     rho(0
 Omega_phys = 2 * np.pi/ (10*24*3600)
 mu0 = 4*np.pi*1e-7
 liste = []
+Rsun = 6.957e8
 
 for t,r_phys,rho_ref in param:
 	r_phys *= Rsun
