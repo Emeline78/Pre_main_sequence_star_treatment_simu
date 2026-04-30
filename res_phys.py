@@ -25,7 +25,9 @@ for t,r_phys,rho_ref in param:
 
 	df["r_phys"] = df["r"] * r_phys * (1 - df["xi"])
 
-	scale = rho_ref * Omega_phys**2 * L_phys**5
+	#scale = rho_ref * Omega_phys**2 * L_phys**5
+	nu_phys = Ek * Omega_phys * L_phys**2
+	scale = rho_ref * nu_phys**2 / L_phys**3
 
 	df["RS_SI"]   = df["RS"]   * scale
 	df["MC_SI"]   = df["MC"]   * scale
@@ -76,7 +78,9 @@ for t,r_phys,rho_ref in param:
 
 	df["r_phys"] = df["r"] * r_phys * (1 - df["xi"])
 
-	scale = rho_ref * Omega_phys**2 * L_phys**5
+	#scale = rho_ref * Omega_phys**2 * L_phys**5
+	nu_phys = Ek * Omega_phys * L_phys**2
+	scale = rho_ref * nu_phys**2 / L_phys**3
 
 	df["RS_SI"]   = df["RS"]   * scale
 	df["MC_SI"]   = df["MC"]   * scale
