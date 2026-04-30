@@ -64,7 +64,7 @@ df_final.to_parquet("transport_profiles_SI.parquet")
 target = "gr_Nr2p5_Pm4_ra_8e6_om100"
 df_stay = pd.read_parquet("transport_profiles.parquet")
 param = np.loadtxt("0.55msun.dat", skiprows=1)		#Age [Myrs]   R [Rsun]     rho(0.9R)
-Omega_phys = 2 * np.pi/ (10*24*3600)
+Omega_phys = 2 * np.pi/ (10*24*3600) * Ek 
 liste = []
 Rsun = 6.957e10
 
