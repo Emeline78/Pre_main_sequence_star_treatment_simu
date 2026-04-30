@@ -67,6 +67,9 @@ files.sort(key=lambda f: int(os.path.basename(f).split('_')[1].split('.')[0]))
 for i in idx:
 	times = []
 	B = []
+	Br_rms = []
+	Bphi_rms = []
+	Bth_rms = []
 
 	for j in range(1,len(files)+1): 
 		gr = MagicGraph(datadir=a,tag='rot01',ivar = j)
@@ -91,16 +94,26 @@ for i in idx:
 		Bp = gr.Bphi[:,:,i]
 		Bth = gr.Btheta[:,:,i]
 
-
+		
 		B_mean = Br**2 + Bp**2 + Bth**2
+		
+		
 		B_snap = np.sqrt((B_mean * w_phi * w_theta[None,:]).sum(axis=(0,1)) * 1/2)
+		Br_snap = np.sqrt((Br**2 * w_phi * w_theta[None,:]).sum(axis=(0,1)) * 1/2)
+		Bphi_snap = np.sqrt((Bphi**2 * w_phi * w_theta[None,:]).sum(axis=(0,1)) * 1/2)
+		Bth_snap = np.sqrt((Bth**2 * w_phi * w_theta[None,:]).sum(axis=(0,1)) * 1/2)
+		
 		B.append(B_snap)
+		Br_rms.append(Br_snap)
+		Bphi_rms.append(Bphi_snap)
+		Bth_rms.append(Bth_snap)
 
 	times = np.array(times)
-
-	r_phys = 1.5e11
-	om = 1e-5
-	rho_ref = 1e-6
+	
+	 
+	r_phys = 1.050421 * 0.9 * 6.957e10
+	om = 2 * np.pi/ (10*24*3600)
+	rho_ref = 8.676966e-02
 	mu0 = 4*np.pi
 	L = r_phys * (1-ki)             
 	nu = Ek * om * L**2
@@ -114,13 +127,28 @@ for i in idx:
 
 
 	B = np.array(B) * np.sqrt(B0car)
+	Br_rms = np.array(Br_rms) * np.sqrt(B0car)
+	Bphi_rms = np.array(Bphi_rms) * np.sqrt(B0car)
+	Bth_rms = np.array(Bth_rms) * np.sqrt(B0car)
 	t_total = times[-1] - times[0]
 	dt = np.diff(times)
 
 	B_tot = np.zeros_like(B[0])
+	Br_mean = np.zeros_like(Br_rms[0])
+	Bphi_mean = np.zeros_like(Bphi_rms[0])
+	Bth_mean = np.zeros_like(Bth_rms[0])
 	for i in range(len(dt)):
 	    B_tot += 0.5*(B[i] + B[i+1])*dt[i]
+	    Br_mean += 0.5*(Br_rms[i] + Br_rms[i+1])*dt[i]
+	    Bphi_mean += 0.5*(Bphi_rms[i] + Bphi_rms[i+1])*dt[i]
+	    Bth_mean += 0.5*(Bth_rms[i] + Bth_rms[i+1])*dt[i]
 
 	B_tot = B_tot / t_total 
-	print(B_tot ,"G")
+	Br_mean = Br_mean / t_total 
+	Bphi_mean = Bphi_mean / t_total 
+	Bth_mean = Bth_mean / t_total 
+	print(f"B = {B_tot} G")
+	print(f"Br = {Br_mean} G")
+	print(f"Bphi = {Bphi_mean} G")
+	print(f"Btheta = {Bth_mean} G")
 
