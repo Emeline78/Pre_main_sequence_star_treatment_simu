@@ -91,11 +91,11 @@ for i in idx:
 		#Bth = np.mean(gr.Btheta,axis = 2)
 
 		Br = gr.Br[:,:,i]
-		Bp = gr.Bphi[:,:,i]
+		Bphi = gr.Bphi[:,:,i]
 		Bth = gr.Btheta[:,:,i]
 
 		
-		B_mean = Br**2 + Bp**2 + Bth**2
+		B_mean = Br**2 + Bphi**2 + Bth**2
 		
 		
 		B_snap = np.sqrt((B_mean * w_phi * w_theta[None,:]).sum(axis=(0,1)) * 1/2)
