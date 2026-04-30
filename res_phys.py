@@ -13,7 +13,7 @@ Ek = 1e-4
 target = "gr_Nr2p5_Pm4_ra_8e6_om100"
 df_stay = pd.read_parquet("transport_profiles.parquet")
 param = np.loadtxt("0.55msun.dat", skiprows=1)		#Age [Myrs]   R [Rsun]     rho(0.9R)[g/cm^3]
-Omega_phys = 2 * np.pi/ (10*24*3600)
+Omega_phys = 2 * np.pi/ (10*24*3600) * Ek
 liste = []
 Rsun = 6.957e8
 
@@ -25,9 +25,7 @@ for t,r_phys,rho_ref in param:
 
 	df["r_phys"] = df["r"] * r_phys * (1 - df["xi"])
 
-	#scale = rho_ref * Omega_phys**2 * L_phys**5
-	nu_phys = Ek * Omega_phys * L_phys**2
-	scale = rho_ref * nu_phys**2 / L_phys**3
+	scale = rho_ref * Omega_phys**2 * L_phys**5
 
 	df["RS_SI"]   = df["RS"]   * scale
 	df["MC_SI"]   = df["MC"]   * scale
@@ -78,9 +76,9 @@ for t,r_phys,rho_ref in param:
 
 	df["r_phys"] = df["r"] * r_phys * (1 - df["xi"])
 
-	#scale = rho_ref * Omega_phys**2 * L_phys**5
-	nu_phys = Ek * Omega_phys * L_phys**2
-	scale = rho_ref * nu_phys**2 / L_phys**3
+	scale = rho_ref * Omega_phys**2 * L_phys**5
+	#nu_phys = Ek * Omega_phys * L_phys**2
+	#scale = rho_ref * nu_phys**2 / L_phys**3
 
 	df["RS_SI"]   = df["RS"]   * scale
 	df["MC_SI"]   = df["MC"]   * scale
