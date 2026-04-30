@@ -9,7 +9,7 @@ git add res_phys.py
 git commit -m "modifications"
 git push
 """
-
+Ek = 1e-4
 target = "gr_Nr2p5_Pm4_ra_8e6_om100"
 df_stay = pd.read_parquet("transport_profiles.parquet")
 param = np.loadtxt("0.55msun.dat", skiprows=1)		#Age [Myrs]   R [Rsun]     rho(0.9R)[g/cm^3]
