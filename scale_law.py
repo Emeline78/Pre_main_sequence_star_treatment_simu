@@ -361,7 +361,7 @@ for date, df in df_tot.groupby('date'):
 	plt.figure()
 	plt.errorbar(Ro_conv[mask],MS_mean[mask], yerr=MS_mean_dist[mask], fmt='o')
 	plt.scatter(Ro_conv_obs, MS_obs, marker='*', s=120, color='red', edgecolor='black',label="Observations")
-	plt.fill_between(Ro_conv_obs,MS_obs_lim[0],MS_obs_lim[1],color = "gray")
+	plt.axhspan(MS_obs_lim[0],MS_obs_lim[1],color = "gray", alpha = 0.3)
 	plt.plot(x_plot, y_plot, color='black')
 	plt.xlabel("Convective Rossby")
 	plt.ylabel("MS mean")
@@ -369,10 +369,11 @@ for date, df in df_tot.groupby('date'):
 	plt.title(rf"$MS_{{mean}} = 10^{{{b_mean:.2f}}} \cdot Ro_{{conv}}^{{{a_mean:.2f}}}$")
 
 	a_max,b_max,x_plot,y_plot = interp(Ro_conv[mask],MS_max[mask],MS_max_dist[mask])
+	MS_obs = 10**b_max * Ro_conv_obs**a_max
 	plt.figure()
 	plt.errorbar(Ro_conv[mask],MS_max[mask], yerr=MS_max_dist[mask], fmt='o')
 	plt.scatter(Ro_conv_obs, MS_obs, marker='*', s=120, color='red', edgecolor='black',label="Observations")
-	plt.fill_between(Ro_conv_obs,MS_obs_lim[0],MS_obs_lim[1],color = "gray")
+	plt.axhspan(MS_obs_lim[0],MS_obs_lim[1],color = "gray", alpha = 0.3)
 	plt.plot(x_plot, y_plot, color='black')
 	plt.xlabel("Convective Rossby")
 	plt.ylabel("MS max")
