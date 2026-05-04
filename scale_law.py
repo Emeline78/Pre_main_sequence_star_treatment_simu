@@ -313,8 +313,9 @@ MS_obs_lim = B_obs**2/mu0
 df_tot = pd.read_parquet("transport_profiles_SI.parquet")
 for date, df in df_tot.groupby('date'):
 	print(f"Computation for age = {date} Myr")
-	MS_mean = (df.groupby("name")["MS_SI"].mean()).to_numpy()
-	MS_max = df.groupby("name")["MS_SI"].apply(lambda x: x.iloc[x.abs().argmax()]).to_numpy()
+	r0 = df.groupby("name")["r_phys"].apply(lambda x: x.iloc[x.abs().argmax()]).to_numpy()
+	MS_mean = (df.groupby("name")["MS_SI"].mean()).to_numpy() / r0**3
+	MS_max = df.groupby("name")["MS_SI"].apply(lambda x: x.iloc[x.abs().argmax()]).to_numpy() / r0**3
 
 	names = df.groupby("name").mean().index.to_numpy(dtype = str)
 	
@@ -335,13 +336,11 @@ for date, df in df_tot.groupby('date'):
 	MS_mean_dist = np.full(len(names),np.nan)
 	MS_max_dist = np.full(len(names),np.nan)
 	for i,namefile in enumerate(names): 
-		sim = df[df["name"] == namefile]
-		r_phys = np.max(sim["r_phys"].values)
 		data = np.load("snapshots/"+namefile+".npz")
-		MS_snap = data["MS"] 
+		MS_snap = data["MS"] * scale[i] / r0[i]**3
 		times = data["times"]
 		
-		x = np.mean(MS_snap, axis=1)* scale[i] / r_phys**3
+		x = np.mean(MS_snap, axis=1) 
 		MS_snap_mean = np.trapz(x, times) / (times[-1]-times[0])
 		#print(MS_snap_mean,MS_mean[i])
 		MS_mean_dist[i] = np.sqrt(np.mean((x - MS_mean[i])**2)) / np.sqrt(len(x))
