@@ -232,7 +232,7 @@ MS_mean = np.abs(MS_mean)
 a_mean,b_mean,x_plot,y_plot = interp(Ro_conv[mask],MS_mean[mask],MS_mean_dist[mask])
 
 plt.figure()
-plt.plot(Ro_conv[mask]/MS_mean[mask]**a_mean, MS_mean[mask])
+plt.plot(Ro_conv[mask]/MS_mean[mask]**a_mean, MS_mean[mask],"+")
 plt.show()
 
 plt.figure()
