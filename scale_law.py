@@ -321,84 +321,84 @@ MS_obs_lim = B_obs**2/mu0
 #=======================================================================================================
 df_tot = pd.read_parquet("transport_profiles_SI.parquet")
 for date, df in df_tot.groupby('date'):
-	print(f"Computation for age = {date} Myr")
-	r0 = df.groupby("name")["r_phys"].apply(lambda x: x.iloc[x.abs().argmax()]).to_numpy()
-	MS_mean = (df.groupby("name")["MS_SI"].mean()).to_numpy() / r0**3
-	MS_max = df.groupby("name")["MS_SI"].apply(lambda x: x.iloc[x.abs().argmax()]).to_numpy() / r0**3
+	if date > 5:
+		print(f"Computation for age = {date} Myr")
+		r0 = df.groupby("name")["r_phys"].apply(lambda x: x.iloc[x.abs().argmax()]).to_numpy()
+		MS_mean = (df.groupby("name")["MS_SI"].mean()).to_numpy() / r0**3
+		MS_max = df.groupby("name")["MS_SI"].apply(lambda x: x.iloc[x.abs().argmax()]).to_numpy() / r0**3
 
-	names = df.groupby("name").mean().index.to_numpy(dtype = str)
-	
-	scale = (df.groupby("name")["scale"].first()).to_numpy()
-	Ra = (df.groupby("name")["ra"].first()).to_numpy()
-	g = (df.groupby("name")["config_code"].first()).to_numpy()
-	om = (df.groupby("name")["om"].first()).to_numpy()
-	om_lim = (df.groupby("name")["om_lim"].first()).to_numpy()
-	Els = (df.groupby("name")["Elsasser"].first()).to_numpy()
-	Ro_conv = (df.groupby("name")["Ro_conv"].first()).to_numpy()
-	Rm = (df.groupby("name")["rm"].first()).to_numpy()
-	Ro_sh = om*1e-4
-
-	mask = (om < om_lim) & (df.groupby("name")["status"].first().to_numpy()) & (np.char.find(names, "wrong") == -1)
-	#mask = (om > om_lim) & (df.groupby("name")["status"].first().to_numpy()) & (np.char.find(names, "wrong") == -1)
-
-
-	MS_mean_dist = np.full(len(names),np.nan)
-	MS_max_dist = np.full(len(names),np.nan)
-	for i,namefile in enumerate(names): 
-		data = np.load("snapshots/"+namefile+".npz")
-		MS_snap = data["MS"] * scale[i] / r0[i]**3
-		times = data["times"]
+		names = df.groupby("name").mean().index.to_numpy(dtype = str)
 		
-		x = np.mean(MS_snap, axis=1) 
-		MS_snap_mean = np.trapz(x, times) / (times[-1]-times[0])
-		#print(MS_snap_mean,MS_mean[i])
-		MS_mean_dist[i] = np.sqrt(np.mean((x - MS_mean[i])**2)) / np.sqrt(len(x))
+		scale = (df.groupby("name")["scale"].first()).to_numpy()
+		Ra = (df.groupby("name")["ra"].first()).to_numpy()
+		g = (df.groupby("name")["config_code"].first()).to_numpy()
+		om = (df.groupby("name")["om"].first()).to_numpy()
+		om_lim = (df.groupby("name")["om_lim"].first()).to_numpy()
+		Els = (df.groupby("name")["Elsasser"].first()).to_numpy()
+		Ro_conv = (df.groupby("name")["Ro_conv"].first()).to_numpy()
+		Rm = (df.groupby("name")["rm"].first()).to_numpy()
+		Ro_sh = om*1e-4
+
+		mask = (om < om_lim) & (df.groupby("name")["status"].first().to_numpy()) & (np.char.find(names, "wrong") == -1)
+		#mask = (om > om_lim) & (df.groupby("name")["status"].first().to_numpy()) & (np.char.find(names, "wrong") == -1)
+
+
+		MS_mean_dist = np.full(len(names),np.nan)
+		MS_max_dist = np.full(len(names),np.nan)
+		for i,namefile in enumerate(names): 
+			data = np.load("snapshots/"+namefile+".npz")
+			MS_snap = data["MS"] * scale[i] / r0[i]**3
+			times = data["times"]
+			
+			x = np.mean(MS_snap, axis=1) 
+			MS_snap_mean = np.trapz(x, times) / (times[-1]-times[0])
+			#print(MS_snap_mean,MS_mean[i])
+			MS_mean_dist[i] = np.sqrt(np.mean((x - MS_mean[i])**2)) / np.sqrt(len(x))
+			
+			x = MS_snap[np.arange(len(MS_snap)), np.abs(MS_snap).argmax(axis=1)]
+			#print(np.mean(x),MS_max[i])
+			MS_max_dist[i] = np.sqrt(np.mean((x - MS_max[i])**2)) / np.sqrt(len(x))
+
+		MS_sign = np.sign(MS_mean)
+		MS_mean = np.abs(MS_mean)
 		
-		x = MS_snap[np.arange(len(MS_snap)), np.abs(MS_snap).argmax(axis=1)]
-		#print(np.mean(x),MS_max[i])
-		MS_max_dist[i] = np.sqrt(np.mean((x - MS_max[i])**2)) / np.sqrt(len(x))
+		# ======================== ROSSBY CONVECTIF =========================
+		a_mean,b_mean,x_plot,y_plot = interp(Ro_conv[mask],MS_mean[mask],MS_mean_dist[mask])
+		MS_obs = 10**b_mean * Ro_conv_obs**a_mean
+		
+		plt.figure()
+		plt.errorbar(Ro_conv[mask],MS_mean[mask], yerr=MS_mean_dist[mask], fmt='o')
+		plt.scatter(Ro_conv_obs, MS_obs, marker='*', s=120, color='red', edgecolor='black',label="Observations")
+		plt.axhspan(MS_obs_lim[0],MS_obs_lim[1],color = "gray", alpha = 0.3)
+		plt.plot(x_plot, y_plot, color='black')
+		plt.xlabel("Convective Rossby")
+		plt.ylabel("MS mean")
+		#plt.xscale('log')
+		#plt.yscale('log')
+		plt.grid()
+		plt.title(rf"$MS_{{mean}} = 10^{{{b_mean:.2f}}} \cdot Ro_{{conv}}^{{{a_mean:.2f}}}$")
+		
+		plt.figure()
+		plt.plot(Ro_conv[mask], MS_sign[mask],"+")
+		plt.xlabel("Convective Rossby")
+		plt.ylabel("MS sign")
+		plt.grid()
+		plt.title("Sign of MS as a function of the Rossby")
 
-
-	MS_mean = np.abs(MS_mean)
-	MS_sign = np.sign(MS_mean)
-
-	# ======================== ROSSBY CONVECTIF =========================
-	a_mean,b_mean,x_plot,y_plot = interp(Ro_conv[mask],MS_mean[mask],MS_mean_dist[mask])
-	MS_obs = 10**b_mean * Ro_conv_obs**a_mean
-	
-	plt.figure()
-	plt.errorbar(Ro_conv[mask],MS_mean[mask], yerr=MS_mean_dist[mask], fmt='o')
-	plt.scatter(Ro_conv_obs, MS_obs, marker='*', s=120, color='red', edgecolor='black',label="Observations")
-	plt.axhspan(MS_obs_lim[0],MS_obs_lim[1],color = "gray", alpha = 0.3)
-	plt.plot(x_plot, y_plot, color='black')
-	plt.xlabel("Convective Rossby")
-	plt.ylabel("MS mean")
-	plt.xscale('log')
-	plt.yscale('log')
-	plt.grid()
-	plt.title(rf"$MS_{{mean}} = 10^{{{b_mean:.2f}}} \cdot Ro_{{conv}}^{{{a_mean:.2f}}}$")
-	
-	plt.figure()
-	plt.plot(Ro_conv[mask], MS_sign[mask],"+")
-	plt.xlabel("Convective Rossby")
-	plt.ylabel("MS sign")
-	plt.grid()
-	plt.title("Sign of MS as a function of the Rossby")
-
-	a_max,b_max,x_plot,y_plot = interp(Ro_conv[mask],MS_max[mask],MS_max_dist[mask])
-	MS_obs = 10**b_max * Ro_conv_obs**a_max
-	plt.figure()
-	plt.errorbar(Ro_conv[mask],MS_max[mask], yerr=MS_max_dist[mask], fmt='o')
-	plt.scatter(Ro_conv_obs, MS_obs, marker='*', s=120, color='red', edgecolor='black',label="Observations")
-	plt.axhspan(MS_obs_lim[0],MS_obs_lim[1],color = "gray", alpha = 0.3)
-	plt.plot(x_plot, y_plot, color='black')
-	plt.xlabel("Convective Rossby")
-	plt.ylabel("MS max")
-	plt.xscale('log')
-	plt.yscale('log')
-	plt.title(rf"$MS_{{max}} = 10^{{{b_max:.2f}}} \cdot Ro_{{conv}}^{{{a_max:.2f}}}$")
-	plt.grid()
-	plt.show()
+		a_max,b_max,x_plot,y_plot = interp(Ro_conv[mask],MS_max[mask],MS_max_dist[mask])
+		MS_obs = 10**b_max * Ro_conv_obs**a_max
+		plt.figure()
+		plt.errorbar(Ro_conv[mask],MS_max[mask], yerr=MS_max_dist[mask], fmt='o')
+		plt.scatter(Ro_conv_obs, MS_obs, marker='*', s=120, color='red', edgecolor='black',label="Observations")
+		plt.axhspan(MS_obs_lim[0],MS_obs_lim[1],color = "gray", alpha = 0.3)
+		plt.plot(x_plot, y_plot, color='black')
+		plt.xlabel("Convective Rossby")
+		plt.ylabel("MS max")
+		#plt.xscale('log')
+		#plt.yscale('log')
+		plt.title(rf"$MS_{{max}} = 10^{{{b_max:.2f}}} \cdot Ro_{{conv}}^{{{a_max:.2f}}}$")
+		plt.grid()
+		plt.show()
 
 """
 	# ======================== ELSASSER =========================
