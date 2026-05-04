@@ -27,6 +27,7 @@ om_lim = (df.groupby("name")["om_lim"].first()).to_numpy()
 Els = (df.groupby("name")["Elsasser"].first()).to_numpy()
 Ro_conv = (df.groupby("name")["Ro_conv"].first()).to_numpy()
 Rm = (df.groupby("name")["rm"].first()).to_numpy()
+xi = (df.groupby("name")["xi"].first()).to_numpy()
 Ro_sh = om*1e-4
 
 mask = (om < om_lim) & (df.groupby("name")["status"].first().to_numpy()) & (np.char.find(names, "wrong") == -1)
@@ -49,7 +50,26 @@ for i,namefile in enumerate(names):
 	#print(np.mean(x),MS_max[i])
 	MS_max_dist[i] = np.sqrt(np.mean((x - MS_max[i])**2)) / np.sqrt(len(x))
 
+# ===================== OBSERVATIONAL DATA =====================
 
+#B_obs_kG = np.array([])   # kG
+Prot_days = np.array([11.55,0.91,0.79,3.70,3.48,11.00]) # days
+tau_conv_days = np.array([268.3,363.1,357.9,351.9,238.0,334.1]) # days
+
+# --- Unit conversions ---
+#B_obs = B_obs_kG * 1e3 * 1e-4  # Tesla
+Omega_obs = 2 * np.pi / (Prot_days * 86400)
+
+# --- ASSUMPTIONS ---
+mu0 = 4 * np.pi * 1e-7
+
+rho = 100     # kg/m^3 (take the ones for the right age of Cesam)
+eta = 1e8     # m^2/s (hope for the best)
+
+#Els_obs = B_obs**2 / (rho * mu0 * eta * Omega_obs)
+Ro_conv_obs = Prot_days / tau_conv_days
+
+# ================== PLOTS ================================
 cmap1 = mcolors.ListedColormap(cm.inferno([0.2, 0.55, 0.9]))
 cmap2 = mcolors.ListedColormap(cm.cool([0.1, 0.5, 0.9]))
 
@@ -177,7 +197,21 @@ plt.grid()
 plt.legend()
 plt.tight_layout()
 plt.show()
+
+
+mask1 = mask & (xi == 0.1)
+mask2 = mask & (xi == 0.2)
+mask3 = mask & (xi == 0.35)
+plt.figure()
+plt.errorbar(Ro_conv[mask1],MS_mean[mask1], yerr=MS_mean_dist[mask1], fmt='o')
+plt.errorbar(Ro_conv[mask2],MS_mean[mask2], yerr=MS_mean_dist[mask2], fmt='o')
+plt.errorbar(Ro_conv[mask3],MS_mean[mask3], yerr=MS_mean_dist[mask3], fmt='o')
+plt.xlabel("Convective Rossby")
+plt.ylabel("MS mean")
+plt.grid()
+plt.show()
 """
+
 from scipy.optimize import least_squares
 
 def residuals(params, x, y, err):
@@ -208,9 +242,12 @@ def interp(x,y,yerr):
 
 # ======================== ROSSBY CONVECTIF =========================
 a_mean,b_mean,x_plot,y_plot = interp(Ro_conv[mask],MS_mean[mask],MS_mean_dist[mask])
+MS_obs = 10**b_mean * Ro_conv_obs**a_mean
+
 plt.figure()
 plt.subplot(1,2,1)
 plt.errorbar(Ro_conv[mask],MS_mean[mask], yerr=MS_mean_dist[mask], fmt='o')
+plt.scatter(Ro_conv_obs, MS_obs, marker='*', s=120, color='cyan', edgecolor='black',label="Observations")
 plt.plot(x_plot, y_plot, color='black')
 plt.xlabel("Convective Rossby")
 plt.ylabel("MS mean")
@@ -218,14 +255,17 @@ plt.grid()
 plt.title(rf"$MS_{{mean}} = 10^{{{b_mean:.2f}}} \cdot Ro_{{conv}}^{{{a_mean:.2f}}}$")
 
 a_max,b_max,x_plot,y_plot = interp(Ro_conv[mask],MS_max[mask],MS_max_dist[mask])
+MS_obs = 10**b_max * Ro_conv_obs**a_max
+
 plt.subplot(1,2,2)
 plt.errorbar(Ro_conv[mask],MS_max[mask], yerr=MS_max_dist[mask], fmt='o')
+plt.scatter(Ro_conv_obs, MS_obs, marker='*', s=120, color='cyan', edgecolor='black',label="Observations")
 plt.plot(x_plot, y_plot, color='black')
 plt.xlabel("Convective Rossby")
 plt.ylabel("MS max")
 plt.title(rf"$MS_{{max}} = 10^{{{b_max:.2f}}} \cdot Ro_{{conv}}^{{{a_max:.2f}}}$")
 plt.grid()
-#plt.show()
+
 
 # ======================== ELSASSER =========================
 a_mean,b_mean,x_plot,y_plot = interp(Els[mask],MS_mean[mask],MS_mean_dist[mask])
