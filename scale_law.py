@@ -197,6 +197,7 @@ plt.show()
 
 from scipy.optimize import least_squares
 
+
 def residuals(params, x, y, err):
     a, b = params
     return (y - linear_model(x, a, b)) / err
@@ -221,8 +222,9 @@ def interp(x,y,yerr):
 	x_plot = np.logspace(np.log10(x.min()), np.log10(x.max()), 200)
 	y_plot = 10**b * x_plot**a
 	return(a,b,x_plot,y_plot)
-	
 
+MS_sign = np.sign(MS_mean)
+MS_mean = np.abs(MS_mean)
 # ======================== ROSSBY CONVECTIF =========================
 a_mean,b_mean,x_plot,y_plot = interp(Ro_conv[mask],MS_mean[mask],MS_mean_dist[mask])
 
@@ -235,8 +237,16 @@ plt.ylabel("MS mean")
 plt.grid()
 plt.title(rf"$MS_{{mean}} = 10^{{{b_mean:.2f}}} \cdot Ro_{{conv}}^{{{a_mean:.2f}}}$")
 
-a_max,b_max,x_plot,y_plot = interp(Ro_conv[mask],MS_max[mask],MS_max_dist[mask])
+plt.figure()
 plt.subplot(1,2,2)
+plt.plot(Ro_conv[mask], MS_sign[mask])
+plt.xlabel("Convective Rossby")
+plt.ylabel("MS sign")
+plt.grid()
+plt.title("Sign of MS as a function of the Rossby")
+
+a_max,b_max,x_plot,y_plot = interp(Ro_conv[mask],MS_max[mask],MS_max_dist[mask])
+plt.figure()
 plt.plot(x_plot, y_plot, color='orange')
 plt.errorbar(Ro_conv[mask],MS_max[mask], yerr=MS_max_dist[mask], fmt='o', color='black')
 plt.xlabel("Convective Rossby")
@@ -350,9 +360,8 @@ for date, df in df_tot.groupby('date'):
 		MS_max_dist[i] = np.sqrt(np.mean((x - MS_max[i])**2)) / np.sqrt(len(x))
 
 
-	x = Ro_conv[mask]
-	y = MS_mean[mask]
-	yerr = MS_mean_dist[mask]
+	MS_mean = np.abs(MS_mean)
+	MS_sign = np.sign(MS_mean)
 
 	# ======================== ROSSBY CONVECTIF =========================
 	a_mean,b_mean,x_plot,y_plot = interp(Ro_conv[mask],MS_mean[mask],MS_mean_dist[mask])
@@ -365,8 +374,17 @@ for date, df in df_tot.groupby('date'):
 	plt.plot(x_plot, y_plot, color='black')
 	plt.xlabel("Convective Rossby")
 	plt.ylabel("MS mean")
+	plt.xscale('log')
+	plt.yscale('log')
 	plt.grid()
 	plt.title(rf"$MS_{{mean}} = 10^{{{b_mean:.2f}}} \cdot Ro_{{conv}}^{{{a_mean:.2f}}}$")
+	
+	plt.figure()
+	plt.plot(Ro_conv[mask], MS_sign[mask])
+	plt.xlabel("Convective Rossby")
+	plt.ylabel("MS sign")
+	plt.grid()
+	plt.title("Sign of MS as a function of the Rossby")
 
 	a_max,b_max,x_plot,y_plot = interp(Ro_conv[mask],MS_max[mask],MS_max_dist[mask])
 	MS_obs = 10**b_max * Ro_conv_obs**a_max
@@ -377,6 +395,8 @@ for date, df in df_tot.groupby('date'):
 	plt.plot(x_plot, y_plot, color='black')
 	plt.xlabel("Convective Rossby")
 	plt.ylabel("MS max")
+	plt.xscale('log')
+	plt.yscale('log')
 	plt.title(rf"$MS_{{max}} = 10^{{{b_max:.2f}}} \cdot Ro_{{conv}}^{{{a_max:.2f}}}$")
 	plt.grid()
 	plt.show()
