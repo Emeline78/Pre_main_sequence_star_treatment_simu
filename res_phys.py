@@ -32,6 +32,7 @@ for t,r_phys,rho_ref in param:
 	df["Visc_SI"] = df["Visc"] * scale
 	df["MS_SI"]   = df["MS"]   * scale
 	df["date"] = t
+	df["scale"] = scale
 	
 	liste.append(df)
 
@@ -85,6 +86,7 @@ for t,r_phys,rho_ref in param:
 	df["Visc_SI"] = df["Visc"] * scale
 	df["MS_SI"]   = df["MS"]   * scale
 	df["date"] = t
+	df["scale"] = scale
 	
 	liste.append(df)
 
