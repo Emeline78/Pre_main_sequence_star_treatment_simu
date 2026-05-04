@@ -218,7 +218,10 @@ def interp(x,y,yerr):
 	
 	res = least_squares(residuals,x0=[1, 0],args=(logx, logy, logy_err),loss='soft_l1')
 	a, b = res.x
-
+	
+	residuals = logy - (a*logx + b)
+	print(np.std(residuals))
+	
 	x_plot = np.logspace(np.log10(x.min()), np.log10(x.max()), 200)
 	y_plot = 10**b * x_plot**a
 	return(a,b,x_plot,y_plot)
@@ -227,6 +230,10 @@ MS_sign = np.sign(MS_mean)
 MS_mean = np.abs(MS_mean)
 # ======================== ROSSBY CONVECTIF =========================
 a_mean,b_mean,x_plot,y_plot = interp(Ro_conv[mask],MS_mean[mask],MS_mean_dist[mask])
+
+plt.figure()
+plt.plot(Ro_conv[mask]/MS_mean[mask]**a_mean, MS_mean[mask])
+plt.show()
 
 plt.figure()
 plt.subplot(1,2,1)
@@ -296,7 +303,7 @@ plt.title(rf"$MS_{{max}} = 10^{{{b_max:.2f}}} \cdot Rm^{{{a_max:.2f}}}$")
 plt.grid()
 plt.show()
 
-
+"""
 # ===================== OBSERVATIONAL DATA =====================
 
 B_obs_kG = np.array([1,3])   # kG
@@ -400,7 +407,7 @@ for date, df in df_tot.groupby('date'):
 		plt.grid()
 		plt.show()
 
-"""
+
 	# ======================== ELSASSER =========================
 	a_mean,b_mean,x_plot,y_plot = interp(Els[mask],MS_mean[mask],MS_mean_dist[mask])
 	plt.figure()
