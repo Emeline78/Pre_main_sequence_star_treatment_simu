@@ -137,7 +137,7 @@ for j in range(1,len(files)+1):
     MC_snap.append(MC)
 
 times = np.array(times)
-"""
+
 L = 1		# pas 1 - ki car r0 n'est pas egale a 1 mais a 1/(1-ki)
 nu = Ek * om * L**2
 tau = L**2/nu		# savoir quoi prendre entre temps visqueux (L**2/nu) ou de rotation (1/om)
@@ -146,8 +146,8 @@ temp, rho, drho = anelprof(r, strat = Nrho, polind = n, g0=g0, g1=g1, g2=g2)
 rho0 = rho[0]
 rho = rho / rho0  
 B0car = eta * om * mu0 	* rho0
-"""
 
+"""
 r_phys = 1.050421 * 0.9 * 6.957e10
 om = 2 * np.pi/ (10*24*3600)
 rho_ref = 8.676966e-02
@@ -160,6 +160,7 @@ temp, rho, drho = anelprof(r, strat = Nrho, polind = n, g0=g0, g1=g1, g2=g2)
 rho = rho * rho_ref
 rho0 = rho[0]
 B0car = eta * om * mu0  * rho0
+"""
 
 RS_snap = np.array(RS_snap) 
 MS_snap = np.array(MS_snap) 
