@@ -219,8 +219,8 @@ def interp(x,y,yerr):
 	res = least_squares(residuals,x0=[1, 0],args=(logx, logy, logy_err),loss='soft_l1')
 	a, b = res.x
 	
-	residuals = logy - (a*logx + b)
-	print(np.std(residuals))
+	resi = logy - (a*logx + b)
+	print(np.std(resi))
 	
 	x_plot = np.logspace(np.log10(x.min()), np.log10(x.max()), 200)
 	y_plot = 10**b * x_plot**a
