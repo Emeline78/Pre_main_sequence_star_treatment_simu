@@ -336,7 +336,7 @@ for date, df in df_tot.groupby('date'):
 	MS_max_dist = np.full(len(names),np.nan)
 	for i,namefile in enumerate(names): 
 		sim = df[df["name"] == namefile]
-		r_phys = sim["r_phys"].values
+		r_phys = np.max(sim["r_phys"].values)
 		data = np.load("snapshots/"+namefile+".npz")
 		MS_snap = data["MS"] 
 		times = data["times"]
