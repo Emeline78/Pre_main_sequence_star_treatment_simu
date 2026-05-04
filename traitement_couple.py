@@ -159,7 +159,6 @@ eta = nu/Pm
 temp, rho, drho = anelprof(r, strat = Nrho, polind = n, g0=g0, g1=g1, g2=g2)
 rho = rho * rho_ref
 rho0 = rho[0]
-rho = rho / rho0  
 B0car = eta * om * mu0  * rho0
 
 RS_snap = np.array(RS_snap) 
@@ -200,11 +199,11 @@ print(RS[25]/t_total)
 #print(f"rho(ri)/rho(ro) = {rho.max()/rho.min():.4f}")
 #print(f"attendu         = {np.exp(Nrho):.4f}")
 
-RS = RS / t_total * rho * L**3 / tau**2 * 2 * np.pi * r**2
-MS = MS / t_total * L * B0car / mu0 * 2 * np.pi * r**2
-MS1 = MS1 / t_total * L * B0car / mu0 * 2 * np.pi * r**2
-Visc = Visc / t_total * rho * L**3 / tau**2 * 2 * np.pi * r**2
-MC = MC / t_total* rho * L**3 / tau**2 * 2 * np.pi * r**2
+RS = RS / t_total * rho * L**5 / tau**2 * 2 * np.pi * r**2
+MS = MS / t_total * L**3 * B0car / mu0 * 2 * np.pi * r**2
+MS1 = MS1 / t_total * L**3 * B0car / mu0 * 2 * np.pi * r**2
+Visc = Visc / t_total * rho * L**5 / tau**2 * 2 * np.pi * r**2
+MC = MC / t_total* rho * L**5 / tau**2 * 2 * np.pi * r**2
 
 F = (MC + MS + RS + Visc + MS1)
 plt.figure()
