@@ -126,6 +126,36 @@ plt.show()
 
 
 from scipy.optimize import least_squares
+from sklearn.linear_model import LinearRegression
+
+def multivariate_interp(Ro, Els, Rm, MS):
+	valid = (Ro > 0) & (Els > 0) & (Rm > 0) & (MS > 0)
+
+	Ro = Ro[valid]
+	Els = Els[valid]
+	Rm = Rm[valid]
+	MS = MS[valid]
+
+	X = np.column_stack([
+	np.log10(Ro),
+	np.log10(Els),
+	np.log10(Rm)
+	])
+
+	y = np.log10(MS)
+
+	model = LinearRegression()
+	model.fit(X, y)
+
+	A = model.intercept_
+	B, C, D = model.coef_
+
+	return A, B, C, D
+    
+mask1 = mask & om>0.9*om_lim
+mask2 = mask & om<0.9*om_lim
+print(multivariate_interp(Ro_conv[mask],Els[mask],Rm[mask],MS_rms[mask])
+
 
 
 def residuals(params, x, y, err):
