@@ -154,7 +154,7 @@ def multivariate_interp(Ro, Els, Rm, MS):
     
 mask1 = mask & om>0.9*om_lim
 mask2 = mask & om<0.9*om_lim
-print(multivariate_interp(Ro_conv[mask],Els[mask],Rm[mask],MS_rms[mask])
+print(multivariate_interp(Ro_conv[mask],Els[mask],Rm[mask],MS_rms[mask]))
 
 
 
