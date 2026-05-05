@@ -149,13 +149,22 @@ def multivariate_interp(Ro, Els, Rm, MS):
 
 	A = model.intercept_
 	B, C, D = model.coef_
-
+	y_pred = model.predict(X)
+	R2 = 1 - np.sum((y - y_pred)**2) / np.sum((y - np.mean(y))**2)
+	print(R2)
+	plt.figure()
+	plt.plot(y-y_pred,y_pred)
+	plt.show()
 	return A, B, C, D
     
 mask1 = mask & (om>0.9*om_lim)
 mask2 = mask & (om<0.9*om_lim)
 print(multivariate_interp(Ro_conv[mask],Els[mask],Rm[mask],MS_rms[mask]))
+print(np.corrcoef(np.log10([Ro_conv[mask],Els[mask],Rm[mask])))
 
+for i in range(10):
+	mask1 = mask & (np.random.rand(len(Ro_conv)) < 0.6)
+	print(multivariate_interp(Ro_conv[mask1],Els[mask1],Rm[mask1],MS_rms[mask1]))
 
 
 def residuals(params, x, y, err):
