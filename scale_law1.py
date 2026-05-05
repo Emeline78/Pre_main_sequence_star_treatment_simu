@@ -6,7 +6,7 @@ import matplotlib.colors as mcolors
 from scipy.interpolate import CubicSpline
 from scipy.optimize import curve_fit
 """
-git add scale_law.py
+git add scale_law1.py
 git commit -m "modifications"
 git push
 """
@@ -56,22 +56,45 @@ mask2 = mask & (g == 1)
 mask3 = mask & (g == 2)
 g_labels = {0: r"$g \propto r$", 1: r"$g \propto 1/r^2$", 2: "CESAM 2k20"}
 plt.figure()
-plt.subplot(1,2,1)
+plt.subplot(1,3,1)
 plt.errorbar(Ro_sh[mask1],MS_mean[mask1], yerr=MS_mean_dist[mask1], fmt='o',label = r"$g \propto r$")
+plt.xlabel("Rossby shear")
+plt.ylabel("MS mean")
+plt.legend()
+
+plt.subplot(1,3,2)
 plt.errorbar(Ro_sh[mask2],MS_mean[mask2], yerr=MS_mean_dist[mask2], fmt='o', label = r"$g \propto 1/r^2$")
+plt.xlabel("Rossby shear")
+plt.ylabel("MS mean")
+plt.legend()
+
+plt.subplot(1,3,3)
 plt.errorbar(Ro_sh[mask3],MS_mean[mask3], yerr=MS_mean_dist[mask3], fmt='o', label = "CESAM 2k20")
 plt.xlabel("Rossby shear")
 plt.ylabel("MS mean")
-plt.title("Radial mean of MS as a function of the Rossby shear")
+plt.suptitle("Radial mean of MS as a function of the Rossby shear")
+plt.legend()
 plt.grid()
 
-plt.subplot(1,2,2)
+plt.figure()
+plt.subplot(1,3,1)
 plt.errorbar(Ro_sh[mask1],MS_max[mask1], yerr=MS_max_dist[mask1], fmt='o',label = r"$g \propto r$")
+plt.xlabel("Rossby shear")
+plt.ylabel("MS mean")
+plt.legend()
+
+plt.subplot(1,3,2)
 plt.errorbar(Ro_sh[mask2],MS_max[mask2], yerr=MS_max_dist[mask2], fmt='o', label = r"$g \propto 1/r^2$")
+plt.xlabel("Rossby shear")
+plt.ylabel("MS mean")
+plt.legend()
+
+plt.subplot(1,3,3)
 plt.errorbar(Ro_sh[mask3],MS_max[mask3], yerr=MS_max_dist[mask3], fmt='o', label = "CESAM 2k20")
 plt.xlabel("Rossby shear")
-plt.ylabel("MS max")
-plt.title("Radial max of MS as a function of the Rossby shear")
+plt.ylabel("MS mean")
+plt.suptitle("Radial max of MS as a function of the Rossby shear")
+plt.legend()
 plt.grid()
 
 
