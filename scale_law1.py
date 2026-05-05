@@ -244,7 +244,7 @@ plt.xlabel("Reynolds magnetic")
 plt.ylabel("MS max")
 plt.title(rf"$MS_{{max}} = 10^{{{b_max:.2f}}} \cdot Rm^{{{a_max:.2f}}}$")
 plt.grid()
-print(rf"$MS_{{max}} = 10^{{{b_max:.2f}}} \cdot Rm^{{{a_max:.2f}}}$"))
+print(rf"$MS_{{max}} = 10^{{{b_max:.2f}}} \cdot Rm^{{{a_max:.2f}}}$")
 
 a_mean,b_mean,x_plot,y_plot = interp(Rm[mask],MS_int_amp[mask],MS_int_err[mask])
 plt.figure()
