@@ -216,7 +216,7 @@ plt.title(rf"$MS_{{max}} = 10^{{{b_max:.2f}}} \cdot Rm^{{{a_max:.2f}}}$")
 plt.grid()
 plt.show()
 
-"""
+
 # ===================== OBSERVATIONAL DATA =====================
 
 B_obs_kG = np.array([1,3])   # kG
@@ -360,4 +360,4 @@ for date, df in df_tot.groupby('date'):
 	plt.title(rf"$MS_{{max}} = 10^{{{b_max:.2f}}} \cdot Rm^{{{a_max:.2f}}}$")
 	plt.grid()
 	plt.show()
-"""
+
