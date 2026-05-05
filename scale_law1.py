@@ -150,7 +150,7 @@ def interp(x,y,yerr):
 	a, b = res.x
 	
 	resi = logy - (a*logx + b)
-	print(np.std(resi))
+	#print(np.std(resi))
 	
 	x_plot = np.logspace(np.log10(x.min()), np.log10(x.max()), 200)
 	y_plot = 10**b * x_plot**a
@@ -180,7 +180,7 @@ plt.xlabel("Convective Rossby")
 plt.ylabel("MS max")
 plt.title(rf"$MS_{{max}} = 10^{{{b_max:.2f}}} \cdot Ro_{{conv}}^{{{a_max:.2f}}}$")
 plt.grid()
-print(f"MS_max = 10^{b_max:.2f} . Rm^{a_max:.2f}")
+print(f"MS_max = 10^{b_max:.2f} . Ro_conv^{a_max:.2f}")
 
 a_mean,b_mean,x_plot,y_plot = interp(Ro_conv[mask],MS_int_amp[mask],MS_int_err[mask])
 plt.figure()
@@ -190,7 +190,7 @@ plt.xlabel("Convective Rossby")
 plt.ylabel("MS integrated")
 plt.grid()
 plt.title(rf"$MS_{{int}} = 10^{{{b_mean:.2f}}} \cdot Ro_{{conv}}^{{{a_mean:.2f}}}$")
-print(f"MS_int = 10^{b_mean:.2f} . Rm^{a_mean:.2f}")
+print(f"MS_int = 10^{b_mean:.2f} . Ro_conv^{a_mean:.2f}")
 
 # ======================== ELSASSER =========================
 a_mean,b_mean,x_plot,y_plot = interp(Els[mask],MS_rms[mask],MS_rms_err[mask])
@@ -202,7 +202,7 @@ plt.xlabel("Elsasser number")
 plt.ylabel("MS root mean square")
 plt.grid()
 plt.title(rf"$MS_{{rms}} = 10^{{{b_mean:.2f}}} \cdot \Lambda^{{{a_mean:.2f}}}$")
-print(f"MS_rms = 10^{b_mean:.2f} . Ro_conv ^{a_mean:.2f}")
+print(f"MS_rms = 10^{b_mean:.2f} . Els ^{a_mean:.2f}")
 
 a_max,b_max,x_plot,y_plot = interp(Els[mask],MS_max[mask],MS_max_err[mask])
 plt.subplot(1,2,2)
@@ -212,7 +212,7 @@ plt.xlabel("Elsasser number")
 plt.ylabel("MS max")
 plt.title(rf"$MS_{{max}} = 10^{{{b_max:.2f}}} \cdot \Lambda^{{{a_max:.2f}}}$")
 plt.grid()
-print(f"MS_max = 10^{b_max:.2f} . Rm^{a_max:.2f}")
+print(f"MS_max = 10^{b_max:.2f} . Els^{a_max:.2f}")
 
 a_mean,b_mean,x_plot,y_plot = interp(Els[mask],MS_int_amp[mask],MS_int_err[mask])
 plt.figure()
@@ -222,7 +222,7 @@ plt.xlabel("Elsasser number")
 plt.ylabel("MS integrated")
 plt.grid()
 plt.title(rf"$MS_{{int}} = 10^{{{b_mean:.2f}}} \cdot \Lambda^{{{a_mean:.2f}}}$")
-print(f"MS_int = 10^{b_mean:.2f} . Rm^{a_mean:.2f}")
+print(f"MS_int = 10^{b_mean:.2f} . Els^{a_mean:.2f}")
 
 # ======================== RM =========================
 a_mean,b_mean,x_plot,y_plot = interp(Rm[mask],MS_rms[mask],MS_rms_err[mask])
@@ -234,7 +234,7 @@ plt.xlabel("Reynolds magnetic")
 plt.ylabel("MS root mean square")
 plt.grid()
 plt.title(rf"$MS_{{rms}} = 10^{{{b_mean:.2f}}} \cdot Rm^{{{a_mean:.2f}}}$")
-print(f"MS_rms = 10^{b_mean:.2f} . Ro_conv ^{a_mean:.2f}")
+print(f"MS_rms = 10^{b_mean:.2f} . Rm ^{a_mean:.2f}")
 
 a_max,b_max,x_plot,y_plot = interp(Rm[mask],MS_max[mask],MS_max_err[mask])
 plt.subplot(1,2,2)
