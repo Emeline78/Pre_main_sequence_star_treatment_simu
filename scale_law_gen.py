@@ -92,7 +92,7 @@ def evaluate_scaling(X_vars, Y, Yerr, n_boot=100):
 		a = params[:-1]
 		b = params[-1]
 		model = X * a + b
-	return (Y - model) / Yerr
+		return (Y - model) / Yerr
 
 	res = least_squares(residuals, x0=np.zeros(logX.shape[1] + 1), args=(logX, logY, logY_err), loss='soft_l1')
 	coefs = res.x[:-1]
