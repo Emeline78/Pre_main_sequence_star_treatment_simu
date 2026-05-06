@@ -151,7 +151,7 @@ def evaluate_scaling(X_vars, Y, Yerr, n_boot=100):
 	
 	plt.figure()
 	for code in np.unique(g):
-		m = (g == code) & mask
+		m = (g[mask] == code)
 		plt.scatter(logY[m], model.predict(logX[m]), label=str(code))
 	plt.plot([logY.min(), logY.max()], [logY.min(), logY.max()], 'r--')
 	plt.show()
