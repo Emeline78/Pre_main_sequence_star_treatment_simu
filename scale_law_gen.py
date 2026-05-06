@@ -149,12 +149,12 @@ def evaluate_scaling(X_vars, Y, Yerr, n_boot=100):
 	residuals = logY - model.predict(logX)
 	sigma2 = np.var(residuals)
 	
-	plt.figure()
-	for code in np.unique(g):
-		m = (g[mask] == code)
-		plt.scatter(logY[m], model.predict(logX[m]), label=str(code))
-	plt.plot([logY.min(), logY.max()], [logY.min(), logY.max()], 'r--')
-	plt.show()
+	#plt.figure()
+	#for code in np.unique(g):
+	#	m = (g[mask] == code)
+	#	plt.scatter(logY[m], model.predict(logX[m]), label=str(code))
+	#plt.plot([logY.min(), logY.max()], [logY.min(), logY.max()], 'r--')
+	#plt.show()
 		
 	# ===================== Stabilite =======================
 	boot_coefs = []
