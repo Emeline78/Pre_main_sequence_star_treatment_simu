@@ -189,10 +189,10 @@ for name, var in models.items():
 	ax = plt.gca()  # récupère les axes actuels
 	xmin, xmax = ax.get_xlim()
 	x = np.linspace(xmin, xmax, 100)
-	plt.plot(x, x, 'r--')
-	plt.title(f"{name}")
-	plt.legend()
+	#plt.plot(x, x, 'r--')
+	#plt.title(f"{name}")
+	#plt.legend()
 
-plt.show()
+#plt.show()
 
 
