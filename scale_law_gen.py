@@ -114,6 +114,7 @@ def evaluate_scaling(X_vars, Y, Yerr, n_boot=100):
 	model = LinearRegression().fit(logX, logY)#, sample_weight=weights)
 	R2 = model.score(logX, logY)
 	coefs = model.coef_
+	intercept = model.intercept_
 	
 	# ===================== Stabilite =======================
 	boot_coefs = []
@@ -145,15 +146,30 @@ def evaluate_scaling(X_vars, Y, Yerr, n_boot=100):
 	# ============================ Correlations =============================
 	corr = np.corrcoef(logX.T)
 
-	return {"R2": R2,"coefs": coefs, "coef_std": std_coefs, "n_stable": n_stable, "PCA_variance": var_ratio,"correlation_matrix": corr}
+	return {"R2": R2,"coefs": coefs,"intercept": intercept, "coef_std": std_coefs, "n_stable": n_stable, "PCA_variance": var_ratio,"correlation_matrix": corr}
     
-    
+   
 models = {"Ro_conv": [Ro_conv], "Ro_conv_xi": [Ro_conv, xi], "Ro_conv_xi_Rosh": [Ro_conv, xi, Ro_sh], "Ro_conv_xi_Els": [Ro_conv, xi, Els]}
-for MS, MS_err, case in [(MS_rms,MS_rms_err,"MS_rms"), (MS_int_amp,MS_int_err,"MS_int_amp"), (MS_max,MS_max_err,"MS_max")]:
-	print(f"================== {case} ==========================")
-	for name, var in models.items():
-		print('================',name,'================')
+
+for name, var in models.items():
+	print('================',name,'================')
+	plt.figure()
+	
+	for MS, MS_err, case in [(MS_rms,MS_rms_err,"MS_rms"), (MS_int_amp,MS_int_err,"MS_int_amp"), (MS_max,MS_max_err,"MS_max")]:
+		print(f"================== {case} ==========================")
 		res = evaluate_scaling(var, MS, MS_err)
 		for key, value in res.items():
 			print(f"{key:20s} : {value}")
+		logX = np.column_stack([np.log10(v[mask]) for v in var])
+		Xeff = 10**res["intercept"] * 10**(np.sum(res["coefs"] * logX, axis=1))
+		
+		plt.plot(Xeff, MS[mask],"+")
+		
+	ax = plt.gca()  # récupère les axes actuels
+	xmin, xmax = ax.get_xlim()
+	x = np.linspace(xmin, xmax, 100)
+	plt.plot(x, x, 'r--')
+			
+plt.show()
+
 
