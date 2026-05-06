@@ -127,7 +127,7 @@ def evaluate_scaling(X_vars, Y, Yerr, n_boot=100):
 	plt.show()
 	"""
 
-	model = LinearRegression().fit(logX, logY)#, sample_weight=weights)
+	model = LinearRegression().fit(logX, logY, sample_weight=weights)
 	R2 = model.score(logX, logY)
 	coefs = model.coef_
 	intercept = model.intercept_
@@ -170,7 +170,7 @@ def evaluate_scaling(X_vars, Y, Yerr, n_boot=100):
 	# ============================ Correlations =============================
 	corr = np.corrcoef(logX.T)
 
-	return {"R2": R2,"coefs": coefs,"intercept": intercept, "residuals": residuals,"sigma2": sigma2, "coef_std": std_coefs, "n_stable": n_stable, "PCA_variance": var_ratio,"correlation_matrix": corr}
+	return {"R2": R2,"coefs": coefs,"intercept": intercept,"sigma2": sigma2, "coef_std": std_coefs, "n_stable": n_stable, "PCA_variance": var_ratio,"correlation_matrix": corr}
     
    
 models = {"Ro_conv": [Ro_conv], "Ro_conv_xi": [Ro_conv, xi], "Ro_conv_xi_Rosh": [Ro_conv, xi, Ro_sh], "Ro_conv_xi_Els": [Ro_conv, xi, Els]}
@@ -187,7 +187,7 @@ for name, var in models.items():
 		logX = np.column_stack([np.log10(v[mask]) for v in var])
 		Xeff = 10**res["intercept"] * 10**(np.sum(res["coefs"] * logX, axis=1))
 		Xeff_corrected = Xeff * np.exp((np.log(10)**2) * res["sigma2"] / 2)
-		plt.errorbar(Xeff, MS[mask],yerr=MS_err[mask],fmt = "+", label = f"{case}")
+		plt.errorbar(Xeff_corrected, MS[mask],yerr=MS_err[mask],fmt = "+", label = f"{case}")
 		
 	ax = plt.gca()  # récupère les axes actuels
 	xmin, xmax = ax.get_xlim()
