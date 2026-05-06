@@ -89,7 +89,7 @@ def evaluate_scaling(X_vars, Y, Yerr, n_boot=100):
 	logY_err = Yerr / (Y * np.log(10))
 	
 	# ===================== R2 et Regression lineaire =======================
-	def residuals(params, X, Y, Yerr):
+	"""def residuals(params, X, Y, Yerr):
 		a = params[:-1]
 		b = params[-1]
 		model = X @ a + b
@@ -108,7 +108,11 @@ def evaluate_scaling(X_vars, Y, Yerr, n_boot=100):
 		return 1 - ss_res / ss_tot
 
 	R2 = weighted_R2(logY, model_logY, weights)
-
+	"""
+	model = LinearRegression().fit(logX, logY)
+	R2 = model.score(logX, logY)
+	coefs = model.coef_
+	
 	# ===================== Stabilite =======================
 	boot_coefs = []
 	for i in range(n_boot):
@@ -124,7 +128,7 @@ def evaluate_scaling(X_vars, Y, Yerr, n_boot=100):
 	std_coefs = np.std(boot_coefs, axis=0)
 
 	stable = []
-	for a, s in zip(coefs, std_coefs):
+	for a, s in zip(boot_coefs, std_coefs):
 		if np.abs(a) > 0:
 			stable.append(s < 0.2 * np.abs(a))
 		else:
@@ -151,9 +155,10 @@ def evaluate_scaling(X_vars, Y, Yerr, n_boot=100):
     
     
 models = {"Ro": [Ro_conv], "Ro_xi": [Ro_conv, xi], "Ro_xi_Rosh": [Ro_conv, xi, Ro_sh]}
-for MS,MS_err in [(MS_rms,MS_rms_err), (MS_int_amp,MS_int_err), (MS_max,MS_max_err)]:
+for MS, MS_err, case in [(MS_rms,MS_rms_err,"MS_rms"), (MS_int_amp,MS_int_err,"MS_int_amp"), (MS_max,MS_max_err,"MS_max")]:
+	print(f"================== {case} ==========================")
 	for name, var in models.items():
-		print(name)
+		print('================',name,'================')
 		res = evaluate_scaling(var, MS, MS_err)
 		for key, value in res.items():
 			print(f"{key:20s} : {value}")
