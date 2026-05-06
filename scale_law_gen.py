@@ -15,9 +15,9 @@ git commit -m "modifications"
 git push
 """
 
-a = input("file : ")
+a = "transport_profiles_adim.parquet"
 df = pd.read_parquet(a)
-datadir = input("directory of snapshots : ")
+datadir = "snapshots1/"
 
 if a == "transport_profiles_SI.parquet" or a == "transport_profiles_CGS.parquet" :
 	df = df[(df["date"] > 5) & (df["date"] < 6)]
