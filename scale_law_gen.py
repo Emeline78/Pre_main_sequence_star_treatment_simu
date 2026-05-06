@@ -110,14 +110,15 @@ def evaluate_scaling(X_vars, Y, Yerr, n_boot=100):
 
 	R2_weighted = weighted_R2(logY, model_logY, weights)
 	
-	model = LinearRegression().fit(logX, logY)
+
+	model = LinearRegression().fit(logX, logY, sample_weight=weights)
 	R2 = model.score(logX, logY)
 	coefs = model.coef_
 	
 	# ===================== Stabilite =======================
 	boot_coefs = []
 	for i in range(n_boot):
-		idx = (np.random.rand(len(logY)) < 0.6)
+		idx = np.random.choice(len(logY), len(logY), replace=True)
 		Xb = logX[idx]
 		Yb = logY[idx]
 
@@ -141,18 +142,10 @@ def evaluate_scaling(X_vars, Y, Yerr, n_boot=100):
 	pca = PCA().fit(logX)
 	var_ratio = pca.explained_variance_ratio_
 
-	# dimension effective
-	if var_ratio[0] > 0.9:
-		dim = 1
-	elif var_ratio[0] + var_ratio[1] > 0.9:
-		dim = 2
-	else:
-		dim = len(coefs)
-
 	# ============================ Correlations =============================
 	corr = np.corrcoef(logX.T)
 
-	return {"R2": R2,"coefs": coefs,"R2_weighted": R2_weighted, "coefs_weighted": coefs_weighted, "coef_std": std_coefs, "n_stable": n_stable, "PCA_variance": var_ratio,"dim": dim,"correlation_matrix": corr}
+	return {"R2": R2,"coefs": coefs,"R2_weighted": R2_weighted, "coefs_weighted": coefs_weighted, "coef_std": std_coefs, "n_stable": n_stable, "PCA_variance": var_ratio,"correlation_matrix": corr}
     
     
 models = {"Ro_conv": [Ro_conv], "Ro_conv_xi": [Ro_conv, xi], "Ro_conv_xi_Rosh": [Ro_conv, xi, Ro_sh], "Ro_conv_xi_Els": [Ro_conv, xi, Els]}
