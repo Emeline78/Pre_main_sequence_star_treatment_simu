@@ -163,12 +163,14 @@ for name, var in models.items():
 		logX = np.column_stack([np.log10(v[mask]) for v in var])
 		Xeff = 10**res["intercept"] * 10**(np.sum(res["coefs"] * logX, axis=1))
 		
-		plt.plot(Xeff, MS[mask],"+")
+		plt.plot(Xeff, MS[mask],"+", label = f"{case}")
 		
 	ax = plt.gca()  # récupère les axes actuels
 	xmin, xmax = ax.get_xlim()
 	x = np.linspace(xmin, xmax, 100)
 	plt.plot(x, x, 'r--')
+	plt.title(f"{name}")
+	plt.legend()
 			
 plt.show()
 
