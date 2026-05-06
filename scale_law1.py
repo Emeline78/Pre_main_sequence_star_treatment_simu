@@ -171,9 +171,9 @@ from sklearn.decomposition import PCA
 #mask3 = mask & (g == 2)
 #for mask_loc in [mask1,mask2,mask3]:
 	
-X1 = np.column_stack([np.log10(Ro_conv[mask_loc]), np.log10(Ro_sh[mask_loc]), np.log10(xi[mask_loc])])
-X2 = np.column_stack([np.log10(Ro_conv[mask_loc]), np.log10(Els[mask_loc]), np.log10(xi[mask_loc])])
-X3 = np.column_stack([np.log10(Ro_conv[mask_loc]), np.log10(Els[mask_loc]), np.log10(Rm[mask_loc])])
+X1 = np.column_stack([np.log10(Ro_conv[mask]), np.log10(Ro_sh[mask]), np.log10(xi[mask])])
+X2 = np.column_stack([np.log10(Ro_conv[mask]), np.log10(Els[mask]), np.log10(xi[mask])])
+X3 = np.column_stack([np.log10(Ro_conv[mask]), np.log10(Els[mask]), np.log10(Rm[mask])])
 for X in [X1,X2,X3]:
 	pca = PCA()
 	pca.fit(X)
