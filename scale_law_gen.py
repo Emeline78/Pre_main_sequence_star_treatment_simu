@@ -8,7 +8,7 @@ from scipy.optimize import curve_fit
 from scipy.optimize import least_squares
 from sklearn.linear_model import LinearRegression
 from sklearn.decomposition import PCA
-
+from scipy.optimize import curve_fit
 """
 git add scale_law_gen.py
 git commit -m "modifications"
@@ -68,6 +68,20 @@ for i,namefile in enumerate(names):
 	
 MS_int_sign = np.sign(MS_int)
 MS_int_amp  = np.abs(MS_int)
+
+def model_func(X_flat, *params):
+    n_vars = len(X_vars)
+    a = params[:n_vars]
+    b = params[-1]  # log10(A)
+
+    # reshape X
+    X = X_flat.reshape(n_vars, -1)
+
+    Y_model = 10**b
+    for i in range(n_vars):
+        Y_model *= X[i]**a[i]
+
+    return Y_model
 
 def evaluate_scaling(X_vars, Y, Yerr, n_boot=100):
 	"""
@@ -135,10 +149,12 @@ def evaluate_scaling(X_vars, Y, Yerr, n_boot=100):
 	residuals = logY - model.predict(logX)
 	sigma2 = np.var(residuals)
 	
-	#plt.figure()
-	#plt.scatter(logY, model.predict(logX))
-	#plt.plot([logY.min(), logY.max()], [logY.min(), logY.max()], 'r--')
-	#plt.show()
+	plt.figure()
+	for code in np.unique(g):
+		m = (g == code) & mask
+		plt.scatter(logY[m], model.predict(logX[m]), label=str(code))
+	plt.plot([logY.min(), logY.max()], [logY.min(), logY.max()], 'r--')
+	plt.show()
 		
 	# ===================== Stabilite =======================
 	boot_coefs = []
@@ -170,7 +186,7 @@ def evaluate_scaling(X_vars, Y, Yerr, n_boot=100):
 	# ============================ Correlations =============================
 	corr = np.corrcoef(logX.T)
 
-	return {"R2": R2,"coefs": coefs,"intercept": intercept,"sigma2": sigma2, "coef_std": std_coefs, "n_stable": n_stable, "PCA_variance": var_ratio,"correlation_matrix": corr}
+	return {"R2": R2,"coefs": coefs,"intercept": intercept, "coef_std": std_coefs, "n_stable": n_stable, "PCA_variance": var_ratio,"correlation_matrix": corr}
     
    
 models = {"Ro_conv": [Ro_conv], "Ro_conv_xi": [Ro_conv, xi], "Ro_conv_xi_Rosh": [Ro_conv, xi, Ro_sh], "Ro_conv_xi_Els": [Ro_conv, xi, Els]}
@@ -186,8 +202,19 @@ for name, var in models.items():
 			print(f"{key:20s} : {value}")
 		logX = np.column_stack([np.log10(v[mask]) for v in var])
 		Xeff = 10**res["intercept"] * 10**(np.sum(res["coefs"] * logX, axis=1))
-		Xeff_corrected = Xeff * np.exp((np.log(10)**2) * res["sigma2"] / 2)
-		plt.errorbar(Xeff_corrected, MS[mask],yerr=MS_err[mask],fmt = "+", label = f"{case}")
+		plt.errorbar(Xeff, MS[mask],yerr=MS_err[mask],fmt = "+", label = f"{case}")
+		
+		X_stack = np.vstack([v[mask] for v in var])
+		Y_fit = MS[mask]
+		Yerr_fit = MS_err[mask]
+		p0 = np.zeros(len(var) + 1)  # initial guess
+		params, cov = curve_fit(model_func, X_stack, Y_fit, sigma=Yerr_fit, absolute_sigma=True, p0=p0, maxfev=10000)
+		coefs = params[:-1]
+		intercept = params[-1]
+		Y_model = model_func(X_stack, *params)
+		plt.errorbar(Y_model, MS[mask],yerr=MS_err[mask],fmt = "+", label = f"{case} en lineaire")
+		
+		
 		
 	ax = plt.gca()  # récupère les axes actuels
 	xmin, xmax = ax.get_xlim()
