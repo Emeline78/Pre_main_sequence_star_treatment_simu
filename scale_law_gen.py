@@ -89,7 +89,7 @@ def evaluate_scaling(X_vars, Y, Yerr, n_boot=100):
 	logY_err = Yerr / (Y * np.log(10))
 	#weights = 1 / (logY_err**2)
 	# ===================== R2 et Regression lineaire =======================
-	"""def residuals(params, X, Y, Yerr):
+	def residuals(params, X, Y, Yerr):
 		a = params[:-1]
 		b = params[-1]
 		model = X @ a + b
@@ -100,6 +100,11 @@ def evaluate_scaling(X_vars, Y, Yerr, n_boot=100):
 	intercept = res.x[-1]
 	model_logY = logX @ coefs + intercept
 	
+	plt.figure()
+	plt.scatter(logY, model_logY)
+	plt.plot([logY.min(), logY.max()], [logY.min(), logY.max()], 'r--')
+	plt.show()
+	
 	coefs_weighted = res.x
 	
 	def weighted_R2(y, y_model, weights):
@@ -109,13 +114,27 @@ def evaluate_scaling(X_vars, Y, Yerr, n_boot=100):
 		return 1 - ss_res / ss_tot
 
 	R2_weighted = weighted_R2(logY, model_logY, weights)
-	"""
+	
+	model = LinearRegression().fit(logX, logY), sample_weight=weights)
+	R2 = model.score(logX, logY)
+	coefs = model.coef_
+	intercept = model.intercept_
+	
+	plt.figure()
+	plt.scatter(logY, model.predict(logX))
+	plt.plot([logY.min(), logY.max()], [logY.min(), logY.max()], 'r--')
+	plt.show()
 
 	model = LinearRegression().fit(logX, logY)#, sample_weight=weights)
 	R2 = model.score(logX, logY)
 	coefs = model.coef_
 	intercept = model.intercept_
 	
+	plt.figure()
+	plt.scatter(logY, model.predict(logX))
+	plt.plot([logY.min(), logY.max()], [logY.min(), logY.max()], 'r--')
+	plt.show()
+		
 	# ===================== Stabilite =======================
 	boot_coefs = []
 	for i in range(n_boot):
@@ -163,7 +182,7 @@ for name, var in models.items():
 		logX = np.column_stack([np.log10(v[mask]) for v in var])
 		Xeff = 10**res["intercept"] * 10**(np.sum(res["coefs"] * logX, axis=1))
 		
-		plt.plot(Xeff, MS[mask],"+", label = f"{case}")
+		plt.errorbar(Xeff, MS[mask],yerr=MS_err[mask],fmt = "+", label = f"{case}")
 		
 	ax = plt.gca()  # récupère les axes actuels
 	xmin, xmax = ax.get_xlim()
