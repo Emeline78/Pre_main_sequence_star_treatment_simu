@@ -128,7 +128,7 @@ def evaluate_scaling(X_vars, Y, Yerr, n_boot=100):
 	std_coefs = np.std(boot_coefs, axis=0)
 
 	stable = []
-	for a, s in zip(boot_coefs, std_coefs):
+	for a, s in zip(coefs, std_coefs):
 		if np.abs(a) > 0:
 			stable.append(s < 0.2 * np.abs(a))
 		else:
