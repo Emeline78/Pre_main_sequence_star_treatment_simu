@@ -172,7 +172,7 @@ models = {"Ro_conv": [Ro_conv], "Ro_conv_xi": [Ro_conv, xi], "Ro_conv_xi_Rosh": 
 
 for name, var in models.items():
 	print('================',name,'================')
-	plt.figure()
+	#plt.figure()
 	
 	for MS, MS_err, case in [(MS_rms,MS_rms_err,"MS_rms"), (MS_int_amp,MS_int_err,"MS_int_amp"), (MS_max,MS_max_err,"MS_max")]:
 		print(f"================== {case} ==========================")
@@ -183,8 +183,8 @@ for name, var in models.items():
 		Xeff = 10**res["intercept"] * 10**(np.sum(res["coefs"] * logX, axis=1))
 		
 		#plt.errorbar(Xeff, MS[mask],yerr=MS_err[mask],fmt = "+", label = f"{case}")
-		plt.scatter(Xeff, MS[mask] - Xeff)
-		plt.axhline(0, color='r')
+		#plt.scatter(Xeff, MS[mask] - Xeff)
+		#plt.axhline(0, color='r')
 		
 	ax = plt.gca()  # récupère les axes actuels
 	xmin, xmax = ax.get_xlim()
