@@ -89,6 +89,7 @@ def evaluate_scaling(X_vars, Y, Yerr, n_boot=100):
 	logY_err = Yerr / (Y * np.log(10))
 	weights = 1 / (logY_err**2)
 	# ===================== R2 et Regression lineaire =======================
+	"""
 	def residuals(params, X, Y, Yerr):
 		a = params[:-1]
 		b = params[-1]
@@ -124,16 +125,20 @@ def evaluate_scaling(X_vars, Y, Yerr, n_boot=100):
 	plt.scatter(logY, model.predict(logX))
 	plt.plot([logY.min(), logY.max()], [logY.min(), logY.max()], 'r--')
 	plt.show()
+	"""
 
 	model = LinearRegression().fit(logX, logY)#, sample_weight=weights)
 	R2 = model.score(logX, logY)
 	coefs = model.coef_
 	intercept = model.intercept_
 	
-	plt.figure()
-	plt.scatter(logY, model.predict(logX))
-	plt.plot([logY.min(), logY.max()], [logY.min(), logY.max()], 'r--')
-	plt.show()
+	residuals = logY - model.predict(logX)
+	sigma2 = np.var(residuals)
+	
+	#plt.figure()
+	#plt.scatter(logY, model.predict(logX))
+	#plt.plot([logY.min(), logY.max()], [logY.min(), logY.max()], 'r--')
+	#plt.show()
 		
 	# ===================== Stabilite =======================
 	boot_coefs = []
@@ -165,14 +170,14 @@ def evaluate_scaling(X_vars, Y, Yerr, n_boot=100):
 	# ============================ Correlations =============================
 	corr = np.corrcoef(logX.T)
 
-	return {"R2": R2,"coefs": coefs,"intercept": intercept, "coef_std": std_coefs, "n_stable": n_stable, "PCA_variance": var_ratio,"correlation_matrix": corr}
+	return {"R2": R2,"coefs": coefs,"intercept": intercept, "residuals": residuals,"sigma2": sigma2, "coef_std": std_coefs, "n_stable": n_stable, "PCA_variance": var_ratio,"correlation_matrix": corr}
     
    
 models = {"Ro_conv": [Ro_conv], "Ro_conv_xi": [Ro_conv, xi], "Ro_conv_xi_Rosh": [Ro_conv, xi, Ro_sh], "Ro_conv_xi_Els": [Ro_conv, xi, Els]}
 
 for name, var in models.items():
 	print('================',name,'================')
-	#plt.figure()
+	plt.figure()
 	
 	for MS, MS_err, case in [(MS_rms,MS_rms_err,"MS_rms"), (MS_int_amp,MS_int_err,"MS_int_amp"), (MS_max,MS_max_err,"MS_max")]:
 		print(f"================== {case} ==========================")
@@ -181,18 +186,16 @@ for name, var in models.items():
 			print(f"{key:20s} : {value}")
 		logX = np.column_stack([np.log10(v[mask]) for v in var])
 		Xeff = 10**res["intercept"] * 10**(np.sum(res["coefs"] * logX, axis=1))
-		
-		#plt.errorbar(Xeff, MS[mask],yerr=MS_err[mask],fmt = "+", label = f"{case}")
-		#plt.scatter(Xeff, MS[mask] - Xeff)
-		#plt.axhline(0, color='r')
+		Xeff_corrected = Xeff * np.exp((np.log(10)**2) * res["sigma2"] / 2)
+		plt.errorbar(Xeff, MS[mask],yerr=MS_err[mask],fmt = "+", label = f"{case}")
 		
 	ax = plt.gca()  # récupère les axes actuels
 	xmin, xmax = ax.get_xlim()
 	x = np.linspace(xmin, xmax, 100)
-	#plt.plot(x, x, 'r--')
-	#plt.title(f"{name}")
-	#plt.legend()
+	plt.plot(x, x, 'r--')
+	plt.title(f"{name}")
+	plt.legend()
 
-#plt.show()
+plt.show()
 
 
