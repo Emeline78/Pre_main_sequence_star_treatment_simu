@@ -12,6 +12,7 @@ git push
 """
 a = input("file : ")
 df = pd.read_parquet(a)
+datadir = input("directory of snapshots : ")
 
 if a == "transport_profiles_SI.parquet" or a == "transport_profiles_CGS.parquet" :
 	df = df[(df["date"] > 5) & (df["date"] < 6)]
@@ -46,7 +47,7 @@ MS_rms_err = np.full(len(names),np.nan)
 MS_int_err = np.full(len(names),np.nan)
 
 for i,namefile in enumerate(names): 
-	data = np.load("snapshots/"+namefile+".npz")
+	data = np.load(datadir+namefile+".npz")
 	MS_snap = data["MS"]
 	times = data["times"]
 	r = data["r"]
