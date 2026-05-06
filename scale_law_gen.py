@@ -89,7 +89,7 @@ def evaluate_scaling(X_vars, Y, Yerr, n_boot=100):
 	logY_err = Yerr / (Y * np.log(10))
 	
 	# ===================== R2 et Regression lineaire =======================
-	"""def residuals(params, X, Y, Yerr):
+	def residuals(params, X, Y, Yerr):
 		a = params[:-1]
 		b = params[-1]
 		model = X @ a + b
@@ -100,15 +100,16 @@ def evaluate_scaling(X_vars, Y, Yerr, n_boot=100):
 	intercept = res.x[-1]
 	model_logY = logX @ coefs + intercept
 	weights = 1 / (logY_err**2)
-
+	coefs_weighted = res.x
+	
 	def weighted_R2(y, y_model, weights):
 		y_mean = np.average(y, weights=weights)
 		ss_res = np.sum(weights * (y - y_model)**2)
 		ss_tot = np.sum(weights * (y - y_mean)**2)
 		return 1 - ss_res / ss_tot
 
-	R2 = weighted_R2(logY, model_logY, weights)
-	"""
+	R2_weighted = weighted_R2(logY, model_logY, weights)
+	
 	model = LinearRegression().fit(logX, logY)
 	R2 = model.score(logX, logY)
 	coefs = model.coef_
@@ -151,10 +152,10 @@ def evaluate_scaling(X_vars, Y, Yerr, n_boot=100):
 	# ============================ Correlations =============================
 	corr = np.corrcoef(logX.T)
 
-	return {"R2": R2,"coefs": coefs,"coef_std": std_coefs, "n_stable": n_stable, "PCA_variance": var_ratio,"dim": dim,"correlation_matrix": corr}
+	return {"R2": R2,"coefs": coefs,"R2_weighted": R2_weighted, "coefs_weighted": coefs_weighted, "coef_std": std_coefs, "n_stable": n_stable, "PCA_variance": var_ratio,"dim": dim,"correlation_matrix": corr}
     
     
-models = {"Ro": [Ro_conv], "Ro_xi": [Ro_conv, xi], "Ro_xi_Rosh": [Ro_conv, xi, Ro_sh]}
+models = {"Ro_conv": [Ro_conv], "Ro_conv_xi": [Ro_conv, xi], "Ro_conv_xi_Rosh": [Ro_conv, xi, Ro_sh], "Ro_conv_xi_Els": [Ro_conv, xi, Els]}
 for MS, MS_err, case in [(MS_rms,MS_rms_err,"MS_rms"), (MS_int_amp,MS_int_err,"MS_int_amp"), (MS_max,MS_max_err,"MS_max")]:
 	print(f"================== {case} ==========================")
 	for name, var in models.items():
