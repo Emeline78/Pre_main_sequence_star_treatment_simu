@@ -179,8 +179,8 @@ for X in [X1,X2,X3]:
 	pca.fit(X)
 	print(pca.explained_variance_ratio_)
 
-	print(multivariate_interp(Ro_conv[mask_loc],Ro_sh[mask_loc],xi[mask_loc], MS_int_amp[mask_loc]))
-	print(np.corrcoef(np.log10([Ro_conv[mask_loc],Ro_sh[mask_loc],xi[mask_loc]])))
+	print(multivariate_interp(Ro_conv[mask],Ro_sh[mask],xi[mask], MS_int_amp[mask]))
+	print(np.corrcoef(np.log10([Ro_conv[mask],Ro_sh[mask],xi[mask]])))
 
 	for i in range(10):
 		mask_bis = mask & (np.random.rand(len(Ro_conv)) < 0.6)
