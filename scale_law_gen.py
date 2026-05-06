@@ -94,13 +94,13 @@ def evaluate_scaling(X_vars, Y, Yerr, n_boot=100):
 	def residuals(params, X, Y, Yerr):
 		a = params[:-1]
 		b = params[-1]
-		model = X * a + b
+		model = X @ a + b
 		return (Y - model) / Yerr
 
 	res = least_squares(residuals, x0=np.zeros(logX.shape[1] + 1), args=(logX, logY, logY_err), loss='soft_l1')
 	coefs = res.x[:-1]
 	intercept = res.x[-1]
-	model_logY = logX * coefs + intercept
+	model_logY = logX @ coefs + intercept
 	weights = 1 / (logY_err**2)
 
 	def weighted_R2(y, y_model, weights):
