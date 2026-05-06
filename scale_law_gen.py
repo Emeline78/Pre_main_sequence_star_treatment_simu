@@ -87,6 +87,9 @@ def evaluate_scaling(X_vars, Y, Yerr, n_boot=100):
 	logX = np.column_stack([np.log10(v) for v in X_vars])
 	logY = np.log10(Y)
 	logY_err = Yerr / (Y * np.log(10))
+	
+	print(logY.shape)
+	print(logY_err.shape)
 	# ===================== R2 et Regression lineaire =======================
 	def residuals(params, X, Y, Yerr):
 		a = params[:-1]
