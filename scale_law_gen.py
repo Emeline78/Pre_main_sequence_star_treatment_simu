@@ -156,5 +156,5 @@ models = {"Ro": [Ro_conv], "Ro_xi": [Ro_conv, xi], "Ro_xi_Rosh": [Ro_conv, xi, R
 for MS,MS_err in [(MS_rms,MS_rms_err), (MS_int_amp,MS_int_err), (MS_max,MS_max_err)]:
 	for name, var in models.items():
 		res = evaluate_scaling(var, MS, MS_err)
-		print(name, res.values)
+		print(name, res.items)
 
