@@ -145,7 +145,7 @@ def evaluate_scaling(X_vars, Y, Yerr, n_boot=100):
 		dim = len(coefs)
 
 	# ============================ Correlations =============================
-	corr = np.corrcoef(logX)
+	corr = np.corrcoef(logX.T)
 
 	return {"R2": R2,"coefs": coefs,"coef_std": std_coefs, "n_stable": n_stable, "PCA_variance": var_ratio,"dim": dim,"correlation_matrix": corr}
     
@@ -153,6 +153,7 @@ def evaluate_scaling(X_vars, Y, Yerr, n_boot=100):
 models = {"Ro": [Ro_conv], "Ro_xi": [Ro_conv, xi], "Ro_xi_Rosh": [Ro_conv, xi, Ro_sh]}
 for MS,MS_err in [(MS_rms,MS_rms_err), (MS_int_amp,MS_int_err), (MS_max,MS_max_err)]:
 	for name, var in models.items():
+		print(name)
 		res = evaluate_scaling(var, MS, MS_err)
 		for key, value in res.items():
 			print(f"{key:20s} : {value}")
