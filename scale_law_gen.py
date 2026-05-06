@@ -149,7 +149,7 @@ def evaluate_scaling(X_vars, Y, Yerr, n_boot=100):
 	# ============================ Correlations =============================
 	corr = np.corrcoef(logX)
 
-	return {"R2": R2,"coefs": coefs,"coef_std": std_coefs,"R2_score": R2_score, "n_stable": n_stable, "PCA_variance": var_ratio,"dim": dim,"correlation_matrix": corr}
+	return {"R2": R2,"coefs": coefs,"coef_std": std_coefs, "n_stable": n_stable, "PCA_variance": var_ratio,"dim": dim,"correlation_matrix": corr}
     
     
 models = {"Ro": [Ro_conv], "Ro_xi": [Ro_conv, xi], "Ro_xi_Rosh": [Ro_conv, xi, Ro_sh]}
