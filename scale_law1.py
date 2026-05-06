@@ -10,9 +10,13 @@ git add scale_law1.py
 git commit -m "modifications"
 git push
 """
+a = input("file : ")
+df = pd.read_parquet(a)
 
-df = pd.read_parquet("transport_profiles.parquet")
-
+if a == "transport_profiles_SI.parquet" or a == "transport_profiles_CGS.parquet" :
+	df = df[(df["date"] > 5) & (df["date"] < 6)]
+	
+	
 #MS_mean = (df.groupby("name")["MS"].mean()).to_numpy()
 MS_rms = df.groupby("name").apply(lambda g: np.sqrt(np.mean(g["MS"]**2))).to_numpy()
 MS_int = df.groupby("name").apply(lambda g: np.trapz(g["MS"], g["r"])).to_numpy()
@@ -160,19 +164,26 @@ def multivariate_interp(Ro, Els, Rm, MS):
 	#plt.show()
 	return A, B, C, D
 
-
 from sklearn.decomposition import PCA
-X = np.column_stack([np.log10(Ro_conv[mask]),np.log10(Els[mask]),np.log10(Rm[mask])])
-pca = PCA()
-pca.fit(X)
-print(pca.explained_variance_ratio_)
+#mask1 = mask & (g == 0)
+#mask2 = mask & (g == 1)
+#mask3 = mask & (g == 2)
+#for mask_loc in [mask1,mask2,mask3]:
+	
+X1 = np.column_stack([np.log10(Ro_conv[mask_loc]), np.log10(Ro_sh[mask_loc]), np.log10(xi[mask_loc])])
+X2 = np.column_stack([np.log10(Ro_conv[mask_loc]), np.log10(Els[mask_loc]), np.log10(xi[mask_loc])])
+X3 = np.column_stack([np.log10(Ro_conv[mask_loc]), np.log10(Els[mask_loc]), np.log10(Rm[mask_loc])])
+for X in [X1,X2,X3]:
+	pca = PCA()
+	pca.fit(X)
+	print(pca.explained_variance_ratio_)
 
-print(multivariate_interp(Ro_conv[mask],Els[mask],Rm[mask],MS_int_amp[mask]))
-print(np.corrcoef(np.log10([Ro_conv[mask],Els[mask],Rm[mask]])))
+	print(multivariate_interp(Ro_conv[mask_loc],Ro_sh[mask_loc],xi[mask_loc], MS_int_amp[mask_loc]))
+	print(np.corrcoef(np.log10([Ro_conv[mask_loc],Ro_sh[mask_loc],xi[mask_loc]])))
 
-for i in range(10):
-	mask1 = mask & (np.random.rand(len(Ro_conv)) < 0.6)
-	print(multivariate_interp(Ro_conv[mask1],Els[mask1],Rm[mask1],MS_int_amp[mask1]))
+	for i in range(10):
+		mask_bis = mask & (np.random.rand(len(Ro_conv)) < 0.6)
+		print(multivariate_interp(Ro_conv[mask_bis], Els[mask_bis], Rm[mask_bis], MS_int_amp[mask_bis]))
 
 
 def residuals(params, x, y, err):
@@ -313,108 +324,4 @@ print(f"MS_int = 10^{b_mean:.2f} . Rm^{a_mean:.2f}")
 plt.show()
 
 
-"""
-# ===================== OBSERVATIONAL DATA =====================
 
-B_obs_kG = np.array([1,3])   # kG
-Prot_days = np.array([11.55,0.91,0.79,3.70,3.48,11.00]) # days
-tau_conv_days = np.array([268.3,363.1,357.9,351.9,238.0,334.1]) # days
-
-# --- Unit conversions ---
-B_obs = B_obs_kG * 1e3 * 1e-4  # Tesla
-Omega_obs = 2 * np.pi / (Prot_days * 86400)
-
-# --- ASSUMPTIONS ---
-mu0 = 4 * np.pi * 1e-7
-
-rho = 100     # kg/m^3 (take the ones for the right age of Cesam)
-eta = 1e8     # m^2/s (hope for the best)
-
-#Els_obs = B_obs**2 / (rho * mu0 * eta * Omega_obs)
-Ro_conv_obs = Prot_days / tau_conv_days
-
-MS_obs_lim = B_obs**2/mu0
-
-#=======================================================================================================
-df_tot = pd.read_parquet("transport_profiles_SI.parquet")
-for date, df in df_tot.groupby('date'):
-	if date > 5:
-		print(f"Computation for age = {date} Myr")
-		r0 = df.groupby("name")["r_phys"].apply(lambda x: x.iloc[x.abs().argmax()]).to_numpy()
-		MS_mean = (df.groupby("name")["MS_SI"].mean()).to_numpy() / r0**3
-		MS_max = df.groupby("name")["MS_SI"].apply(lambda x: x.iloc[x.abs().argmax()]).to_numpy() / r0**3
-
-		names = df.groupby("name").mean().index.to_numpy(dtype = str)
-		
-		scale = (df.groupby("name")["scale"].first()).to_numpy()
-		Ra = (df.groupby("name")["ra"].first()).to_numpy()
-		g = (df.groupby("name")["config_code"].first()).to_numpy()
-		om = (df.groupby("name")["om"].first()).to_numpy()
-		om_lim = (df.groupby("name")["om_lim"].first()).to_numpy()
-		Els = (df.groupby("name")["Elsasser"].first()).to_numpy()
-		Ro_conv = (df.groupby("name")["Ro_conv"].first()).to_numpy()
-		Rm = (df.groupby("name")["rm"].first()).to_numpy()
-		Ro_sh = om*1e-4
-
-		mask = (om < om_lim) & (df.groupby("name")["status"].first().to_numpy()) & (np.char.find(names, "wrong") == -1)
-		#mask = (om > om_lim) & (df.groupby("name")["status"].first().to_numpy()) & (np.char.find(names, "wrong") == -1)
-
-
-		MS_mean_dist = np.full(len(names),np.nan)
-		MS_max_dist = np.full(len(names),np.nan)
-		for i,namefile in enumerate(names): 
-			data = np.load("snapshots/"+namefile+".npz")
-			MS_snap = data["MS"] * scale[i] / r0[i]**3
-			times = data["times"]
-			
-			x = np.mean(MS_snap, axis=1) 
-			MS_snap_mean = np.trapz(x, times) / (times[-1]-times[0])
-			#print(MS_snap_mean,MS_mean[i])
-			MS_mean_dist[i] = np.sqrt(np.mean((x - MS_mean[i])**2)) / np.sqrt(len(x))
-			
-			x = MS_snap[np.arange(len(MS_snap)), np.abs(MS_snap).argmax(axis=1)]
-			#print(np.mean(x),MS_max[i])
-			MS_max_dist[i] = np.sqrt(np.mean((x - MS_max[i])**2)) / np.sqrt(len(x))
-
-		MS_sign = np.sign(MS_mean)
-		MS_mean = np.abs(MS_mean)
-		
-		# ======================== ROSSBY CONVECTIF =========================
-		a_mean,b_mean,x_plot,y_plot = interp(Ro_conv[mask],MS_mean[mask],MS_mean_dist[mask])
-		MS_obs = 10**b_mean * Ro_conv_obs**a_mean
-		
-		plt.figure()
-		plt.errorbar(Ro_conv[mask],MS_mean[mask], yerr=MS_mean_dist[mask], fmt='o')
-		plt.scatter(Ro_conv_obs, MS_obs, marker='*', s=120, color='red', edgecolor='black',label="Observations")
-		plt.axhspan(MS_obs_lim[0],MS_obs_lim[1],color = "gray", alpha = 0.3)
-		plt.plot(x_plot, y_plot, color='black')
-		plt.xlabel("Convective Rossby")
-		plt.ylabel("MS mean")
-		#plt.xscale('log')
-		#plt.yscale('log')
-		plt.grid()
-		plt.title(rf"$MS_{{mean}} = 10^{{{b_mean:.2f}}} \cdot Ro_{{conv}}^{{{a_mean:.2f}}}$")
-		
-		plt.figure()
-		plt.plot(Ro_conv[mask], MS_sign[mask],"+")
-		plt.xlabel("Convective Rossby")
-		plt.ylabel("MS sign")
-		plt.grid()
-		plt.title("Sign of MS as a function of the Rossby")
-
-		a_max,b_max,x_plot,y_plot = interp(Ro_conv[mask],MS_max[mask],MS_max_dist[mask])
-		MS_obs = 10**b_max * Ro_conv_obs**a_max
-		plt.figure()
-		plt.errorbar(Ro_conv[mask],MS_max[mask], yerr=MS_max_dist[mask], fmt='o')
-		plt.scatter(Ro_conv_obs, MS_obs, marker='*', s=120, color='red', edgecolor='black',label="Observations")
-		plt.axhspan(MS_obs_lim[0],MS_obs_lim[1],color = "gray", alpha = 0.3)
-		plt.plot(x_plot, y_plot, color='black')
-		plt.xlabel("Convective Rossby")
-		plt.ylabel("MS max")
-		#plt.xscale('log')
-		#plt.yscale('log')
-		plt.title(rf"$MS_{{max}} = 10^{{{b_max:.2f}}} \cdot Ro_{{conv}}^{{{a_max:.2f}}}$")
-		plt.grid()
-		plt.show()
-
-"""
