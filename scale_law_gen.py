@@ -70,7 +70,7 @@ MS_int_sign = np.sign(MS_int)
 MS_int_amp  = np.abs(MS_int)
 
 def model_func(X_flat, *params):
-    n_vars = len(X_vars)
+    n_vars = len(var)
     a = params[:n_vars]
     b = params[-1]  # log10(A)
 
