@@ -87,9 +87,9 @@ def evaluate_scaling(X_vars, Y, Yerr, n_boot=100):
 	logX = np.column_stack([np.log10(v) for v in X_vars])
 	logY = np.log10(Y)
 	logY_err = Yerr / (Y * np.log(10))
-	
+	#weights = 1 / (logY_err**2)
 	# ===================== R2 et Regression lineaire =======================
-	def residuals(params, X, Y, Yerr):
+	"""def residuals(params, X, Y, Yerr):
 		a = params[:-1]
 		b = params[-1]
 		model = X @ a + b
@@ -99,7 +99,7 @@ def evaluate_scaling(X_vars, Y, Yerr, n_boot=100):
 	coefs = res.x[:-1]
 	intercept = res.x[-1]
 	model_logY = logX @ coefs + intercept
-	weights = 1 / (logY_err**2)
+	
 	coefs_weighted = res.x
 	
 	def weighted_R2(y, y_model, weights):
@@ -109,9 +109,9 @@ def evaluate_scaling(X_vars, Y, Yerr, n_boot=100):
 		return 1 - ss_res / ss_tot
 
 	R2_weighted = weighted_R2(logY, model_logY, weights)
-	
+	"""
 
-	model = LinearRegression().fit(logX, logY, sample_weight=weights)
+	model = LinearRegression().fit(logX, logY)#, sample_weight=weights)
 	R2 = model.score(logX, logY)
 	coefs = model.coef_
 	
