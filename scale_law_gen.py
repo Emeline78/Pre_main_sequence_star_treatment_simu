@@ -83,6 +83,14 @@ def evaluate_scaling(X_vars, Y, Yerr, n_boot=100):
 	X_vars = [v[mask] for v in X_vars]
 	Y = Y[mask]
 	Yerr = Yerr[mask]
+	
+	def model_func(X, *params):
+		a = params[:-1]
+		b = params[-1]
+		return 10**b * np.prod([X[i]**a[i] for i in range(len(a))], axis=0)
+
+	popt, pcov = curve_fit(model_func, X_vars, Y, sigma=Yerr)
+	print(popt)
 
 	logX = np.column_stack([np.log10(v) for v in X_vars])
 	logY = np.log10(Y)
@@ -182,7 +190,9 @@ for name, var in models.items():
 		logX = np.column_stack([np.log10(v[mask]) for v in var])
 		Xeff = 10**res["intercept"] * 10**(np.sum(res["coefs"] * logX, axis=1))
 		
-		plt.errorbar(Xeff, MS[mask],yerr=MS_err[mask],fmt = "+", label = f"{case}")
+		#plt.errorbar(Xeff, MS[mask],yerr=MS_err[mask],fmt = "+", label = f"{case}")
+		plt.scatter(Xeff, MS[mask] - Xeff)
+		plt.axhline(0, color='r')
 		
 	ax = plt.gca()  # récupère les axes actuels
 	xmin, xmax = ax.get_xlim()
