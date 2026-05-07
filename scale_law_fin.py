@@ -9,6 +9,8 @@ from scipy.optimize import least_squares
 from sklearn.linear_model import LinearRegression
 from sklearn.decomposition import PCA
 from scipy.optimize import curve_fit
+from sklearn.model_selection import LeaveOneOut
+from sklearn.metrics import r2_score
 """
 git add scale_law_fin.py
 git commit -m "modifications"
@@ -139,11 +141,38 @@ def evaluate_scaling_realspace(X_vars, Y, Yerr):
 	pca = PCA().fit(logX)
 	corr = np.corrcoef(logX.T)
 
-	return {"mask_fit": mask_fit,"R2": R2,"adj_R2": adj_R2,"coefs": coefs,"intercept": intercept, "covariance": cov,"condition_number": cond,"PCA_variance": pca.explained_variance_ratio_, "correlation_matrix": corr,"Y_model": Y_model,"Y": Y,"residuals": residuals,}
+	return {"mask_fit": mask_fit,"R2": R2,"adj_R2": adj_R2,"coefs": coefs,"intercept": intercept, "covariance": cov,"condition_number": cond,"PCA_variance": pca.explained_variance_ratio_, "correlation_matrix": corr,"Y_model": Y_model,"Y": Y,"residuals": residuals}
+
+
+def loo_score(X, Y):
+
+	loo = LeaveOneOut()
+
+	preds = []
+	truths = []
+
+	for train_idx, test_idx in loo.split(X):
+
+		Xtr = X[train_idx]
+		Xte = X[test_idx]
+
+		Ytr = Y[train_idx]
+		Yte = Y[test_idx]
+
+		model = LinearRegression()
+		model.fit(Xtr, Ytr)
+
+		pred = model.predict(Xte)
+
+		preds.append(pred[0])
+		truths.append(Yte[0])
+
+	return r2_score(truths, preds)
 
 
 #models = {"Ro_conv": [Ro_conv], "Ro_conv_xi": [Ro_conv, xi], "Ro_conv_Els": [Ro_conv, Els], "Ro_conv_Ro_sh": [Ro_conv, Ro_sh], "Ro_conv_xi_Rosh": [Ro_conv, xi, Ro_sh], "Ro_conv_xi_Els": [Ro_conv, xi, Els]}
-models = {"Ro_conv": [Ro_conv],"Ro_conv_Els": [Ro_conv, Els],"Ro_conv_Rosh": [Ro_conv, Ro_sh],"Ro_conv_Els_Rosh": [Ro_conv, Els, Ro_sh],}
+#models = {"Ro_conv": [Ro_conv],"Ro_conv_Els": [Ro_conv, Els],"Ro_conv_Rosh": [Ro_conv, Ro_sh],"Ro_conv_Els_Rosh": [Ro_conv, Els, Ro_sh],}
+models = {"Ro_conv_Els_Rosh": [Ro_conv, Els, Ro_sh],}
 for g_code in np.unique(g):
 
 	mask_g = mask & (g == g_code)
@@ -155,7 +184,7 @@ for g_code in np.unique(g):
 	print(f"N points = {npts}")
 	print("====================================================")
 
-	if npts < 8:	#g_code != 1 :
+	if g_code != 1 : 	#npts < 8:
 		print("Too few points")
 		continue
 
@@ -222,6 +251,9 @@ for g_code in np.unique(g):
 			print("PCA_variance       :", res["PCA_variance"])
 			print("correlation_matrix :")
 			print(res["correlation_matrix"])
+			
+			d = res["intercept"]
+			a,b,c = res["coefs"]
 
 			plt.figure()
 			plt.scatter(res["Y_model"],res["Y"],s=60)
@@ -229,9 +261,10 @@ for g_code in np.unique(g):
 			xmax = max(res["Y_model"].max(), res["Y"].max())
 			x = np.linspace(xmin, xmax, 100)
 			plt.plot(x, x, 'r--')
-			plt.xlabel("Predicted")
-			plt.ylabel("Observed")
+			plt.xlabel(rf"$MS_{{rms}} = 10^{{{d:.2f}}} \cdot Ro_{{conv}}^{{{a:.2f}}} \cdot \Lambda^{{{b:.2f}}} \cdot Ro_{{sh}}^{{{c:.2f}}}$")
+			plt.ylabel(r"$MS_{rms}$ from simulations")
 			plt.title(f"{case} | {model_name} | g={g_code}")
+			
 
 
 			for i, v in enumerate(vars_fit):
@@ -243,3 +276,11 @@ for g_code in np.unique(g):
 				plt.title(f"Residuals | {case} | {model_name} | g={g_code}")
 
 plt.show()
+
+
+m =  mask & (g == 1)
+X = np.column_stack([np.log10(Ro_conv[m]),np.log10(Ro_sh[m]),np.log10(Els[m])])
+Y = np.log10(MS_rms[m])
+print("LOO score:",loo_score(X, Y))
+
+
