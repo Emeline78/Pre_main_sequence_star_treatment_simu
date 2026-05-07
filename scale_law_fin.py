@@ -10,7 +10,7 @@ from sklearn.linear_model import LinearRegression
 from sklearn.decomposition import PCA
 from scipy.optimize import curve_fit
 """
-git add scale_law_gen.py
+git add scale_law_fin.py
 git commit -m "modifications"
 git push
 """
@@ -142,8 +142,8 @@ def evaluate_scaling_realspace(X_vars, Y, Yerr):
 	return {"mask_fit": mask_fit,"R2": R2,"adj_R2": adj_R2,"coefs": coefs,"intercept": intercept, "covariance": cov,"condition_number": cond,"PCA_variance": pca.explained_variance_ratio_, "correlation_matrix": corr,"Y_model": Y_model,"Y": Y,"residuals": residuals,}
 
 
-models = {"Ro_conv": [Ro_conv], "Ro_conv_xi": [Ro_conv, xi], "Ro_conv_Els": [Ro_conv, Els], "Ro_conv_xi_Rosh": [Ro_conv, xi, Ro_sh], "Ro_conv_xi_Els": [Ro_conv, xi, Els]}
-
+#models = {"Ro_conv": [Ro_conv], "Ro_conv_xi": [Ro_conv, xi], "Ro_conv_Els": [Ro_conv, Els], "Ro_conv_Ro_sh": [Ro_conv, Ro_sh], "Ro_conv_xi_Rosh": [Ro_conv, xi, Ro_sh], "Ro_conv_xi_Els": [Ro_conv, xi, Els]}
+models = {"Ro_conv": [Ro_conv],"Ro_conv_Els": [Ro_conv, Els],"Ro_conv_Rosh": [Ro_conv, Ro_sh],"Ro_conv_Els_Rosh": [Ro_conv, Els, Ro_sh],}
 for g_code in np.unique(g):
 
 	mask_g = mask & (g == g_code)
@@ -155,7 +155,7 @@ for g_code in np.unique(g):
 	print(f"N points = {npts}")
 	print("====================================================")
 
-	if npts < 8:
+	if npts < 8:	#g_code != 1 :
 		print("Too few points")
 		continue
 
