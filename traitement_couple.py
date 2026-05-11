@@ -112,12 +112,13 @@ for j in range(1,len(files)+1):
     #prodM = -(gr.Br * gr.Bphi * w_phi).sum(axis=0)
     MS = (prodM * np.sin(th)[:,None] * w_theta[:,None]).sum(axis=0) * r  
     
+    ratio = (Br**2* np.sin(th)[None,:,None] * w_theta[None,:,None] * w_phi).sum(axis=(0,1)) * (Bphi**2* np.sin(th)[None,:,None] * w_theta[None,:,None] * w_phi).sum(axis=(0,1))
+    
     # Moy champ mag
     Br_mean = (gr.Br * w_phi).sum(axis=0)
     Bphi_mean = (gr.Bphi * w_phi).sum(axis=0)
     MS1 = -(Br_mean * Bphi_mean * np.sin(th)[:,None] * w_theta[:,None]).sum(axis = 0) * r 
-    
-    ratio = np.trapz(MS/MS1, r)
+
     
     # Ecoulement meridional
     vr_mean = (gr.vr * w_phi).sum(axis=0)
@@ -203,7 +204,7 @@ for i in range(len(dt)):
     ratio += 0.5*(ratio_snap[i] + ratio_snap[i+1])*dt[i]
 print(RS[25]/t_total)
 
-print(ratio)
+print(np.trapz(MS/ratio,r))
 
 #print(f"rho(ri)/rho(ro) = {rho.max()/rho.min():.4f}")
 #print(f"attendu         = {np.exp(Nrho):.4f}")
