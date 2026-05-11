@@ -74,6 +74,7 @@ Visc_snap = []
 MC_snap = []
 MS1_snap = []
 l_snap = []
+ratio_snap = []
 
 # pour les moyennes sur phi j'aurais juste pu faire mean vu que c'est espace regulierement
 for j in range(1,len(files)+1): 
@@ -116,6 +117,8 @@ for j in range(1,len(files)+1):
     Bphi_mean = (gr.Bphi * w_phi).sum(axis=0)
     MS1 = -(Br_mean * Bphi_mean * np.sin(th)[:,None] * w_theta[:,None]).sum(axis = 0) * r 
     
+    ratio = np.trapz(MS/MS1, r)
+    
     # Ecoulement meridional
     vr_mean = (gr.vr * w_phi).sum(axis=0)
     vphi_mean = (gr.vphi * w_phi).sum(axis=0)
@@ -135,6 +138,7 @@ for j in range(1,len(files)+1):
     MS_snap.append(MS)
     MS1_snap.append(MS1)
     MC_snap.append(MC)
+    ratio_snap.append(ratio)
 
 times = np.array(times)
 
@@ -168,7 +172,7 @@ MS1_snap = np.array(MS1_snap)
 Visc_snap = np.array(Visc_snap) 
 MC_snap = np.array(MC_snap)
 l_snap = np.array(l_snap)
-
+ratio_snap = np.array(ratio_snap)
 t_total = times[-1] - times[0]
 
 print(RS_snap[:,25])
@@ -188,6 +192,7 @@ MC = np.zeros_like(MC_snap[0])
 Visc = np.zeros_like(Visc_snap[0])
 MS1 = np.zeros_like(MS1_snap[0])
 l = np.zeros_like(l_snap[0])
+ratio = np.zeros_like(ratio_snap[0])
 for i in range(len(dt)):
     RS += 0.5*(RS_snap[i] + RS_snap[i+1])*dt[i]
     MS += 0.5*(MS_snap[i] + MS_snap[i+1])*dt[i]
@@ -195,7 +200,10 @@ for i in range(len(dt)):
     MC += 0.5*(MC_snap[i] + MC_snap[i+1])*dt[i]
     Visc += 0.5*(Visc_snap[i] + Visc_snap[i+1])*dt[i]
     l += 0.5*(l_snap[i] + l_snap[i+1])*dt[i]
+    ratio += 0.5*(ratio_snap[i] + ratio_snap[i+1])*dt[i]
 print(RS[25]/t_total)
+
+print(ratio)
 
 #print(f"rho(ri)/rho(ro) = {rho.max()/rho.min():.4f}")
 #print(f"attendu         = {np.exp(Nrho):.4f}")
