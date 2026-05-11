@@ -112,7 +112,7 @@ for j in range(1,len(files)+1):
     #prodM = -(gr.Br * gr.Bphi * w_phi).sum(axis=0)
     MS = (prodM * np.sin(th)[:,None] * w_theta[:,None]).sum(axis=0) * r  
     
-    ratio = (Br**2* np.sin(th)[None,:,None] * w_theta[None,:,None] * w_phi).sum(axis=(0,1)) * (Bphi**2* np.sin(th)[None,:,None] * w_theta[None,:,None] * w_phi).sum(axis=(0,1))
+    ratio = (Br**2* np.sin(th)[None,:,None] * w_theta[None,:,None] * w_phi).sum(axis=(0,1)) * (Bp**2 * np.sin(th)[None,:,None] * w_theta[None,:,None] * w_phi).sum(axis=(0,1))
     
     # Moy champ mag
     Br_mean = (gr.Br * w_phi).sum(axis=0)
