@@ -42,7 +42,7 @@ Rm = (df.groupby("name")["rm"].first()).to_numpy()
 xi = (df.groupby("name")["xi"].first()).to_numpy()
 Ro_sh = om*1e-4
 
-mask = (om < om_lim) & (df.groupby("name")["status"].first().to_numpy()) & (np.char.find(names, "wrong") == -1)
+mask = (om < om_lim)  & (np.char.find(names, "wrong") == -1) #& (df.groupby("name")["status"].first().to_numpy())
 #mask = (om > om_lim) & (df.groupby("name")["status"].first().to_numpy()) & (np.char.find(names, "wrong") == -1)
 
 MS_mean_err = np.full(len(names),np.nan)
@@ -261,9 +261,10 @@ for g_code in np.unique(g):
 			xmax = max(res["Y_model"].max(), res["Y"].max())
 			x = np.linspace(xmin, xmax, 100)
 			plt.plot(x, x, 'r--')
-			plt.xlabel(rf"$MS_{{rms}} = 10^{{{d:.2f}}} \cdot Ro_{{conv}}^{{{a:.2f}}} \cdot \Lambda^{{{b:.2f}}} \cdot Ro_{{sh}}^{{{c:.2f}}}$")
+			plt.xlabel(rf"$ 10^{{{d:.2f}}} \cdot Ro_{{conv}}^{{{a:.2f}}} \cdot \Lambda^{{{b:.2f}}} \cdot Ro_{{sh}}^{{{c:.2f}}}$")
 			plt.ylabel(r"$MS_{rms}$ from simulations")
-			plt.title(f"{case} | {model_name} | g={g_code}")
+			plt.title(r"Scale law of $MS_{rms}$ for $g \propto 1/r^2$")
+			plt.grid()
 			
 
 
@@ -280,7 +281,7 @@ plt.show()
 
 m =  mask & (g == 1)
 X = np.column_stack([np.log10(Ro_conv[m]),np.log10(Ro_sh[m]),np.log10(Els[m])])
-Y = np.log10(MS_rms[m])
+Y = np.log10(MS_int_amp[m])
 print("LOO score:",loo_score(X, Y))
 
 
