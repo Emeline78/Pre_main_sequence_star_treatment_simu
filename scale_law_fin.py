@@ -42,7 +42,7 @@ Rm = (df.groupby("name")["rm"].first()).to_numpy()
 xi = (df.groupby("name")["xi"].first()).to_numpy()
 Ro_sh = om*1e-4
 
-mask = (om < om_lim)  & (np.char.find(names, "wrong") == -1) #& (df.groupby("name")["status"].first().to_numpy())
+mask = (om < om_lim)  & (np.char.find(names, "wrong") == -1) & (df.groupby("name")["status"].first().to_numpy())
 #mask = (om > om_lim) & (df.groupby("name")["status"].first().to_numpy()) & (np.char.find(names, "wrong") == -1)
 
 MS_mean_err = np.full(len(names),np.nan)
