@@ -252,6 +252,11 @@ for g_code in np.unique(g):
 			print("correlation_matrix :")
 			print(res["correlation_matrix"])
 			
+			m =  mask_g
+			X = np.column_stack([np.log10(v) for v in vars_fit])
+			Y = np.log10(MS[m])
+			print("LOO score:",loo_score(X, Y))
+			
 			"""d = res["intercept"]
 			a,b,c = res["coefs"]
 
