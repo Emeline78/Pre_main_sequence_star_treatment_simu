@@ -170,9 +170,9 @@ def loo_score(X, Y):
 	return r2_score(truths, preds)
 
 
-#models = {"Ro_conv": [Ro_conv], "Ro_conv_xi": [Ro_conv, xi], "Ro_conv_Els": [Ro_conv, Els], "Ro_conv_Ro_sh": [Ro_conv, Ro_sh], "Ro_conv_xi_Rosh": [Ro_conv, xi, Ro_sh], "Ro_conv_xi_Els": [Ro_conv, xi, Els]}
+models = {"Ro_conv": [Ro_conv], "Ro_conv_xi": [Ro_conv, xi], "Ro_conv_Els": [Ro_conv, Els], "Ro_conv_Ro_sh": [Ro_conv, Ro_sh], "Ro_conv_xi_Rosh": [Ro_conv, xi, Ro_sh], "Ro_conv_xi_Els": [Ro_conv, xi, Els]}
 #models = {"Ro_conv": [Ro_conv],"Ro_conv_Els": [Ro_conv, Els],"Ro_conv_Rosh": [Ro_conv, Ro_sh],"Ro_conv_Els_Rosh": [Ro_conv, Els, Ro_sh],}
-models = {"Ro_conv_Els_Rosh": [Ro_conv, Els, Ro_sh],}
+#models = {"Ro_conv_Els_Rosh": [Ro_conv, Els, Ro_sh],}
 for g_code in np.unique(g):
 
 	mask_g = mask & (g == g_code)
