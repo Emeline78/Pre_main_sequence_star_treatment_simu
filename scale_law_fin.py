@@ -252,7 +252,7 @@ for g_code in np.unique(g):
 			print("correlation_matrix :")
 			print(res["correlation_matrix"])
 			
-			d = res["intercept"]
+			"""d = res["intercept"]
 			a,b,c = res["coefs"]
 
 			plt.figure()
@@ -277,7 +277,7 @@ for g_code in np.unique(g):
 				plt.title(f"Residuals | {case} | {model_name} | g={g_code}")
 
 plt.show()
-
+"""
 
 m =  mask & (g == 1)
 X = np.column_stack([np.log10(Ro_conv[m]),np.log10(Ro_sh[m]),np.log10(Els[m])])
