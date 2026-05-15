@@ -348,7 +348,7 @@ for g_code in np.unique(g):
 					plt.title(f"Residuals | {case} | {model_name} | g={g_code}")
 
 plt.show()
-"""
+
 
 
 
