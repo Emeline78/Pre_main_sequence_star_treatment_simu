@@ -1,4 +1,5 @@
 import pandas as pd
+import warnings
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
@@ -94,9 +95,9 @@ def model_func_signed(X_flat, *params):
 	A = params[-1]
 
 	Y_model = A
-
-	for i in range(n_vars):
-		Y_model *= X_flat[i]**a[i]
+	with np.errstate(over='ignore'):
+		for i in range(n_vars):
+			Y_model *= X_flat[i]**a[i]
 
 	return Y_model
 	
@@ -307,7 +308,7 @@ for g_code in np.unique(g):
 		print(model_name)
 		print("--------------------------------------------")
 
-		for MS, MS_err, case, sign in [(MS_rms, MS_rms_err, "MS_rms",False),(MS_int, MS_int_err, "MS_int_amp",True)]:
+		for MS, MS_err, case, sign in [(MS_rms, MS_rms_err, "MS_rms",False),(MS_int, MS_int_err, "MS_int",True)]:
 			print()
 			print(f"===== {case} =====")
 
@@ -336,7 +337,7 @@ for g_code in np.unique(g):
 					plt.plot(x, x, 'r--')
 					#plt.xlabel(rf"$ {A:.2f} \cdot Ro_{{conv}}^{{{a:.2f}}} \cdot \Lambda^{{{b:.2f}}} \cdot Ro_{{sh}}^{{{c:.2f}}}$")
 					plt.ylabel(r"$MS_{int}$ from simulations")
-					plt.xlabel(rf"$ {model_name},\ A = {A:.2e},\ " rf"a = {a:.2f},\ b = {b:.2f},\ c = {c:.2f}$")
+					plt.xlabel(f"{model_name}, "rf"$A={A:.2e},\ a={a:.2f},\ b={b:.2f},\ c={c:.2f}$")
 					plt.grid()
 				else:
 					plt.figure()
@@ -345,7 +346,7 @@ for g_code in np.unique(g):
 					xmax = max(res["Y_model"].max(), res["Y"].max())
 					x = np.linspace(xmin, xmax, 100)
 					plt.plot(x, x, 'r--')
-					plt.xlabel(rf"$ {model_name},\ A = {A:.2e},\ " rf"a = {a:.2f},\ b = {b:.2f},\ c = {c:.2f}$")
+					plt.xlabel(f"{model_name}, "rf"$A={A:.2e},\ a={a:.2f},\ b={b:.2f},\ c={c:.2f}$")
 					#plt.xlabel(rf"$ {A:.2f} \cdot Ro_{{conv}}^{{{a:.2f}}} \cdot \Lambda^{{{b:.2f}}} \cdot Ro_{{sh}}^{{{c:.2f}}}$")
 					plt.ylabel(r"$MS_{rms}$ from simulations")
 					plt.title(r"Scale law of $MS_{rms}$ for $g \propto 1/r^2$")
