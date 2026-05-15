@@ -132,9 +132,9 @@ def evaluate_scaling_realspace(X_vars, Y, Yerr, signed = True):
 
 		X_stack = np.vstack(X_vars)
 
-		#params, cov = curve_fit(model_func_signed, X_stack, Y, sigma=Yerr, absolute_sigma=True, bounds=(bounds_lower, bounds_upper), p0=p0, maxfev=20000)
-		result = least_squares(residuals_signed,x0=p0,args=(X_stack, Y, Yerr), bounds=(bounds_lower, bounds_upper), max_nfev=50000)
-		params = result.x
+		params, cov = curve_fit(model_func_signed, X_stack, Y, sigma=Yerr, absolute_sigma=True, bounds=(bounds_lower, bounds_upper), p0=p0, maxfev=20000)
+		#result = least_squares(residuals_signed,x0=p0,args=(X_stack, Y, Yerr), bounds=(bounds_lower, bounds_upper), max_nfev=50000)
+		#params = result.x
 
 		coefs = params[:-1]
 		intercept = params[-1]
@@ -327,17 +327,28 @@ for g_code in np.unique(g):
 			if len(variables) == 3:
 				A = res["intercept"]
 				a,b,c = res["coefs"]
-
-				plt.figure()
-				plt.scatter(res["Y_model"],res["Y"],s=60)
-				xmin = min(res["Y_model"].min(), res["Y"].min())
-				xmax = max(res["Y_model"].max(), res["Y"].max())
-				x = np.linspace(xmin, xmax, 100)
-				plt.plot(x, x, 'r--')
-				plt.xlabel(rf"$ {A:.2f} \cdot Ro_{{conv}}^{{{a:.2f}}} \cdot \Lambda^{{{b:.2f}}} \cdot Ro_{{sh}}^{{{c:.2f}}}$")
-				plt.ylabel(r"$MS_{rms}$ from simulations")
-				plt.title(r"Scale law of $MS_{rms}$ for $g \propto 1/r^2$")
-				plt.grid()
+				if sign :
+					plt.figure()
+					plt.scatter(res["Y_model"],res["Y"],s=60)
+					xmin = min(res["Y_model"].min(), res["Y"].min())
+					xmax = max(res["Y_model"].max(), res["Y"].max())
+					x = np.linspace(xmin, xmax, 100)
+					plt.plot(x, x, 'r--')
+					plt.xlabel(rf"$ {A:.2f} \cdot Ro_{{conv}}^{{{a:.2f}}} \cdot \Lambda^{{{b:.2f}}} \cdot Ro_{{sh}}^{{{c:.2f}}}$")
+					plt.ylabel(r"$MS_{rms}$ from simulations")
+					plt.title(r"Scale law of $MS_{rms}$ for $g \propto 1/r^2$")
+					plt.grid()
+				else:
+					plt.figure()
+					plt.scatter(res["Y_model"],res["Y"],s=60)
+					xmin = min(res["Y_model"].min(), res["Y"].min())
+					xmax = max(res["Y_model"].max(), res["Y"].max())
+					x = np.linspace(xmin, xmax, 100)
+					plt.plot(x, x, 'r--')
+					plt.xlabel(rf"$ {A:.2f} \cdot Ro_{{conv}}^{{{a:.2f}}} \cdot \Lambda^{{{b:.2f}}} \cdot Ro_{{sh}}^{{{c:.2f}}}$")
+					plt.ylabel(r"$MS_{int}$ from simulations")
+					plt.title(r"Scale law of $MS_{int}$ for $g \propto 1/r^2$")
+					plt.grid()
 				
 				"""for i, v in enumerate(vars_fit):
 					plt.figure()
