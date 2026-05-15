@@ -339,13 +339,14 @@ for g_code in np.unique(g):
 				plt.title(r"Scale law of $MS_{rms}$ for $g \propto 1/r^2$")
 				plt.grid()
 				
-				for i, v in enumerate(vars_fit):
+				"""for i, v in enumerate(vars_fit):
 					plt.figure()
 					plt.scatter(np.log10(v),res["residuals"],s=60)
 					plt.axhline(0,linestyle='--')
 					plt.xlabel(f"log(variable {i})")
 					plt.ylabel("Residuals")
 					plt.title(f"Residuals | {case} | {model_name} | g={g_code}")
+				"""
 
 plt.show()
 
