@@ -334,9 +334,9 @@ for g_code in np.unique(g):
 					xmax = max(res["Y_model"].max(), res["Y"].max())
 					x = np.linspace(xmin, xmax, 100)
 					plt.plot(x, x, 'r--')
-					plt.xlabel(rf"$ {A:.2f} \cdot Ro_{{conv}}^{{{a:.2f}}} \cdot \Lambda^{{{b:.2f}}} \cdot Ro_{{sh}}^{{{c:.2f}}}$")
-					plt.ylabel(r"$MS_{rms}$ from simulations")
-					plt.title(r"Scale law of $MS_{rms}$ for $g \propto 1/r^2$")
+					#plt.xlabel(rf"$ {A:.2f} \cdot Ro_{{conv}}^{{{a:.2f}}} \cdot \Lambda^{{{b:.2f}}} \cdot Ro_{{sh}}^{{{c:.2f}}}$")
+					plt.ylabel(r"$MS_{int}$ from simulations")
+					plt.title(r"Scale law of $MS_{int}$ for $g \propto 1/r^2$")
 					plt.grid()
 				else:
 					plt.figure()
@@ -345,9 +345,10 @@ for g_code in np.unique(g):
 					xmax = max(res["Y_model"].max(), res["Y"].max())
 					x = np.linspace(xmin, xmax, 100)
 					plt.plot(x, x, 'r--')
-					plt.xlabel(rf"$ {A:.2f} \cdot Ro_{{conv}}^{{{a:.2f}}} \cdot \Lambda^{{{b:.2f}}} \cdot Ro_{{sh}}^{{{c:.2f}}}$")
-					plt.ylabel(r"$MS_{int}$ from simulations")
-					plt.title(r"Scale law of $MS_{int}$ for $g \propto 1/r^2$")
+					plt.xlabel(rf"$ {case}, A = {A}, coefs = {b,c,d}$")
+					#plt.xlabel(rf"$ {A:.2f} \cdot Ro_{{conv}}^{{{a:.2f}}} \cdot \Lambda^{{{b:.2f}}} \cdot Ro_{{sh}}^{{{c:.2f}}}$")
+					plt.ylabel(r"$MS_{rms}$ from simulations")
+					plt.title(r"Scale law of $MS_{rms}$ for $g \propto 1/r^2$")
 					plt.grid()
 				
 				"""for i, v in enumerate(vars_fit):
