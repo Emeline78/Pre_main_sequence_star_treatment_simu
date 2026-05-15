@@ -85,41 +85,85 @@ def model_func(X_flat, *params):
 
 	return Y_model
 
+def model_func_signed(X_flat, *params):
 
-def evaluate_scaling_realspace(X_vars, Y, Yerr):
-	mask_fit = np.ones_like(Y, dtype=bool)
+	n_vars = X_flat.shape[0]
 
-	for v in X_vars:
-		mask_fit &= (v > 0)
+	a = params[:-1]
+	A = params[-1]
 
-	mask_fit &= (Y > 0)
-	mask_fit &= np.isfinite(Y)
-	mask_fit &= np.isfinite(Yerr)
+	Y_model = A
 
-	X_vars = [v[mask_fit] for v in X_vars]
-	Y = Y[mask_fit]
-	Yerr = Yerr[mask_fit]
+	for i in range(n_vars):
+		Y_model *= X_flat[i]**a[i]
 
-	# ---------------- Initial guess from log fit ----------------
+	return Y_model
 
-	logX = np.column_stack([np.log10(v) for v in X_vars])
-	logY = np.log10(Y)
+def evaluate_scaling_realspace(X_vars, Y, Yerr, signed = True):
+	if signed :
+		mask_fit = np.ones_like(Y, dtype=bool)
 
-	lin_model = LinearRegression().fit(logX, logY)
-	p0 = np.append(lin_model.coef_,lin_model.intercept_)
+		for v in X_vars:
+			mask_fit &= (v > 0)
 
-	# ---------------- Real-space nonlinear fit ----------------
+		mask_fit &= np.isfinite(Y)
+		mask_fit &= np.isfinite(Yerr)
 
-	X_stack = np.vstack(X_vars)
+		X_vars = [v[mask_fit] for v in X_vars]
+		Y = Y[mask_fit]
+		Yerr = Yerr[mask_fit]
+		Yerr = np.maximum(Yerr, 1e-12)
 
-	params, cov = curve_fit(model_func,X_stack,Y,sigma=Yerr,absolute_sigma=True,p0=p0,maxfev=20000)
+		# ---------------- Initial guess from log fit ----------------
 
-	coefs = params[:-1]
-	intercept = params[-1]
+		logX = np.column_stack([np.log10(v) for v in X_vars])
+		p0 = np.ones(len(X_vars)+1)
+		p0[-1] = np.mean(Y)
+
+		# ---------------- Real-space nonlinear fit ----------------
+
+		X_stack = np.vstack(X_vars)
+
+		params, cov = curve_fit(model_func_signed, X_stack, Y, sigma=Yerr, absolute_sigma=True, p0=p0, maxfev=20000)
+
+		coefs = params[:-1]
+		intercept = params[-1]
+		Y_model = model_func_signed(X_stack, *params)
+		
+	else :
+		mask_fit = np.ones_like(Y, dtype=bool)
+
+		for v in X_vars:
+			mask_fit &= (v > 0)
+
+		mask_fit &= (Y > 0)
+		mask_fit &= np.isfinite(Y)
+		mask_fit &= np.isfinite(Yerr)
+
+		X_vars = [v[mask_fit] for v in X_vars]
+		Y = Y[mask_fit]
+		Yerr = Yerr[mask_fit]
+
+		# ---------------- Initial guess from log fit ----------------
+
+		logX = np.column_stack([np.log10(v) for v in X_vars])
+		logY = np.log10(Y)
+
+		lin_model = LinearRegression().fit(logX, logY)
+		p0 = np.append(lin_model.coef_,lin_model.intercept_)
+
+		# ---------------- Real-space nonlinear fit ----------------
+
+		X_stack = np.vstack(X_vars)
+
+		params, cov = curve_fit(model_func,X_stack,Y,sigma=Yerr,absolute_sigma=True,p0=p0,maxfev=20000)
+
+		coefs = params[:-1]
+		intercept = 10**params[-1]
+		
+		Y_model = model_func(X_stack, *params)
 
 	# ---------------- Predictions ----------------
-
-	Y_model = model_func(X_stack, *params)
 
 	residuals = Y - Y_model
 
@@ -144,28 +188,45 @@ def evaluate_scaling_realspace(X_vars, Y, Yerr):
 	return {"mask_fit": mask_fit,"R2": R2,"adj_R2": adj_R2,"coefs": coefs,"intercept": intercept, "covariance": cov,"condition_number": cond,"PCA_variance": pca.explained_variance_ratio_, "correlation_matrix": corr,"Y_model": Y_model,"Y": Y,"residuals": residuals}
 
 
-def loo_score(X, Y):
+def loo_score(X_vars, Y, signed=False):
 
 	loo = LeaveOneOut()
 
 	preds = []
 	truths = []
 
-	for train_idx, test_idx in loo.split(X):
+	X_stack = np.vstack(X_vars)
 
-		Xtr = X[train_idx]
-		Xte = X[test_idx]
+	for train_idx, test_idx in loo.split(Y):
+
+		Xtr = X_stack[:, train_idx]
+		Xte = X_stack[:, test_idx]
 
 		Ytr = Y[train_idx]
 		Yte = Y[test_idx]
 
-		model = LinearRegression()
-		model.fit(Xtr, Ytr)
+		try:
+			if signed:
+				p0 = np.ones(Xtr.shape[0] + 1)
+				p0[-1] = np.mean(Ytr)
 
-		pred = model.predict(Xte)
+				params, _ = curve_fit(model_func_signed,Xtr,Ytr,p0=p0,maxfev=20000)
+				pred = model_func_signed(Xte, *params)[0]
+			else:
+				logX = np.column_stack([np.log10(v) for v in Xtr])
+				logY = np.log10(Ytr)
 
-		preds.append(pred[0])
-		truths.append(Yte[0])
+				lin_model = LinearRegression().fit(logX, logY)
+				p0 = np.append(lin_model.coef_,lin_model.intercept_)
+
+				params, _ = curve_fit(model_func,Xtr,Ytr,p0=p0,maxfev=20000)
+				pred = model_func(Xte, *params)[0]
+
+			preds.append(pred)
+			truths.append(Yte[0])
+
+		except:
+			continue
 
 	return r2_score(truths, preds)
 
@@ -236,12 +297,12 @@ for g_code in np.unique(g):
 		print(model_name)
 		print("--------------------------------------------")
 
-		for MS, MS_err, case in [(MS_rms, MS_rms_err, "MS_rms"),(MS_int_amp, MS_int_err, "MS_int_amp")]:
+		for MS, MS_err, case, sign in [(MS_rms, MS_rms_err, "MS_rms",False),(MS_int, MS_int_err, "MS_int_amp",True)]:
 			print()
 			print(f"===== {case} =====")
 
 			vars_fit = [v[mask_g] for v in variables]
-			res = evaluate_scaling_realspace(vars_fit,MS[mask_g],MS_err[mask_g])
+			res = evaluate_scaling_realspace(vars_fit,MS[mask_g],MS_err[mask_g],signed=sign)
 
 			print("R2                 :", res["R2"])
 			print("adj_R2             :", res["adj_R2"])
@@ -251,13 +312,9 @@ for g_code in np.unique(g):
 			print("PCA_variance       :", res["PCA_variance"])
 			print("correlation_matrix :")
 			print(res["correlation_matrix"])
+			print("LOO score:",loo_score(vars_fit,MS[mask_g],signed=sign))
 			
-			m =  mask_g
-			X = np.column_stack([np.log10(v) for v in vars_fit])
-			Y = np.log10(MS[m])
-			print("LOO score:",loo_score(X, Y))
-			
-			"""d = res["intercept"]
+			"""A = res["intercept"]
 			a,b,c = res["coefs"]
 
 			plt.figure()
@@ -266,7 +323,7 @@ for g_code in np.unique(g):
 			xmax = max(res["Y_model"].max(), res["Y"].max())
 			x = np.linspace(xmin, xmax, 100)
 			plt.plot(x, x, 'r--')
-			plt.xlabel(rf"$ 10^{{{d:.2f}}} \cdot Ro_{{conv}}^{{{a:.2f}}} \cdot \Lambda^{{{b:.2f}}} \cdot Ro_{{sh}}^{{{c:.2f}}}$")
+			plt.xlabel(rf"$ {A:.2f} \cdot Ro_{{conv}}^{{{a:.2f}}} \cdot \Lambda^{{{b:.2f}}} \cdot Ro_{{sh}}^{{{c:.2f}}}$")
 			plt.ylabel(r"$MS_{rms}$ from simulations")
 			plt.title(r"Scale law of $MS_{rms}$ for $g \propto 1/r^2$")
 			plt.grid()
@@ -284,9 +341,5 @@ for g_code in np.unique(g):
 plt.show()
 """
 
-m =  mask & (g == 1)
-X = np.column_stack([np.log10(Ro_conv[m]),np.log10(Ro_sh[m]),np.log10(Els[m])])
-Y = np.log10(MS_int_amp[m])
-print("LOO score:",loo_score(X, Y))
 
 
