@@ -195,7 +195,7 @@ def evaluate_scaling_realspace(X_vars, Y, Yerr, signed = True):
 	pca = PCA().fit(logX)
 	corr = np.corrcoef(logX.T)
 
-	return {"mask_fit": mask_fit,"R2": R2,"adj_R2": adj_R2,"coefs": coefs,"intercept": intercept, "covariance": cov,"condition_number": cond,"PCA_variance": pca.explained_variance_ratio_, "correlation_matrix": corr,"Y_model": Y_model,"Y": Y,"residuals": residuals}
+	return {"mask_fit": mask_fit,"R2": R2,"adj_R2": adj_R2,"coefs": coefs,"intercept": intercept, "condition_number": cond,"PCA_variance": pca.explained_variance_ratio_, "correlation_matrix": corr,"Y_model": Y_model,"Y": Y,"residuals": residuals}
 
 
 def loo_score(X_vars, Y, signed=False):
