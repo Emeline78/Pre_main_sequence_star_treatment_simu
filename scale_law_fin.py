@@ -117,14 +117,17 @@ def evaluate_scaling_realspace(X_vars, Y, Yerr, signed = True):
 		# ---------------- Initial guess from log fit ----------------
 
 		logX = np.column_stack([np.log10(v) for v in X_vars])
-		p0 = np.ones(len(X_vars)+1)
+		p0 = [0.5]*len(X_vars) + [np.mean(Y)]
 		p0[-1] = np.mean(Y)
-
+		
+		bounds_lower = [-5]*len(X_vars) + [-np.inf]
+		bounds_upper = [5]*len(X_vars) + [ np.inf]
+		
 		# ---------------- Real-space nonlinear fit ----------------
 
 		X_stack = np.vstack(X_vars)
 
-		params, cov = curve_fit(model_func_signed, X_stack, Y, sigma=Yerr, absolute_sigma=True, p0=p0, maxfev=20000)
+		params, cov = curve_fit(model_func_signed, X_stack, Y, sigma=Yerr, absolute_sigma=True, bounds=(bounds_lower, bounds_upper), p0=p0, maxfev=20000)
 
 		coefs = params[:-1]
 		intercept = params[-1]
