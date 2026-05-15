@@ -11,6 +11,7 @@ from sklearn.decomposition import PCA
 from scipy.optimize import curve_fit
 from sklearn.model_selection import LeaveOneOut
 from sklearn.metrics import r2_score
+from scipy.optimize import least_squares
 """
 git add scale_law_fin.py
 git commit -m "modifications"
@@ -98,6 +99,10 @@ def model_func_signed(X_flat, *params):
 		Y_model *= X_flat[i]**a[i]
 
 	return Y_model
+	
+def residuals_signed(params, X_stack, Y, Yerr):
+	Y_model = model_func_signed(X_stack, *params)
+	return (Y - Y_model) / Yerr
 
 def evaluate_scaling_realspace(X_vars, Y, Yerr, signed = True):
 	if signed :
@@ -127,7 +132,9 @@ def evaluate_scaling_realspace(X_vars, Y, Yerr, signed = True):
 
 		X_stack = np.vstack(X_vars)
 
-		params, cov = curve_fit(model_func_signed, X_stack, Y, sigma=Yerr, absolute_sigma=True, bounds=(bounds_lower, bounds_upper), p0=p0, maxfev=20000)
+		#params, cov = curve_fit(model_func_signed, X_stack, Y, sigma=Yerr, absolute_sigma=True, bounds=(bounds_lower, bounds_upper), p0=p0, maxfev=20000)
+		result = least_squares(residuals_signed,x0=p0,args=(X_stack, Y, Yerr), bounds=(bounds_lower, bounds_upper), max_nfev=50000)
+		params = result.x
 
 		coefs = params[:-1]
 		intercept = params[-1]
@@ -317,29 +324,28 @@ for g_code in np.unique(g):
 			print(res["correlation_matrix"])
 			print("LOO score:",loo_score(vars_fit,MS[mask_g],signed=sign))
 			
-			"""A = res["intercept"]
-			a,b,c = res["coefs"]
+			if len(variables) == 3:
+				A = res["intercept"]
+				a,b,c = res["coefs"]
 
-			plt.figure()
-			plt.scatter(res["Y_model"],res["Y"],s=60)
-			xmin = min(res["Y_model"].min(), res["Y"].min())
-			xmax = max(res["Y_model"].max(), res["Y"].max())
-			x = np.linspace(xmin, xmax, 100)
-			plt.plot(x, x, 'r--')
-			plt.xlabel(rf"$ {A:.2f} \cdot Ro_{{conv}}^{{{a:.2f}}} \cdot \Lambda^{{{b:.2f}}} \cdot Ro_{{sh}}^{{{c:.2f}}}$")
-			plt.ylabel(r"$MS_{rms}$ from simulations")
-			plt.title(r"Scale law of $MS_{rms}$ for $g \propto 1/r^2$")
-			plt.grid()
-			
-
-
-			for i, v in enumerate(vars_fit):
 				plt.figure()
-				plt.scatter(np.log10(v),res["residuals"],s=60)
-				plt.axhline(0,linestyle='--')
-				plt.xlabel(f"log(variable {i})")
-				plt.ylabel("Residuals")
-				plt.title(f"Residuals | {case} | {model_name} | g={g_code}")
+				plt.scatter(res["Y_model"],res["Y"],s=60)
+				xmin = min(res["Y_model"].min(), res["Y"].min())
+				xmax = max(res["Y_model"].max(), res["Y"].max())
+				x = np.linspace(xmin, xmax, 100)
+				plt.plot(x, x, 'r--')
+				plt.xlabel(rf"$ {A:.2f} \cdot Ro_{{conv}}^{{{a:.2f}}} \cdot \Lambda^{{{b:.2f}}} \cdot Ro_{{sh}}^{{{c:.2f}}}$")
+				plt.ylabel(r"$MS_{rms}$ from simulations")
+				plt.title(r"Scale law of $MS_{rms}$ for $g \propto 1/r^2$")
+				plt.grid()
+				
+				for i, v in enumerate(vars_fit):
+					plt.figure()
+					plt.scatter(np.log10(v),res["residuals"],s=60)
+					plt.axhline(0,linestyle='--')
+					plt.xlabel(f"log(variable {i})")
+					plt.ylabel("Residuals")
+					plt.title(f"Residuals | {case} | {model_name} | g={g_code}")
 
 plt.show()
 """
