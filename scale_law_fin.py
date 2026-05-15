@@ -335,7 +335,6 @@ for g_code in np.unique(g):
 					x = np.linspace(xmin, xmax, 100)
 					plt.plot(x, x, 'r--')
 					#plt.xlabel(rf"$ {A:.2f} \cdot Ro_{{conv}}^{{{a:.2f}}} \cdot \Lambda^{{{b:.2f}}} \cdot Ro_{{sh}}^{{{c:.2f}}}$")
-					plt.xlabel(rf"$ {model_name}, A = {A:.2f}, coefs = {a:.2f,b:.2f,c:.2f}$")
 					plt.ylabel(r"$MS_{int}$ from simulations")
 					plt.xlabel(rf"$ {model_name},\ A = {A:.2e},\ " rf"a = {a:.2f},\ b = {b:.2f},\ c = {c:.2f}$")
 					plt.grid()
