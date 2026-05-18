@@ -14,8 +14,11 @@ git push
 
 df = pd.read_parquet("transport_profiles_adim_sep.parquet")
 
+om = (df.groupby("name")["om"].first()).to_numpy()
+om_lim = (df.groupby("name")["om_lim"].first()).to_numpy()
+mask = (om < om_lim) & (df.groupby("name")["status"].first().to_numpy()) & (np.char.find(names, "wrong") == -1)
 names = df.groupby("name").mean().index.to_numpy(dtype = str)
-for target in names : 
+for target in names[mask] : 
 	sim = df[df["name"] == target]
 	 
 	r    = sim["r"].values
