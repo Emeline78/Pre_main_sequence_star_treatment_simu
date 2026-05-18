@@ -30,8 +30,8 @@ if a == "transport_profiles_SI.parquet" or a == "transport_profiles_CGS.parquet"
 #MS_mean = (df.groupby("name")["MS"].mean()).to_numpy()
 MS_rms = df.groupby("name").apply(lambda g: np.sqrt(np.mean(g["MS"]**2))).to_numpy()
 MS_int = df.groupby("name").apply(lambda g: np.trapz(g["MS"], g["r"])).to_numpy()
-MS_max = df.groupby("name")["MS"].apply(lambda x: x.iloc[x.abs().argmax()]).to_numpy()
-
+MS_min = df.groupby("name")["MS"].apply(lambda x: x.iloc[x.argmin()]).to_numpy()
+MS_max = df.groupby("name")["MS"].apply(lambda x: x.iloc[x.argmax()]).to_numpy()
 
 names = df.groupby("name").mean().index.to_numpy(dtype = str)
 Ra = (df.groupby("name")["ra"].first()).to_numpy()
@@ -67,8 +67,11 @@ for i,namefile in enumerate(names):
 	x = np.array([np.trapz(MS_snap[i], r) for i in range(len(MS_snap))])
 	MS_int_err[i] = np.std(x) / np.sqrt(len(x))
 	
-	x = MS_snap[np.arange(len(MS_snap)), np.abs(MS_snap).argmax(axis=1)]
+	x = MS_snap[np.arange(len(MS_snap)), MS_snap.argmax(axis=1)]
 	MS_max_err[i] = np.std(x) / np.sqrt(len(x))
+	
+	x = MS_snap[np.arange(len(MS_snap)), MS_snap.argmin(axis=1)]
+	MS_min_err[i] = np.std(x) / np.sqrt(len(x))
 	
 MS_int_sign = np.sign(MS_int)
 MS_int_amp  = np.abs(MS_int)
@@ -308,7 +311,7 @@ for g_code in np.unique(g):
 		print(model_name)
 		print("--------------------------------------------")
 
-		for MS, MS_err, case, sign in [(MS_rms, MS_rms_err, "MS_rms",False),(MS_int, MS_int_err, "MS_int",True)]:
+		for MS, MS_err, case, sign in [(MS_rms, MS_rms_err, "MS_rms",False),(MS_int, MS_int_err, "MS_int",True),(MS_max, MS_max_err, "MS_max",True),(MS_min, MS_min_err, "MS_rms",True)]:
 			print()
 			print(f"===== {case} =====")
 
