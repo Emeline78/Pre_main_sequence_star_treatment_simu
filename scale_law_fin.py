@@ -49,6 +49,7 @@ mask = (om < om_lim)  & (np.char.find(names, "wrong") == -1) & (df.groupby("name
 
 MS_mean_err = np.full(len(names),np.nan)
 MS_max_err = np.full(len(names),np.nan)
+MS_min_err = np.full(len(names),np.nan)
 MS_rms_err = np.full(len(names),np.nan)
 MS_int_err = np.full(len(names),np.nan)
 
