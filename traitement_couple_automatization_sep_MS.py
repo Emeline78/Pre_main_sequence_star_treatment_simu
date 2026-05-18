@@ -88,12 +88,12 @@ def make_case_name(path):
 	return case_name
 
 
-def save_snapshots(save_dir, case_name, r, times, RS, MS, MC, Visc):
-	np.savez(save_dir + "/"+ f"{case_name}.npz",r=r,times=times,RS=RS,MS=MS,MC=MC,Visc=Visc)
+def save_snapshots(save_dir, case_name, r, times, RS, MS, MT, MC, Visc):
+	np.savez(save_dir + "/"+ f"{case_name}.npz",r=r,times=times,RS=RS,MS=MS,MT=MT,MC=MC,Visc=Visc)
 
 def load_snapshots(file):
 	data = np.load(file)
-	return data["r"], data["times"], data["RS"], data["MS"], data["MC"], data["Visc"]
+	return data["r"], data["times"], data["RS"], data["MS"], dat["MT"], data["MC"], data["Visc"]
 
 from magic import *
 mu0 = 4*np.pi*1e-7
@@ -140,7 +140,7 @@ for path in all_dirs:
 	if snap_file.exists():
 
 		print(f"Loading {case_name}")
-		r, times, RS_snap, MS_snap, MC_snap, Visc_snap = \
+		r, times, RS_snap, MS_snap, MT_snap, MC_snap, Visc_snap = \
 		load_snapshots(snap_file)
 		stp = MagicSetup(datadir=a)
 		n = stp.polind
