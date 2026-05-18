@@ -244,9 +244,10 @@ def loo_score(X_vars, Y, signed=False):
 			continue
 
 	return r2_score(truths, preds)
+L_eta = 0.62 * Rm**(-1/2) + 0.014
+Els_prime = Els/(Rm*L_eta)
 
-
-models = {"Ro_conv": [Ro_conv], "ELs": [Els], "Ro_sh": [Ro_sh], "Ro_conv_xi": [Ro_conv, xi], "Ro_conv_Els": [Ro_conv, Els], "Ro_conv_Ro_sh": [Ro_conv, Ro_sh], "Ro_conv_xi_Rosh": [Ro_conv, xi, Ro_sh], "Ro_conv_xi_Els": [Ro_conv, xi, Els],"Ro_conv_Els_Rosh": [Ro_conv, Els, Ro_sh]}
+models = {"Els_prime": [Els_prime], "Ro_conv": [Ro_conv], "ELs": [Els], "Ro_sh": [Ro_sh], "Ro_conv_xi": [Ro_conv, xi], "Ro_conv_Els": [Ro_conv, Els], "Ro_conv_Ro_sh": [Ro_conv, Ro_sh], "Ro_conv_xi_Rosh": [Ro_conv, xi, Ro_sh], "Ro_conv_xi_Els": [Ro_conv, xi, Els],"Ro_conv_Els_Rosh": [Ro_conv, Els, Ro_sh]}
 #models = {"Ro_conv": [Ro_conv],"Ro_conv_Els": [Ro_conv, Els],"Ro_conv_Rosh": [Ro_conv, Ro_sh],"Ro_conv_Els_Rosh": [Ro_conv, Els, Ro_sh],}
 #models = {"Ro_conv_Els_Rosh": [Ro_conv, Els, Ro_sh],}
 for g_code in np.unique(g):
@@ -312,7 +313,7 @@ for g_code in np.unique(g):
 		print(model_name)
 		print("--------------------------------------------")
 
-		for MS, MS_err, case, sign in [(MS_rms, MS_rms_err, "MS_rms",False),(MS_int, MS_int_err, "MS_int",True),(MS_max, MS_max_err, "MS_max",True),(MS_min, MS_min_err, "MS_rms",True)]:
+		for MS, MS_err, case, sign in [(MS_rms, MS_rms_err, "MS_rms",False),(MS_int, MS_int_err, "MS_int",True),(MS_max, MS_max_err, "MS_max",True),(MS_min, MS_min_err, "MS_min",True)]:
 			print()
 			print(f"===== {case} =====")
 
