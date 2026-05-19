@@ -33,6 +33,8 @@ MS_int = df.groupby("name").apply(lambda g: np.trapz(g["MS"], g["r"])).to_numpy(
 MS_min = df.groupby("name")["MS"].apply(lambda x: x.iloc[x.argmin()]).to_numpy()
 MS_max = df.groupby("name")["MS"].apply(lambda x: x.iloc[x.argmax()]).to_numpy()
 
+mask_min = MS_min < 0
+
 names = df.groupby("name").mean().index.to_numpy(dtype = str)
 Ra = (df.groupby("name")["ra"].first()).to_numpy()
 g = (df.groupby("name")["config_code"].first()).to_numpy()
@@ -316,7 +318,10 @@ for g_code in np.unique(g):
 		for MS, MS_err, case, sign in [(MS_rms, MS_rms_err, "MS_rms",False),(MS_int, MS_int_err, "MS_int",True),(MS_max, MS_max_err, "MS_max",True),(MS_min, MS_min_err, "MS_min",True)]:
 			print()
 			print(f"===== {case} =====")
-
+			
+			if case == "MS_min":
+				mask_g &= mask_min
+				
 			vars_fit = [v[mask_g] for v in variables]
 			res = evaluate_scaling_realspace(vars_fit,MS[mask_g],MS_err[mask_g],signed=sign)
 
@@ -333,29 +338,17 @@ for g_code in np.unique(g):
 			if len(variables) == 3:
 				A = res["intercept"]
 				a,b,c = res["coefs"]
-				if sign :
-					plt.figure()
-					plt.scatter(res["Y_model"],res["Y"],s=60)
-					xmin = min(res["Y_model"].min(), res["Y"].min())
-					xmax = max(res["Y_model"].max(), res["Y"].max())
-					x = np.linspace(xmin, xmax, 100)
-					plt.plot(x, x, 'r--')
-					#plt.xlabel(rf"$ {A:.2f} \cdot Ro_{{conv}}^{{{a:.2f}}} \cdot \Lambda^{{{b:.2f}}} \cdot Ro_{{sh}}^{{{c:.2f}}}$")
-					plt.ylabel(r"$MS_{int}$ from simulations")
-					plt.xlabel(f"{model_name}, "rf"$A={A:.2e},\ a={a:.2f},\ b={b:.2f},\ c={c:.2f}$")
-					plt.grid()
-				else:
-					plt.figure()
-					plt.scatter(res["Y_model"],res["Y"],s=60)
-					xmin = min(res["Y_model"].min(), res["Y"].min())
-					xmax = max(res["Y_model"].max(), res["Y"].max())
-					x = np.linspace(xmin, xmax, 100)
-					plt.plot(x, x, 'r--')
-					plt.xlabel(f"{model_name}, "rf"$A={A:.2e},\ a={a:.2f},\ b={b:.2f},\ c={c:.2f}$")
-					#plt.xlabel(rf"$ {A:.2f} \cdot Ro_{{conv}}^{{{a:.2f}}} \cdot \Lambda^{{{b:.2f}}} \cdot Ro_{{sh}}^{{{c:.2f}}}$")
-					plt.ylabel(r"$MS_{rms}$ from simulations")
-					plt.title(r"Scale law of $MS_{rms}$ for $g \propto 1/r^2$")
-					plt.grid()
+				plt.figure()
+				plt.scatter(res["Y_model"],res["Y"],s=60)
+				xmin = min(res["Y_model"].min(), res["Y"].min())
+				xmax = max(res["Y_model"].max(), res["Y"].max())
+				x = np.linspace(xmin, xmax, 100)
+				plt.plot(x, x, 'r--')
+				#plt.xlabel(rf"$ {A:.2f} \cdot Ro_{{conv}}^{{{a:.2f}}} \cdot \Lambda^{{{b:.2f}}} \cdot Ro_{{sh}}^{{{c:.2f}}}$")
+				plt.ylabel(f"{case} from simulations")
+				plt.xlabel(f"{model_name}, "rf"$A={A:.2e},\ a={a:.2f},\ b={b:.2f},\ c={c:.2f}$")
+				plt.title(f"Scale law of {case} for $g \propto 1/r^2$")
+				plt.grid()
 				
 				"""for i, v in enumerate(vars_fit):
 					plt.figure()
