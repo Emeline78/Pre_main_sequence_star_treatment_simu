@@ -33,6 +33,10 @@ MS_int = df.groupby("name").apply(lambda g: np.trapz(g["MS"], g["r"])).to_numpy(
 MS_min = df.groupby("name")["MS"].apply(lambda x: x.iloc[x.argmin()]).to_numpy()
 MS_max = df.groupby("name")["MS"].apply(lambda x: x.iloc[x.argmax()]).to_numpy()
 
+neg_width = (df.groupby("name")["MS"].apply(lambda x: np.sum(x < 0)).to_numpy())
+Nmin = 10
+
+mask = (MS_min < 0) & (neg_width > Nmin)
 mask_min = MS_min < 0
 
 names = df.groupby("name").mean().index.to_numpy(dtype = str)
