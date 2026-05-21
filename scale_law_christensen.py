@@ -1,71 +1,31 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-from magic import *
-import pandas as pd
-import numpy as np
-import matplotlib.cm as cm
-import matplotlib.colors as mcolors
-from scipy.interpolate import CubicSpline
 from scipy.optimize import curve_fit
-from scipy.optimize import least_squares
 from sklearn.linear_model import LinearRegression
 from sklearn.decomposition import PCA
-from scipy.optimize import curve_fit
 from sklearn.model_selection import LeaveOneOut
 from sklearn.metrics import r2_score
-from scipy.optimize import least_squares
-
-"""
-git add scale_law_christensen.py
-git commit -m "modifications"
-git push
-"""
 
 a = "transport_profiles_adim.parquet"
 df = pd.read_parquet(a)
 datadir = "snapshots1/"
 
-mapping = {
-	"gr_Nr2p5_Pm4_ra_1p6e7": 2.98,
-	"gr_Nr2p5_Pm4_ra_8e6": 1.42,
-	"gr2_xi_p2_pm4_ra_1e6": 1.78,
-	"gr2_xi_p2_pm6_ra_1p5e6": 3.75,
-	"gr2_xi_p1_pm4_ra_5e5": 2.07,
-	"gr2_xi_p1_pm6_ra_5p5e6": 2.07,
-	"gr2_xi_p35_pm4_ra_2e6": 2.53,
-	"gr2_xi_p35_pm4_ra_5e6": 7.26,
-	"gr2_xi_p35_pm6_ra_1p5e6": 3.75,
-	"gr_gr2_Louis_ra_1p5e7": 5.78,
-	"gr_gr2_Louis_ra_1e7": 4.14
-}
+"""
+mapping = {"gr_Nr2p5_Pm4_ra_1p6e7": 2.98,"gr_Nr2p5_Pm4_ra_8e6": 1.42,"gr2_xi_p2_pm4_ra_1e6": 1.78,"gr2_xi_p2_pm6_ra_1p5e6": 3.75,"gr2_xi_p1_pm4_ra_5e5": 2.07,"gr2_xi_p1_pm6_ra_5p5e6": 2.07,"gr2_xi_p35_pm4_ra_2e6": 2.53,"gr2_xi_p35_pm4_ra_5e6": 7.26,"gr2_xi_p35_pm6_ra_1p5e6": 3.75,"gr_gr2_Louis_ra_1p5e7": 5.78,"gr_gr2_Louis_ra_1e7": 4.14}
 
 df["Nu"] = np.nan
-
 for pattern, value in mapping.items():
-	mask = df["name"].str.startswith(pattern)
-	df.loc[mask, "Nu"] = value
-	
-mapping = {
-	"gr_Nr2p5_Pm4_ra_1p6e7": 4,
-	"gr_Nr2p5_Pm4_ra_8e6": 4,
-	"gr2_xi_p2_pm4_ra_1e6": 4,
-	"gr2_xi_p2_pm6_ra_1p5e6": 6,
-	"gr2_xi_p1_pm4_ra_5e5": 4,
-	"gr2_xi_p1_pm6_ra_5p5e6": 6,
-	"gr2_xi_p35_pm4_ra_2e6": 4,
-	"gr2_xi_p35_pm4_ra_5e6": 4,
-	"gr2_xi_p35_pm6_ra_1p5e6": 6,
-	"gr_gr2_Louis_ra_1p5e7": 4,
-	"gr_gr2_Louis_ra_1e7": 4
-}
+    mask = df["name"].str.startswith(pattern)
+    df.loc[mask, "Nu"] = value
 
-df["Pm"] = np.nan
+df.to_parquet("transport_profiles_adim.parquet")
 
-for pattern, value in mapping.items():
-	mask = df["name"].str.startswith(pattern)
-	df.loc[mask, "Pm"] = value
-
+export OPENBLAS_NUM_THREADS=1
+export MKL_NUM_THREADS=1
+export OMP_NUM_THREADS=1
+export NUMEXPR_NUM_THREADS=1
+"""
 
 names = df.groupby("name").mean().index.to_numpy(dtype = str)
 Ra = (df.groupby("name")["ra"].first()).to_numpy()
@@ -86,7 +46,7 @@ Nu_mod = (Nu - 1) * E / Pr
 Ra_mod = Ra * (Nu - 1) * E**3 / Pr**2
 
 mask = (om < om_lim)  & (np.char.find(names, "wrong") == -1) & (df.groupby("name")["status"].first().to_numpy())
-"""
+
 def model_func(X_flat, *params):
 	n_vars = X_flat.shape[0]
 
@@ -327,7 +287,6 @@ for g_code in np.unique(g):
 
 plt.show()
 
-"""
 
 
 
