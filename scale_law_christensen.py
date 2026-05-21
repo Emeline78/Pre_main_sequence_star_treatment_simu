@@ -114,9 +114,9 @@ def model_func_signed(X_flat, *params):
 
 	return Y_model
 	
-def residuals_signed(params, X_stack, Y, Yerr):
+def residuals_signed(params, X_stack, Y):
 	Y_model = model_func_signed(X_stack, *params)
-	return (Y - Y_model) / Yerr
+	return (Y - Y_model)
 
 def evaluate_scaling_realspace(X_vars, Y, signed = True):
 	if signed :
@@ -126,7 +126,6 @@ def evaluate_scaling_realspace(X_vars, Y, signed = True):
 			mask_fit &= (v > 0)
 
 		mask_fit &= np.isfinite(Y)
-		mask_fit &= np.isfinite(Yerr)
 
 		X_vars = [v[mask_fit] for v in X_vars]
 		Y = Y[mask_fit]
@@ -145,8 +144,6 @@ def evaluate_scaling_realspace(X_vars, Y, signed = True):
 		X_stack = np.vstack(X_vars)
 
 		params, cov = curve_fit(model_func_signed, X_stack, Y, absolute_sigma=True, bounds=(bounds_lower, bounds_upper), p0=p0, maxfev=20000)
-		#result = least_squares(residuals_signed,x0=p0,args=(X_stack, Y, Yerr), bounds=(bounds_lower, bounds_upper), max_nfev=50000)
-		#params = result.x
 
 		coefs = params[:-1]
 		intercept = params[-1]
@@ -160,7 +157,6 @@ def evaluate_scaling_realspace(X_vars, Y, signed = True):
 
 		mask_fit &= (Y > 0)
 		mask_fit &= np.isfinite(Y)
-		mask_fit &= np.isfinite(Yerr)
 
 		X_vars = [v[mask_fit] for v in X_vars]
 		Y = Y[mask_fit]
@@ -288,6 +284,7 @@ for g_code in np.unique(g):
 			print(f"===== {case} =====")
 				
 			vars_fit = [v[mask_g] for v in variables]
+			print(vars_fit, X[mask_g])
 			res = evaluate_scaling_realspace(vars_fit, X[mask_g], signed=sign)
 
 			print("R2                 :", res["R2"])
@@ -298,7 +295,7 @@ for g_code in np.unique(g):
 			print("PCA_variance       :", res["PCA_variance"])
 			print("correlation_matrix :")
 			print(res["correlation_matrix"])
-			print("LOO score:",loo_score(vars_fit,MS[mask_g],signed=sign))
+			print("LOO score:",loo_score(vars_fit,X[mask_g],signed=sign))
 			
 			if len(variables) == 1:
 				A = res["intercept"]
