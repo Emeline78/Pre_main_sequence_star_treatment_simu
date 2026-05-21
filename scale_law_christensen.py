@@ -7,6 +7,12 @@ from sklearn.decomposition import PCA
 from sklearn.model_selection import LeaveOneOut
 from sklearn.metrics import r2_score
 
+"""
+git add scale_law_christensen.py
+git commit -m "modifications"
+git push
+"""
+
 a = "transport_profiles_adim.parquet"
 df = pd.read_parquet(a)
 datadir = "snapshots1/"
@@ -244,7 +250,6 @@ for g_code in np.unique(g):
 			print(f"===== {case} =====")
 				
 			vars_fit = [v[mask_g] for v in variables]
-			print(vars_fit, X[mask_g])
 			res = evaluate_scaling_realspace(vars_fit, X[mask_g], signed=sign)
 
 			print("R2                 :", res["R2"])
@@ -259,7 +264,7 @@ for g_code in np.unique(g):
 			
 			if len(variables) == 1:
 				A = res["intercept"]
-				a = res["coefs"]
+				a = res["coefs"][0]
 				plt.figure()
 				plt.scatter(res["Y_model"],res["Y"],s=60)
 				xmin = min(res["Y_model"].min(), res["Y"].min())
