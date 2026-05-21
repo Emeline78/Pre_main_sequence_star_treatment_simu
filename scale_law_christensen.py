@@ -45,6 +45,26 @@ df["Nu"] = np.nan
 for pattern, value in mapping.items():
 	mask = df["name"].str.startswith(pattern)
 	df.loc[mask, "Nu"] = value
+	
+mapping = {
+	"gr_Nr2p5_Pm4_ra_1p6e7": 4,
+	"gr_Nr2p5_Pm4_ra_8e6": 4,
+	"gr2_xi_p2_pm4_ra_1e6": 4,
+	"gr2_xi_p2_pm6_ra_1p5e6": 6,
+	"gr2_xi_p1_pm4_ra_5e5": 4,
+	"gr2_xi_p1_pm6_ra_5p5e6": 6,
+	"gr2_xi_p35_pm4_ra_2e6": 4,
+	"gr2_xi_p35_pm4_ra_5e6": 4,
+	"gr2_xi_p35_pm6_ra_1p5e6": 6,
+	"gr_gr2_Louis_ra_1p5e7": 4,
+	"gr_gr2_Louis_ra_1e7": 4
+}
+
+df["Pm"] = np.nan
+
+for pattern, value in mapping.items():
+	mask = df["name"].str.startswith(pattern)
+	df.loc[mask, "Pm"] = value
 
 
 names = df.groupby("name").mean().index.to_numpy(dtype = str)
@@ -57,6 +77,8 @@ Ro_conv = (df.groupby("name")["Ro_conv"].first()).to_numpy()
 Rm = (df.groupby("name")["rm"].first()).to_numpy()
 Nu = (df.groupby("name")["Nu"].first()).to_numpy()
 xi = (df.groupby("name")["xi"].first()).to_numpy()
+Pm = (df.groupby("name")["Pm"].first()).to_numpy()
+
 E = 1e-4
 Ro_sh = om * E
 Pr = 1
