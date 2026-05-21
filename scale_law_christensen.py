@@ -86,7 +86,7 @@ Nu_mod = (Nu - 1) * E / Pr
 Ra_mod = Ra * (Nu - 1) * E**3 / Pr**2
 
 mask = (om < om_lim)  & (np.char.find(names, "wrong") == -1) & (df.groupby("name")["status"].first().to_numpy())
-
+"""
 def model_func(X_flat, *params):
 	n_vars = X_flat.shape[0]
 
@@ -327,7 +327,7 @@ for g_code in np.unique(g):
 
 plt.show()
 
-
+"""
 
 
 
