@@ -17,7 +17,7 @@ from sklearn.metrics import r2_score
 from scipy.optimize import least_squares
 
 """
-git add scale_law_fin.py
+git add scale_law_christensen.py
 git commit -m "modifications"
 git push
 """
@@ -27,17 +27,17 @@ df = pd.read_parquet(a)
 datadir = "snapshots1/"
 
 mapping = {
-    "gr_Nr2p5_Pm4_ra_1p6e7": 2.98,
-    "gr_Nr2p5_Pm4_ra_8e6": 1.42,
-    "gr2_xi_p2_pm4_ra_1e6": 1.78,
-    "gr2_xi_p2_pm6_ra_1p5e6": 3.75,
-    "gr2_xi_p1_pm4_ra_5e5": 2.07,
-    "gr2_xi_p1_pm6_ra_5p5e6": 2.07,
-    "gr2_xi_p35_pm4_ra_2e6": 2.53,
-    "gr2_xi_p35_pm4_ra_5e6": 7.26,
-    "gr2_xi_p35_pm6_ra_1p5e6": 3.75,
-    "gr_gr2_Louis_ra_1p5e7": 5.78,
-    "gr_gr2_Louis_ra_1e7": 4.14,
+	"gr_Nr2p5_Pm4_ra_1p6e7": 2.98,
+	"gr_Nr2p5_Pm4_ra_8e6": 1.42,
+	"gr2_xi_p2_pm4_ra_1e6": 1.78,
+	"gr2_xi_p2_pm6_ra_1p5e6": 3.75,
+	"gr2_xi_p1_pm4_ra_5e5": 2.07,
+	"gr2_xi_p1_pm6_ra_5p5e6": 2.07,
+	"gr2_xi_p35_pm4_ra_2e6": 2.53,
+	"gr2_xi_p35_pm4_ra_5e6": 7.26,
+	"gr2_xi_p35_pm6_ra_1p5e6": 3.75,
+	"gr_gr2_Louis_ra_1p5e7": 5.78,
+	"gr_gr2_Louis_ra_1e7": 4.14
 }
 
 df["Nu"] = np.nan
