@@ -317,7 +317,7 @@ mapping = {
     "gr_gr2_Louis_ra_1e7": 0.084,
 }
 
-df_final["Ro_conv"] = np.nan
+df_final["Ro_conv_l"] = np.nan
 
 for pattern, value in mapping.items():
     mask = df_final["name"].str.startswith(pattern)
