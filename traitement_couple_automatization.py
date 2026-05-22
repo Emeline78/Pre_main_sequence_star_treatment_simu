@@ -317,11 +317,11 @@ mapping = {
     "gr_gr2_Louis_ra_1e7": 0.084,
 }
 
-df_final["Ro_conv"] = np.nan
+df_final["Ro_conv_l"] = np.nan
 
 for pattern, value in mapping.items():
     mask = df_final["name"].str.startswith(pattern)
-    df_final.loc[mask, "Ro_conv"] = value
+    df_final.loc[mask, "Ro_conv_l"] = value
     
 mapping = {
     "gr_Nr2p5_Pm4_ra_1p6e7": 15.09,
