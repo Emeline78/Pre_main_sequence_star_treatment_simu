@@ -135,6 +135,7 @@ for path in all_dirs:
 	    
 	ts = MagicTs(datadir = a,field='par', all=True, iplot = False)
 	Rm = np.mean(ts.rm)
+	Ro_conv = np.mean(ts.ro)
 
 	
 	if snap_file.exists():
@@ -257,7 +258,7 @@ for path in all_dirs:
 	MC = MC / t_total 
 
 	params = extract_params(path)
-	res = pd.DataFrame({"r": r,"RS": RS, "MC": MC, "MS": MS, "Visc": Visc,"name": str(case_name), "status": status, "rm" : Rm})
+	res = pd.DataFrame({"r": r,"RS": RS, "MC": MC, "MS": MS, "Visc": Visc,"name": str(case_name), "status": status, "rm" : Rm, "Ro_conv": Ro_conv})
 	for key, value in params.items():
         	res[key] = value
 	liste.append(res)
@@ -320,7 +321,7 @@ df_final["Ro_conv"] = np.nan
 
 for pattern, value in mapping.items():
     mask = df_final["name"].str.startswith(pattern)
-    df_final.loc[mask, "Ro_conv"] = value
+    df_final.loc[mask, "Ro_conv_l"] = value
     
 mapping = {
     "gr_Nr2p5_Pm4_ra_1p6e7": 15.09,
