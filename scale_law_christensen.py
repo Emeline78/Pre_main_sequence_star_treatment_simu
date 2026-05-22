@@ -31,6 +31,17 @@ export OPENBLAS_NUM_THREADS=1
 export MKL_NUM_THREADS=1
 export OMP_NUM_THREADS=1
 export NUMEXPR_NUM_THREADS=1
+
+from magic import *
+
+a = "/travail/dynconv/multiscale_dyno/anelasticCouette/gr2/xi_p35_pm4/ra_5e6/om50/"
+ts = MagicTs(datadir = a,field='par', all=True, iplot = False)
+Rm = np.mean(ts.rm)
+Ro_conv = np.mean(ts.ro)
+Ro_conv_l = np.mean(ts.rossby_l)
+
+print(Rm, Ro_conv, Ro_conv_l)
+
 """
 
 names = df.groupby("name").mean().index.to_numpy(dtype = str)
@@ -216,7 +227,7 @@ def loo_score(X_vars, Y, signed=False):
 L_eta = 0.62 * Rm**(-1/2) + 0.014
 Els_prime = Els/(Rm*L_eta)
 
-models = {"Ra_Q": [Ra_mod], "Ra_Q_Pm": [Ra_mod, Pm]}
+models = {"Ra_Q": [Ra_mod],"Ro_sh": [Ro_sh], "Ra_Q_Pm": [Ra_mod, Pm], "Ra_Q_Pm_Ro_sh": [Ra_mod, Pm,Ro_sh]}
 
 for g_code in np.unique(g):
 
