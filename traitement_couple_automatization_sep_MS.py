@@ -93,7 +93,7 @@ def save_snapshots(save_dir, case_name, r, times, RS, MS, MT, MC, Visc):
 
 def load_snapshots(file):
 	data = np.load(file)
-	return data["r"], data["times"], data["RS"], data["MS"], dat["MT"], data["MC"], data["Visc"]
+	return data["r"], data["times"], data["RS"], data["MS"], data["MT"], data["MC"], data["Visc"]
 
 from magic import *
 mu0 = 4*np.pi*1e-7
