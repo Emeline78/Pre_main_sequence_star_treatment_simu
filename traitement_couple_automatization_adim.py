@@ -133,7 +133,7 @@ for path in all_dirs:
 	else:
 	    status = False
 	    
-	ts = MagicTs(datadir = a,field='par', all=True, iplot = False)
+	ts = MagicTs(datadir = a,field='par',tag = "rot01", all=True, iplot = False)
 	Rm = np.mean(ts.rm)
 	Ro_conv = np.mean(ts.ro)
 
