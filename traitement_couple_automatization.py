@@ -135,6 +135,7 @@ for path in all_dirs:
 	    
 	ts = MagicTs(datadir = a,field='par', all=True, iplot = False)
 	Rm = np.mean(ts.rm)
+	Ro_conv = np.mean(ts.ro)
 
 	
 	if snap_file.exists():
@@ -174,7 +175,6 @@ for path in all_dirs:
 		Visc_snap = []
 		MC_snap = []
 
-		# pour les moyennes sur phi j'aurais juste pu faire mean vu que c'est espace regulierement
 		for j in range(1,len(files)+1): 
 			gr = MagicGraph(datadir=a,tag='rot01',ivar = j)
 			times.append(gr.time)
@@ -191,8 +191,8 @@ for path in all_dirs:
 				w_phi = dphi / (2* np.pi)
 
 			# fluctuations
-			vr = gr.vr - gr.vr.mean(axis=0)
-			vp = gr.vphi - gr.vphi.mean(axis=0)
+			vr = gr.vr - (gr.vr * w_phi).sum(axis=0)
+			vp = gr.vphi - (gr.vphi * w_phi).sum(axis=0)
 
 			# def de tau
 			dvphi = np.gradient(gr.vphi, r, axis=2)
@@ -231,10 +231,10 @@ for path in all_dirs:
 		rho = rho / rho0  
 		B0car = eta * om * mu0 	* rho0
 		
-		RS_snap = np.array(RS_snap) * rho * L**3 / tau**2 * 2 * np.pi * r**2
-		MS_snap = np.array(MS_snap) * L * B0car / mu0 * 2 * np.pi * r**2
-		Visc_snap = np.array(Visc_snap) * rho * L**3 / tau**2 * 2 * np.pi * r**2
-		MC_snap = np.array(MC_snap) * rho * L**3 / tau**2 * 2 * np.pi * r**2
+		RS_snap = np.array(RS_snap) * rho * L**5 / tau**2 * 2 * np.pi * r**2
+		MS_snap = np.array(MS_snap) * L**3 * B0car / mu0 * 2 * np.pi * r**2
+		Visc_snap = np.array(Visc_snap) * rho * L**5 / tau**2 * 2 * np.pi * r**2
+		MC_snap = np.array(MC_snap) * rho * L**5 / tau**2 * 2 * np.pi * r**2
 	
 		save_snapshots(snap_dir,case_name,r,times,RS_snap,MS_snap,MC_snap,Visc_snap)
 
@@ -258,7 +258,7 @@ for path in all_dirs:
 	MC = MC / t_total 
 
 	params = extract_params(path)
-	res = pd.DataFrame({"r": r,"RS": RS, "MC": MC, "MS": MS, "Visc": Visc,"name": str(case_name), "status": status, "rm" : Rm})
+	res = pd.DataFrame({"r": r,"RS": RS, "MC": MC, "MS": MS, "Visc": Visc,"name": str(case_name), "status": status, "rm" : Rm, "Ro_conv": Ro_conv})
 	for key, value in params.items():
         	res[key] = value
 	liste.append(res)
@@ -268,7 +268,7 @@ df_final = pd.concat(liste, ignore_index=True)
 df_final.loc[df_final["name"].str.startswith("gr_"), "xi"] = 0.2
 df_final.loc[df_final["name"].str.startswith("gr_gr2_Louis"), "xi"] = 0.35
 
-df_final.loc[df_final["name"].str.startswith("gr_gr2_Louis"), "Pm"] =4
+df_final.loc[df_final["name"].str.startswith("gr_gr2_Louis"), "Pm"] = 4
 
 def encode_config(name):
      if "gr_gr2_Louis" in name:
