@@ -258,7 +258,7 @@ models = {"Els_prime": [Els_prime], "Ro_conv": [Ro_conv], "ELs": [Els], "Ro_sh":
 #models = {"Ro_conv_Els_Rosh": [Ro_conv, Els, Ro_sh],}
 for g_code in np.unique(g):
 
-	mask_g = mask #& (g == g_code)
+	mask_g = mask & (g == g_code)
 
 	npts = np.sum(mask_g)
 	print()
