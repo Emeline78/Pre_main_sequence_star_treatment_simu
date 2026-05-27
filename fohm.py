@@ -112,7 +112,7 @@ for path in all_dirs:
 	snap_file = Path(snap_dir) / f"{case_name}.npz"
 	
 	ts = MagicTs(datadir = a, field='power', all=True, iplot = False) 	# verification que le regime ne change pas dans le temps pour pouvoir faire l'integration en temps 
-	fohm = ts.fohm
+	fohm = np.mean(ts.fohm)
 	mask = df["name"].str.startswith(case_name)
 	df.loc[mask, "fohm"] = fohm
 
