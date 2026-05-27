@@ -242,7 +242,7 @@ for g_code in np.unique(g):
 	print(f"N points = {npts}")
 	print("====================================================")
 
-	if g_code == 2 : 	#npts < 8:
+	if g_code != 1 : 	#npts < 8:
 		print("Too few points")
 		continue
 
