@@ -233,7 +233,7 @@ models = {"Ra_Q": [Ra_mod],"Ro_sh": [Ro_sh], "Ra_Q_Pm": [Ra_mod, Pm], "Ra_Q_Pm_R
 
 for g_code in np.unique(g):
 
-	mask_g = mask & (g == g_code)
+	mask_g = mask #& (g == g_code)
 
 	npts = np.sum(mask_g)
 	print()
