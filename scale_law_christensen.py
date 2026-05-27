@@ -50,7 +50,7 @@ g = (df.groupby("name")["config_code"].first()).to_numpy()
 om = (df.groupby("name")["om"].first()).to_numpy()
 om_lim = (df.groupby("name")["om_lim"].first()).to_numpy()
 Els = (df.groupby("name")["Elsasser"].first()).to_numpy()
-Ro_conv = (df.groupby("name")["Ro_conv"].first()).to_numpy()
+Ro = (df.groupby("name")["Ro_conv"].first()).to_numpy()
 Rm = (df.groupby("name")["rm"].first()).to_numpy()
 Nu = (df.groupby("name")["Nu"].first()).to_numpy()
 xi = (df.groupby("name")["xi"].first()).to_numpy()
@@ -61,6 +61,7 @@ Ro_sh = om * E
 Pr = 1
 Nu_mod = (Nu - 1) * E / Pr
 Ra_mod = Ra * (Nu - 1) * E**3 / Pr**2
+Lo = (Els * E / Pm)**(1/2)
 
 mask = (om < om_lim)  & (np.char.find(names, "wrong") == -1) & (df.groupby("name")["status"].first().to_numpy())
 
@@ -256,7 +257,7 @@ for g_code in np.unique(g):
 		print(model_name)
 		print("--------------------------------------------")
 
-		for X, case, sign in [(Ro_conv, "Ro_conv",False),(Nu_mod, "Nu_mod",True)]:
+		for X, case, sign in [(Ro, "Ro",False),(Lo, "Lo",False),(Nu_mod, "Nu_mod",True)]:
 			print()
 			print(f"===== {case} =====")
 				
