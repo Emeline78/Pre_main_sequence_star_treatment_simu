@@ -229,7 +229,7 @@ def loo_score(X_vars, Y, signed=False):
 L_eta = 0.62 * Rm**(-1/2) + 0.014
 Els_prime = Els/(Rm*L_eta)
 
-models = {"Ra_Q": [Ra_mod],"Ro_sh": [Ro_sh], "Ra_Q_Pm": [Ra_mod, Pm], "Ra_Q_Pm_Ro_sh": [Ra_mod, Pm,Ro_sh]}
+models = {"Ra_Q": [Ra_mod], "Ra_Q_Pm": [Ra_mod, Pm], "Ra_Q_Pm_Ro_sh": [Ra_mod, Pm,Ro_sh]}
 
 for g_code in np.unique(g):
 
@@ -279,11 +279,12 @@ for g_code in np.unique(g):
 				A = res["intercept"]
 				a = res["coefs"][0]
 				plt.figure()
-				plt.scatter(res["Y_model"],res["Y"],s=60)
+				plt.scatter(res["Y_model"],res["Y"],c = Ro_sh[mask_g],s=60)
+				plt.colorbar()
 				xmin = min(res["Y_model"].min(), res["Y"].min())
 				xmax = max(res["Y_model"].max(), res["Y"].max())
 				x = np.linspace(xmin, xmax, 100)
-				#plt.plot(x, x, 'r--')
+				plt.plot(x, x, 'r--')
 				plt.ylabel(f"{case} from simulations")
 				plt.xlabel(f"{model_name}, "rf"$A={A:.2e},\ a={a:.2f}$")
 				plt.title(f"Scale law of {case} for $g \propto 1/r^2$")
@@ -293,11 +294,12 @@ for g_code in np.unique(g):
 				A = res["intercept"]
 				a,b = res["coefs"]
 				plt.figure()
-				plt.scatter(res["Y_model"],res["Y"],s=60)
+				plt.scatter(res["Y_model"],res["Y"],c = Ro_sh[mask_g],s=60)
 				xmin = min(res["Y_model"].min(), res["Y"].min())
 				xmax = max(res["Y_model"].max(), res["Y"].max())
 				x = np.linspace(xmin, xmax, 100)
-				#plt.plot(x, x, 'r--')
+				plt.plot(x, x, 'r--')
+				plt.colorbar()
 				plt.ylabel(f"{case} from simulations")
 				plt.xlabel(f"{model_name}, "rf"$A={A:.2e},\ a={a:.2f},\ b={b:.2f}$")
 				plt.title(f"Scale law of {case} for $g \propto 1/r^2$")
