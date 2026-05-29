@@ -289,7 +289,7 @@ for g_code in np.unique(g):
 				plt.plot(x, x, 'r--')
 				plt.xlabel(rf"$ {A:.2f} \cdot Ra_{{Q}}^{{*{a:.2f}}} $")
 				plt.ylabel(r"$\frac{Lo}{f_{ohm}^{1/2}}$ from simulations")
-				plt.title(r"Scale law of $Lo/f_{ohm}^{1/2}$ for $g \propto 1/r^2$")
+				plt.title(r"Scale law of $\frac{Lo}{f_{ohm}^{1/2}}$ for $g \propto 1/r^2$")
 				plt.grid()
 			
 			"""
