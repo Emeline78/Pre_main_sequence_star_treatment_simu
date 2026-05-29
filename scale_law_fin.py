@@ -27,7 +27,7 @@ if a == "transport_profiles_SI.parquet" or a == "transport_profiles_CGS.parquet"
 	df = df[(df["date"] > 5) & (df["date"] < 6)]
 	
 
-#MS_mean = (df.groupby("name")["MS"].mean()).to_numpy()
+MS_mean = (df.groupby("name")["MS"].mean()).to_numpy()
 MS_rms = df.groupby("name").apply(lambda g: np.sqrt(np.mean(g["MS"]**2))).to_numpy()
 MS_int = df.groupby("name").apply(lambda g: np.trapz(g["MS"], g["r"])).to_numpy()
 MS_min = df.groupby("name")["MS"].apply(lambda x: x.iloc[x.argmin()]).to_numpy()
@@ -319,7 +319,7 @@ for g_code in np.unique(g):
 		print(model_name)
 		print("--------------------------------------------")
 
-		for MS, MS_err, case, sign in [(MS_rms, MS_rms_err, "MS_rms",False),(MS_int, MS_int_err, "MS_int",True),(MS_max, MS_max_err, "MS_max",True),(MS_min, MS_min_err, "MS_min",True)]:
+		for MS, MS_err, case, sign in [(MS_rms, MS_rms_err, "MS_rms",False),(MS_int, MS_int_err, "MS_int",True),(MS_max, MS_max_err, "MS_max",True),(MS_mean, MS_mean_err, "MS_mean",True)]:
 			print()
 			print(f"===== {case} =====")
 			
