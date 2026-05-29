@@ -108,7 +108,7 @@ def evaluate_scaling_realspace(X_vars, Y, signed = True):
 
 		X_vars = [v[mask_fit] for v in X_vars]
 		Y = Y[mask_fit]
-		print(Y.shape())
+		print(Y.shape)
 
 		# ---------------- Initial guess from log fit ----------------
 
@@ -140,7 +140,7 @@ def evaluate_scaling_realspace(X_vars, Y, signed = True):
 
 		X_vars = [v[mask_fit] for v in X_vars]
 		Y = Y[mask_fit]
-		print(Y.shape())
+		print(Y.shape)
 
 		# ---------------- Initial guess from log fit ----------------
 
@@ -264,7 +264,7 @@ for g_code in np.unique(g):
 			print()
 			print(f"===== {case} =====")
 				
-			print(X[mask_g].shape())
+			print(X[mask_g].shape)
 			vars_fit = [v[mask_g] for v in variables]
 			res = evaluate_scaling_realspace(vars_fit, X[mask_g], signed=sign)
 			print(X[mask_g].shape())
