@@ -278,6 +278,21 @@ for g_code in np.unique(g):
 			print(res["correlation_matrix"])
 			print("LOO score:",loo_score(vars_fit,X[mask_g],signed=sign))
 			
+			if model_name == "Ra_Q" and case == "Lo_fohm":
+				A = res["intercept"]
+				a = res["coefs"]
+				plt.figure()
+				plt.scatter(res["Y_model"],res["Y"],s=60)
+				xmin = min(res["Y_model"].min(), res["Y"].min())
+				xmax = max(res["Y_model"].max(), res["Y"].max())
+				x = np.linspace(xmin, xmax, 100)
+				plt.plot(x, x, 'r--')
+				plt.xlabel(rf"$ {A:.2f} \cdot Ra_{{Q}}*^{{{a:.2f}}} $")
+				plt.ylabel(r"$Lo/f_{ohm}^{1/2}$ from simulations")
+				plt.title(r"Scale law of $Lo/f_{ohm}^{1/2}$ for $g \propto 1/r^2$")
+				plt.grid()
+			
+			"""
 			if len(variables) == 1:
 				A = res["intercept"]
 				a = res["coefs"][0]
@@ -307,6 +322,7 @@ for g_code in np.unique(g):
 				plt.xlabel(f"{model_name}, "rf"$A={A:.2e},\ a={a:.2f},\ b={b:.2f}$")
 				plt.title(f"Scale law of {case} for $g \propto 1/r^2$")
 				plt.grid()
+			"""
 
 plt.show()
 
