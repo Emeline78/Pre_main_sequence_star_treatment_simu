@@ -235,7 +235,7 @@ models = {"Ra_Q": [Ra_mod], "Ra_Q_Pm": [Ra_mod, Pm], "Ra_Q_Pm_Ro_sh": [Ra_mod, P
 
 for g_code in np.unique(g):
 
-	mask_g = mask #& (g == g_code)
+	mask_g = mask & (g == g_code)
 
 	npts = np.sum(mask_g)
 	print()
@@ -276,7 +276,7 @@ for g_code in np.unique(g):
 			print("PCA_variance       :", res["PCA_variance"])
 			print("correlation_matrix :")
 			print(res["correlation_matrix"])
-			#print("LOO score:",loo_score(vars_fit,X[mask_g],signed=sign))
+			print("LOO score:",loo_score(vars_fit,X[mask_g],signed=sign))
 			
 			if len(variables) == 1:
 				A = res["intercept"]
