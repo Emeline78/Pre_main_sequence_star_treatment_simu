@@ -264,6 +264,7 @@ for g_code in np.unique(g):
 				
 			vars_fit = [v[mask_g] for v in variables]
 			res = evaluate_scaling_realspace(vars_fit, X[mask_g], signed=sign)
+			mask_fit = mask_g & np.isfinite(X)
 
 			print("R2                 :", res["R2"])
 			print("adj_R2             :", res["adj_R2"])
@@ -279,7 +280,7 @@ for g_code in np.unique(g):
 				A = res["intercept"]
 				a = res["coefs"][0]
 				plt.figure()
-				plt.scatter(res["Y_model"],res["Y"],c = Pm[mask_g],s=60)
+				plt.scatter(res["Y_model"],res["Y"],c = Pm[mask_fit],s=60)
 				plt.colorbar()
 				xmin = min(res["Y_model"].min(), res["Y"].min())
 				xmax = max(res["Y_model"].max(), res["Y"].max())
@@ -294,7 +295,7 @@ for g_code in np.unique(g):
 				A = res["intercept"]
 				a,b = res["coefs"]
 				plt.figure()
-				plt.scatter(res["Y_model"],res["Y"],c = Pm[mask_g],s=60)
+				plt.scatter(res["Y_model"],res["Y"],c = Pm[mask_fit],s=60)
 				xmin = min(res["Y_model"].min(), res["Y"].min())
 				xmax = max(res["Y_model"].max(), res["Y"].max())
 				x = np.linspace(xmin, xmax, 100)
