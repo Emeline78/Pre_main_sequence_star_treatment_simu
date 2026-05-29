@@ -280,7 +280,7 @@ for g_code in np.unique(g):
 			
 			if model_name == "Ra_Q" and case == "Lo_fohm":
 				A = res["intercept"]
-				a = res["coefs"]
+				a = res["coefs"][0]
 				plt.figure()
 				plt.scatter(res["Y_model"],res["Y"],s=60)
 				xmin = min(res["Y_model"].min(), res["Y"].min())
