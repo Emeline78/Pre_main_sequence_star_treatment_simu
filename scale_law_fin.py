@@ -323,8 +323,8 @@ for g_code in np.unique(g):
 			print()
 			print(f"===== {case} =====")
 			
-			if case == "MS_min":
-				mask_g &= mask_min
+			#if case == "MS_min":
+			#	mask_g &= mask_min
 				
 			vars_fit = [v[mask_g] for v in variables]
 			res = evaluate_scaling_realspace(vars_fit,MS[mask_g],MS_err[mask_g],signed=sign)
@@ -339,29 +339,31 @@ for g_code in np.unique(g):
 			print(res["correlation_matrix"])
 			print("LOO score:",loo_score(vars_fit,MS[mask_g],signed=sign))
 			
-			if len(variables) == 3:
+			if model_name == "Els_prime_Ro_conv":
 				A = res["intercept"]
-				a,b,c = res["coefs"]
+				a,b = res["coefs"]
 				plt.figure()
 				plt.scatter(res["Y_model"],res["Y"],s=60)
 				xmin = min(res["Y_model"].min(), res["Y"].min())
 				xmax = max(res["Y_model"].max(), res["Y"].max())
 				x = np.linspace(xmin, xmax, 100)
 				plt.plot(x, x, 'r--')
-				#plt.xlabel(rf"$ {A:.2f} \cdot Ro_{{conv}}^{{{a:.2f}}} \cdot \Lambda^{{{b:.2f}}} \cdot Ro_{{sh}}^{{{c:.2f}}}$")
-				plt.ylabel(f"{case} from simulations")
-				plt.xlabel(f"{model_name}, "rf"$A={A:.2e},\ a={a:.2f},\ b={b:.2f},\ c={c:.2f}$")
-				plt.title(f"Scale law of {case} for $g \propto 1/r^2$")
+				plt.xlabel(rf"$ {A:.2f} \cdot Ro_{{conv}}^{{{b:.2f}}} \cdot \Lambda'^{{{a:.2f}}} $")
+				if case == "MS_rms":
+					plt.ylabel(r"$MS_{rms}$ from simulations")
+					plt.title(r"Scale law of $MS_{rms}$ for $g \propto 1/r^2$")
+				if case == "MS_int":
+					plt.ylabel(r"$MS_{int}$ from simulations")
+					plt.title(r"Scale law of $MS_{int}$ for $g \propto 1/r^2$")
+				if case == "MS_max":
+					plt.ylabel(r"$MS_{max}$ from simulations")
+					plt.title(r"Scale law of $MS_{max}$ for $g \propto 1/r^2$")
+				if case == "MS_mean":
+					plt.ylabel(r"$MS_{mean}$ from simulations")
+					plt.title(r"Scale law of $MS_{mean}$ for $g \propto 1/r^2$")	
 				plt.grid()
 				
-				"""for i, v in enumerate(vars_fit):
-					plt.figure()
-					plt.scatter(np.log10(v),res["residuals"],s=60)
-					plt.axhline(0,linestyle='--')
-					plt.xlabel(f"log(variable {i})")
-					plt.ylabel("Residuals")
-					plt.title(f"Residuals | {case} | {model_name} | g={g_code}")
-				"""
+				
 
 plt.show()
 
