@@ -81,6 +81,7 @@ Lo_fohm_added = added_df["Lo"].to_numpy()/(added_df["fohm"].to_numpy())**(1/2)
 Ra_mod_added = Ra_added * (Nu_added - 1) * E_added**3 / Pr_added**2
 Nu_mod_added = (Nu_added - 1) * E_added / Pr_added
 
+
 Nu_mod = np.concatenate([Nu_mod[mask], Nu_mod_added])
 Ra_mod = np.concatenate([Ra_mod[mask], Ra_mod_added])
 Lo_fohm = np.concatenate([Lo_fohm[mask], Lo_fohm_added])
@@ -256,7 +257,7 @@ def loo_score(X_vars, Y, signed=False):
 L_eta = 0.62 * Rm**(-1/2) + 0.014
 Els_prime = Els/(Rm*L_eta)
 
-models = {"Ra_Q": [Ra_mod], "Ra_Q_Pm": [Ra_mod, Pm], "Ra_Q_Pm_Ro_sh": [Ra_mod, Pm,Ro_sh]}
+models = {"Ra_Q": [Ra_mod], "Ra_Q_Pm": [Ra_mod, Pm]}
 
 for g_code in np.unique(g):
 
