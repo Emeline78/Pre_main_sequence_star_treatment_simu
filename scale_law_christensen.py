@@ -79,12 +79,13 @@ Ro_added = added_df["Ro"].to_numpy()
 Pm_added = added_df["Pm"].to_numpy()
 Rosh_added = np.zeros(len(Pm_added))
 g_added = np.ones(len(Pm_added))
+ki_added = added_df["ki"].to_numpy()
 
 Lo_fohm_added = added_df["Lo"].to_numpy()/(added_df["fohm"].to_numpy())**(1/2)
-Ra_mod_added = Ra_added * (Nu_added - 1) * E_added**3 / Pr_added**2
+Ra_mod_added = Ra_added * (Nu_added - 1) * E_added**3 / Pr_added**2 * (1-ki_added)**2
 Nu_mod_added = (Nu_added - 1) * E_added / Pr_added
 
-"""
+
 Nu_mod = np.concatenate([Nu_mod[mask], Nu_mod_added])
 Ra_mod = np.concatenate([Ra_mod[mask], Ra_mod_added])
 Lo_fohm = np.concatenate([Lo_fohm[mask], Lo_fohm_added])
@@ -92,7 +93,7 @@ Ro = np.concatenate([Ro[mask], Ro_added])
 Pm = np.concatenate([Pm[mask], Pm_added])
 Ro_sh = np.concatenate([Ro_sh[mask], Rosh_added])
 g = np.concatenate([g[mask], g_added])
-"""
+
 
 
 def model_func(X_flat, *params):
@@ -264,8 +265,8 @@ models = {"Ra_Q": [Ra_mod], "Ra_Q_Pm": [Ra_mod, Pm]}
 
 for g_code in np.unique(g):
 
-	mask_g = (g == g_code) & mask
-	#mask_plot = np.concatenate([np.ones(len(Els[mask]),dtype=bool), np.zeros(len(Nu_added),dtype=bool)])[mask_g]
+	mask_g = (g == g_code) #& mask
+	mask_plot = np.concatenate([np.ones(len(Els[mask]),dtype=bool), np.zeros(len(Nu_added),dtype=bool)])[mask_g]
 
 	npts = np.sum(mask_g)
 	print()
@@ -312,16 +313,16 @@ for g_code in np.unique(g):
 				A = res["intercept"]
 				a = res["coefs"][0]
 				plt.figure()
-				sc = plt.scatter(res["Y_model"],res["Y"],c = Ro_sh[mask_g],s=60, norm=LogNorm(vmin=Ro_sh[mask_g].min(), vmax=Ro_sh[mask_g].max()))
-				#sc = plt.scatter(res["Y_model"][mask_plot],res["Y"][mask_plot],c = Ro_sh[mask_g][mask_plot],s=60, norm=LogNorm(vmin=Ro_sh[mask_g][mask_plot].min(), vmax=Ro_sh[mask_g][mask_plot].max()))
+				#sc = plt.scatter(res["Y_model"],res["Y"],c = Ro_sh[mask_g],s=60, norm=LogNorm(vmin=Ro_sh[mask_g].min(), vmax=Ro_sh[mask_g].max()))
+				sc = plt.scatter(res["Y_model"][mask_plot],res["Y"][mask_plot],c = Ro_sh[mask_g][mask_plot],s=60, norm=LogNorm(vmin=Ro_sh[mask_g][mask_plot].min(), vmax=Ro_sh[mask_g][mask_plot].max()))
 				xmin = min(res["Y_model"].min(), res["Y"].min(), (0.99*Ra_mod_added**(0.31)).min())
 				xmax = max(res["Y_model"].max(), res["Y"].max(), (0.99*Ra_mod_added**(0.31)).max())
 				x = np.linspace(xmin, xmax, 100)
 				plt.plot(x, x, 'r--')
-				#plt.plot(res["Y_model"][~mask_plot],res["Y"][~mask_plot],"k*",label ="added data")
-				plt.plot(1.31*Ra_mod_added**(0.36),Lo_fohm_added,"r*",label ="Schrinner's law")
-				plt.plot(0.99*Ra_mod_added**(0.31),Lo_fohm_added,"b*",label ="My law")
-				plt.plot(0.92*Ra_mod_added**(0.34),Lo_fohm_added,"k*",label ="Christensen's law")
+				plt.plot(res["Y_model"][~mask_plot],res["Y"][~mask_plot],"k*",label ="added data")
+				#plt.plot(1.31*Ra_mod_added**(0.36),Lo_fohm_added,"r*",label ="Schrinner's law")
+				#plt.plot(0.99*Ra_mod_added**(0.31),Lo_fohm_added,"b*",label ="My law")
+				#plt.plot(0.92*Ra_mod_added**(0.34),Lo_fohm_added,"k*",label ="Christensen's law")
 				plt.xlabel(rf"$ {A:.2f} \cdot Ra_{{Q}}^{{*{a:.2f}}} $")
 				plt.ylabel(r"$\frac{Lo}{f_{ohm}^{1/2}}$ from simulations")
 				plt.title(r"Scale law of $\frac{Lo}{f_{ohm}^{1/2}}$ for $g \propto 1/r^2$")
@@ -333,15 +334,15 @@ for g_code in np.unique(g):
 				A = res["intercept"]
 				a,b = res["coefs"]
 				plt.figure()
-				sc = plt.scatter(res["Y_model"],res["Y"],c = Ro_sh[mask_g],s=60, norm=LogNorm(vmin=Ro_sh[mask_g].min(), vmax=Ro_sh[mask_g].max()))
-				#sc = plt.scatter(res["Y_model"][mask_plot],res["Y"][mask_plot],c = Ro_sh[mask_g][mask_plot],s=60, norm=LogNorm(vmin=Ro_sh[mask_g][mask_plot].min(), vmax=Ro_sh[mask_g][mask_plot].max()))
+				#sc = plt.scatter(res["Y_model"],res["Y"],c = Ro_sh[mask_g],s=60, norm=LogNorm(vmin=Ro_sh[mask_g].min(), vmax=Ro_sh[mask_g].max()))
+				sc = plt.scatter(res["Y_model"][mask_plot],res["Y"][mask_plot],c = Ro_sh[mask_g][mask_plot],s=60, norm=LogNorm(vmin=Ro_sh[mask_g][mask_plot].min(), vmax=Ro_sh[mask_g][mask_plot].max()))
 				xmin = min(res["Y_model"].min(), res["Y"].min(), (0.99*Ra_mod_added**(0.31)).min())
 				xmax = max(res["Y_model"].max(), res["Y"].max(), (0.99*Ra_mod_added**(0.31)).max())
 				x = np.linspace(xmin, xmax, 100)
 				plt.plot(x, x, 'r--')
-				#plt.plot(res["Y_model"][~mask_plot],res["Y"][~mask_plot],"k*",label ="added data")
-				plt.plot(1.78*Ra_mod_added**(0.29)*Pm_added**(-0.48),Lo_fohm_added,"b*",label ="My law")
-				plt.plot(0.76*Ra_mod_added**(0.32)*Pm_added**(0.11),Lo_fohm_added,"k*",label ="Christensen's law")
+				plt.plot(res["Y_model"][~mask_plot],res["Y"][~mask_plot],"k*",label ="added data")
+				#plt.plot(1.78*Ra_mod_added**(0.29)*Pm_added**(-0.48),Lo_fohm_added,"b*",label ="My law")
+				#plt.plot(0.76*Ra_mod_added**(0.32)*Pm_added**(0.11),Lo_fohm_added,"k*",label ="Christensen's law")
 				plt.xlabel(rf"$ {A:.2f} \cdot Ra_{{Q}}^{{*{a:.2f}}} \cdot Pm^{{{b:.2f}}} $")
 				plt.ylabel(r"$\frac{Lo}{f_{ohm}^{1/2}}$ from simulations")
 				plt.title(r"Scale law of $\frac{Lo}{f_{ohm}^{1/2}}$ for $g \propto 1/r^2$")
