@@ -64,6 +64,9 @@ Nu_mod = (Nu - 1) * E / Pr
 Ra_mod = Ra * (Nu - 1) * E**3 / Pr**2
 Lo_fohm = ((Els * E / Pm) / fohm)**(1/2) 
 
+Ra_mod_al = Ra_mod.copy()
+Lo_fohm_al = Lo_fohm.copy()
+
 mask = (om < om_lim)  & (np.char.find(names, "wrong") == -1) & (df.groupby("name")["status"].first().to_numpy())
 
 added_df = pd.read_csv('added_data.dat', sep='\s+', header=0)
@@ -335,6 +338,7 @@ for g_code in np.unique(g):
 				plt.plot(x, x, 'r--')
 				plt.plot(res["Y_model"][~mask_plot],res["Y"][~mask_plot],"k*")
 				plt.plot(1.31*Ra_mod_added**(0.36),Lo_fohm_added,"r*")
+				plt.plot(1.31*Ra_mod_al**(0.36),Lo_fohm_al,"r*")
 				plt.xlabel(rf"$ {A:.2f} \cdot Ra_{{Q}}^{{*{a:.2f}}} $")
 				plt.ylabel(r"$\frac{Lo}{f_{ohm}^{1/2}}$ from simulations")
 				plt.title(r"Scale law of $\frac{Lo}{f_{ohm}^{1/2}}$ for $g \propto 1/r^2$")
