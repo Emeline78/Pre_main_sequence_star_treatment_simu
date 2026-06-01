@@ -313,7 +313,7 @@ for g_code in np.unique(g):
 				xmax = max(res["Y_model"].max(), res["Y"].max())
 				x = np.linspace(xmin, xmax, 100)
 				plt.plot(x, x, 'r--')
-				plt.plot(Ra_mod_added,Lo_fohm_added,"k*")
+				plt.plot(1.58*Ra_mod_added**(1/3),Lo_fohm_added,"k*")
 				plt.xlabel(rf"$ {A:.2f} \cdot Ra_{{Q}}^{{*{a:.2f}}} $")
 				plt.ylabel(r"$\frac{Lo}{f_{ohm}^{1/2}}$ from simulations")
 				plt.title(r"Scale law of $\frac{Lo}{f_{ohm}^{1/2}}$ for $g \propto 1/r^2$")
