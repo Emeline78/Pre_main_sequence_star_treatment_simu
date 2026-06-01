@@ -319,14 +319,15 @@ for g_code in np.unique(g):
 				x = np.linspace(xmin, xmax, 100)
 				plt.plot(x, x, 'r--')
 				#plt.plot(res["Y_model"][~mask_plot],res["Y"][~mask_plot],"k*")
-				plt.plot(1.31*Ra_mod_added**(0.36),Lo_fohm_added,"r*")
-				plt.plot(0.99*Ra_mod_added**(0.31),Lo_fohm_added,"b*")
-				plt.plot(0.92*Ra_mod_added**(0.34),Lo_fohm_added,"k*")
+				plt.plot(1.31*Ra_mod_added**(0.36),Lo_fohm_added,"r*",label ="Schrinner's law")
+				plt.plot(0.99*Ra_mod_added**(0.31),Lo_fohm_added,"b*",label ="My law")
+				plt.plot(0.92*Ra_mod_added**(0.34),Lo_fohm_added,"k*",label ="Christensen's law")
 				plt.xlabel(rf"$ {A:.2f} \cdot Ra_{{Q}}^{{*{a:.2f}}} $")
 				plt.ylabel(r"$\frac{Lo}{f_{ohm}^{1/2}}$ from simulations")
 				plt.title(r"Scale law of $\frac{Lo}{f_{ohm}^{1/2}}$ for $g \propto 1/r^2$")
 				plt.colorbar(sc)
 				plt.grid()
+				plt.legend()
 			
 			"""
 			if len(variables) == 1:
