@@ -290,10 +290,13 @@ for g_code in np.unique(g):
 		for X, case, sign in [(Ro, "Ro",False),(Lo_fohm, "Lo_fohm",False),(Lo_fohm_added, "Lo_fohm_added",False),(Nu_mod, "Nu_mod",True)]:
 			print()
 			print(f"===== {case} =====")
-				
-			print(X[mask_g].shape)
-			vars_fit = [v[mask_g] for v in variables]
-			res = evaluate_scaling_realspace(vars_fit, X[mask_g], signed=sign)
+			
+			if case == "Lo_fohm_added":
+				vars_fit = [v for v in variables]
+				res = evaluate_scaling_realspace(vars_fit, X, signed=sign)
+			else :
+				vars_fit = [v[mask_g] for v in variables]
+				res = evaluate_scaling_realspace(vars_fit, X[mask_g], signed=sign)
 
 			print("R2                 :", res["R2"])
 			print("adj_R2             :", res["adj_R2"])
