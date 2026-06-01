@@ -77,7 +77,7 @@ sc = plt.scatter(mine(Ra_mod[mask]),Lo_fohm[mask],c = Ro_sh[mask],s=60, norm=Log
 
 plt.plot(schrinner(Ra_mod_added),Lo_fohm_added,"r*",label ="Schrinner's law")
 plt.plot(christensen(Ra_mod_added),Lo_fohm_added,"k*",label ="Christensen's law")
-plt.plot(mine(Ra_mod_added),Lo_fohm_added,"g*",label ="my law")
+plt.plot(christensen(Ra_mod),Lo_fohm,"g*",label ="Christensen on my data")
 
 plt.plot(schrinner(x),schrinner(x),"r--",label ="Schrinner's law")
 plt.plot(christensen(x),christensen(x),"k--",label ="Christensen's law")
