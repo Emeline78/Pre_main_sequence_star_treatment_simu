@@ -64,7 +64,7 @@ Nu_mod = (Nu - 1) * E / Pr
 Ra_mod = Ra * (Nu - 1) * E**3 / Pr**2
 Lo_fohm = ((Els * E / Pm) / fohm)**(1/2) 
 
-added_df = pd.read_csv('data.dat', sep='\s+', header=0)
+added_df = pd.read_csv('added_data.dat', sep='\s+', header=0)
 
 Ra_added = added_df["Ra"].to_numpy()
 Nu_added = added_df["Nu"].to_numpy()
