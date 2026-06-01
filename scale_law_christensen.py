@@ -309,7 +309,7 @@ for g_code in np.unique(g):
 				A = res["intercept"]
 				a = res["coefs"][0]
 				plt.figure()
-				sc = plt.scatter(res["Y_model"],res["Y"],c = Ro_sh[mask_g][mask_plot],s=60)
+				sc = plt.scatter(res["Y_model"],res["Y"],c = Ro_sh[mask_g],s=60)
 				#sc = plt.scatter(res["Y_model"][mask_plot],res["Y"][mask_plot],c = Ro_sh[mask_g][mask_plot],s=60, norm=LogNorm(vmin=Ro_sh[mask_g][mask_plot].min(), vmax=Ro_sh[mask_g][mask_plot].max()))
 				xmin = min(res["Y_model"].min(), res["Y"].min())
 				xmax = max(res["Y_model"].max(), res["Y"].max())
