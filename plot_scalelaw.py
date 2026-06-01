@@ -77,10 +77,11 @@ sc = plt.scatter(mine(Ra_mod[mask]),Lo_fohm[mask],c = Ro_sh[mask],s=60, norm=Log
 
 plt.plot(schrinner(Ra_mod_added),Lo_fohm_added,"r*",label ="Schrinner's law")
 plt.plot(christensen(Ra_mod_added),Lo_fohm_added,"k*",label ="Christensen's law")
+plt.plot(mine(Ra_mod_added),Lo_fohm_added,"g*",label ="my law")
 
 plt.plot(schrinner(x),schrinner(x),"r--",label ="Schrinner's law")
 plt.plot(christensen(x),christensen(x),"k--",label ="Christensen's law")
-plt.plot(mine(x),mine(x),"k--",label ="my law")
+
 
 plt.xlabel(r"law on $Ra_{Q}$")
 plt.ylabel(r"$\frac{Lo}{f_{ohm}^{1/2}}$ from simulations")
