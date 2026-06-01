@@ -80,6 +80,7 @@ plt.plot(christensen(Ra_mod_added),Lo_fohm_added,"k*",label ="Christensen's law"
 
 plt.plot(schrinner(x),schrinner(x),"r--",label ="Schrinner's law")
 plt.plot(christensen(x),christensen(x),"k--",label ="Christensen's law")
+plt.plot(mine(x),mine(x),"k--",label ="my law")
 
 plt.xlabel(r"law on $Ra_{Q}$")
 plt.ylabel(r"$\frac{Lo}{f_{ohm}^{1/2}}$ from simulations")
