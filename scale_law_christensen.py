@@ -64,6 +64,8 @@ Nu_mod = (Nu - 1) * E / Pr
 Ra_mod = Ra * (Nu - 1) * E**3 / Pr**2
 Lo_fohm = ((Els * E / Pm) / fohm)**(1/2) 
 
+mask = (om < om_lim)  & (np.char.find(names, "wrong") == -1) & (df.groupby("name")["status"].first().to_numpy())
+
 added_df = pd.read_csv('added_data.dat', sep='\s+', header=0)
 
 Ra_added = added_df["Ra"].to_numpy()
@@ -79,15 +81,15 @@ Lo_fohm_added = added_df["Lo"].to_numpy()/(added_df["fohm"].to_numpy())**(1/2)
 Ra_mod_added = Ra_added * (Nu_added - 1) * E_added**3 / Pr_added**2
 Nu_mod_added = (Nu_added - 1) * E_added / Pr_added
 
-Nu_mod = np.concatenate([Nu_mod, Nu_mod_added])
-Ra_mod = np.concatenate([Ra_mod, Ra_mod_added])
-Lo_fohm = np.concatenate([Lo_fohm, Lo_fohm_added])
-Ro = np.concatenate([Ro, Ro_added])
-Pm = np.concatenate([Pm, Pm_added])
-Ro_sh = np.concatenate([Ro_sh, Rosh_added])
-g = np.concatenate([g, g_added])
+Nu_mod = np.concatenate([Nu_mod[mask], Nu_mod_added])
+Ra_mod = np.concatenate([Ra_mod[mask], Ra_mod_added])
+Lo_fohm = np.concatenate([Lo_fohm[mask], Lo_fohm_added])
+Ro = np.concatenate([Ro[mask], Ro_added])
+Pm = np.concatenate([Pm[mask], Pm_added])
+Ro_sh = np.concatenate([Ro_sh[mask], Rosh_added])
+g = np.concatenate([g[mask], g_added])
 
-mask = (om < om_lim)  & (np.char.find(names, "wrong") == -1) & (df.groupby("name")["status"].first().to_numpy())
+
 
 def model_func(X_flat, *params):
 	n_vars = X_flat.shape[0]
@@ -258,7 +260,7 @@ models = {"Ra_Q": [Ra_mod], "Ra_Q_Pm": [Ra_mod, Pm], "Ra_Q_Pm_Ro_sh": [Ra_mod, P
 
 for g_code in np.unique(g):
 
-	mask_g = mask & (g == g_code)
+	mask_g = (g == g_code) #& mask
 
 	npts = np.sum(mask_g)
 	print()
