@@ -8,7 +8,7 @@ from sklearn.model_selection import LeaveOneOut
 from sklearn.metrics import r2_score
 from matplotlib.colors import LogNorm
 """
-git add scale_law_christensen.py
+git add plot_scalelaw.py
 git commit -m "modifications"
 git push
 """
@@ -70,11 +70,18 @@ mine = lambda x: 0.99*x**(0.31)
 christensen = lambda x: 0.92*x**(0.34)
 schrinner = lambda x: 1.58*x**(0.35)	
 
+x = np.linspace(Lo_fohm_both.min(),Lo_fohm_both.max(),1000)
+
 plt.figure()
 sc = plt.scatter(mine(Ra_mod[mask]),Lo_fohm[mask],c = Ro_sh[mask],s=60, norm=LogNorm(vmin=Ro_sh[mask].min(), vmax=Ro_sh[mask].max()))
-plt.plot(schrinner(Ra_mod_added),Lo_fohm_added,"r--",label ="Schrinner's law")
-plt.plot(christensen(Ra_mod_both),Lo_fohm_both,"k--",label ="Christensen's law")
-plt.xlabel(r"$ Ra_{Q} $")
+
+plt.plot(schrinner(Ra_mod_added),Lo_fohm_added,"r*",label ="Schrinner's law")
+#plt.plot(christensen(Ra_mod_both),Lo_fohm_both,"k*",label ="Christensen's law")
+
+plt.plot(schrinner(x),schrinner(x),"r--",label ="Schrinner's law")
+plt.plot(christensen(x),christensen(x),"k--",label ="Christensen's law")
+
+plt.xlabel(r"$ law on Ra_{Q} $")
 plt.ylabel(r"$\frac{Lo}{f_{ohm}^{1/2}}$ from simulations")
 plt.title(r"Scale law of $\frac{Lo}{f_{ohm}^{1/2}}$ for $g \propto 1/r^2$")
 plt.colorbar(sc)
