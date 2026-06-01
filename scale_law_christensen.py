@@ -303,7 +303,7 @@ for g_code in np.unique(g):
 			print("correlation_matrix :")
 			print(res["correlation_matrix"])
 			print("LOO score:",loo_score(vars_fit,X[mask_g],signed=sign))
-			
+			"""
 			if model_name == "Ra_Q" and case == "Lo_fohm":
 				A = res["intercept"]
 				a = res["coefs"][0]
@@ -349,7 +349,7 @@ for g_code in np.unique(g):
 				plt.xlabel(f"{model_name}, "rf"$A={A:.2e},\ a={a:.2f},\ b={b:.2f}$")
 				plt.title(f"Scale law of {case} for $g \propto 1/r^2$")
 				plt.grid()
-			"""
+			
 
 plt.show()
 
