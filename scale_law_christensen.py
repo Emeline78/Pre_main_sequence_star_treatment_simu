@@ -262,7 +262,7 @@ models = {"Ra_Q": [Ra_mod], "Ra_Q_Pm": [Ra_mod, Pm]}
 for g_code in np.unique(g):
 
 	mask_g = (g == g_code) #& mask
-	mask_plot = np.concatenate([np.ones(len(Nu_mod[mask & mask_g]),dtype=bool), np.zeros(len(Nu_added),dtype=bool)])[mask_g]
+	mask_plot = np.concatenate([np.ones(len(Nu_mod[mask][mask_g]),dtype=bool), np.zeros(len(Nu_added),dtype=bool)])[mask_g]
 
 	npts = np.sum(mask_g)
 	print()
