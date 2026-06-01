@@ -50,11 +50,12 @@ E_added = added_df["E"].to_numpy()
 Pr_added = added_df["Pr"].to_numpy()
 Ro_added = added_df["Ro"].to_numpy()
 Pm_added = added_df["Pm"].to_numpy()
+ki_added = added_df["ki"].to_numpy()
 Rosh_added = np.zeros(len(Pm_added))
 g_added = np.ones(len(Pm_added))
 
 Lo_fohm_added = added_df["Lo"].to_numpy()/(added_df["fohm"].to_numpy())**(1/2)
-Ra_mod_added = Ra_added * (Nu_added - 1) * E_added**3 / Pr_added**2
+Ra_mod_added = Ra_added * (Nu_added - 1) * E_added**3 / Pr_added**2 * (1-ki_added)**2
 Nu_mod_added = (Nu_added - 1) * E_added / Pr_added
 
 
