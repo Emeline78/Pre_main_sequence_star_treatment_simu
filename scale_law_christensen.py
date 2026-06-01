@@ -73,6 +73,7 @@ Pr_added = added_df["Pr"].to_numpy()
 Ro_added = added_df["Ro"].to_numpy()
 Pm_added = added_df["Ro"].to_numpy()
 Rosh_added = np.zeros(len(Pm_added))
+g_added = np.ones(len(Pm_added))
 
 Lo_fohm_added = added_df["Lo"].to_numpy()/(added_df["fohm"].to_numpy())**(1/2)
 Ra_mod_added = Ra_added * (Nu_added - 1) * E_added**3 / Pr_added**2
@@ -84,7 +85,7 @@ Lo_fohm = np.concatenate([Lo_fohm, Lo_fohm_added])
 Ro = np.concatenate([Ro, Ro_added])
 Pm = np.concatenate([Pm, Pm_added])
 Ro_sh = np.concatenate([Ro_sh, Rosh_added])
-
+g = np.concatenate([g, g_added])
 
 mask = (om < om_lim)  & (np.char.find(names, "wrong") == -1) & (df.groupby("name")["status"].first().to_numpy())
 
