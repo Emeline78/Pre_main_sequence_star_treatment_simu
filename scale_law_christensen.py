@@ -305,6 +305,22 @@ for g_code in np.unique(g):
 			print(res["correlation_matrix"])
 			print("LOO score:",loo_score(vars_fit,X[mask_g],signed=sign))
 			
+			if model_name == "Ra_Q_Pm" and case == "Lo_fohm":
+				A = res["intercept"]
+				a,b = res["coefs"]
+				plt.figure()
+				sc = plt.scatter(res["Y_model"],res["Y"],c = Ro_sh[mask_g],s=60)
+				xmin = min(res["Y_model"].min(), res["Y"].min(), Ra_mod_added.min(), Lo_fohm_added.min())
+				xmax = max(res["Y_model"].max(), res["Y"].max(), Ra_mod_added.max(), Lo_fohm_added.max())
+				x = np.linspace(xmin, xmax, 100)
+				plt.plot(x, x, 'r--')
+				plt.plot(1.58*Ra_mod_added**(0.35),Lo_fohm_added,"k*")
+				plt.xlabel(rf"$ {A:.2f} \cdot Ra_{{Q}}^{{*{a:.2f}}} \cdot Pm^{{{b:.2f}}}$")
+				plt.ylabel(r"$\frac{Lo}{f_{ohm}^{1/2}}$ from simulations")
+				plt.title(r"Scale law of $\frac{Lo}{f_{ohm}^{1/2}}$ for $g \propto 1/r^2$")
+				plt.colorbar(sc)
+				plt.grid()
+			
 			if model_name == "Ra_Q" and case == "Lo_fohm":
 				A = res["intercept"]
 				a = res["coefs"][0]
@@ -316,7 +332,7 @@ for g_code in np.unique(g):
 				x = np.linspace(xmin, xmax, 100)
 				plt.plot(x, x, 'r--')
 				#plt.plot(res["Y_model"][~mask_plot],res["Y"][~mask_plot],"k*")
-				plt.plot(0.72*Ra_mod_added**(0.3),Lo_fohm_added,"k*")
+				plt.plot(1.58*Ra_mod_added**(0.35),Lo_fohm_added,"k*")
 				plt.xlabel(rf"$ {A:.2f} \cdot Ra_{{Q}}^{{*{a:.2f}}} $")
 				plt.ylabel(r"$\frac{Lo}{f_{ohm}^{1/2}}$ from simulations")
 				plt.title(r"Scale law of $\frac{Lo}{f_{ohm}^{1/2}}$ for $g \propto 1/r^2$")
