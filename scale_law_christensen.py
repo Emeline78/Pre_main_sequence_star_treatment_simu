@@ -329,6 +329,26 @@ for g_code in np.unique(g):
 				plt.grid()
 				plt.legend()
 			
+			if model_name == "Ra_Q_Pm" and case == "Lo_fohm":
+				A = res["intercept"]
+				a,b = res["coefs"]
+				plt.figure()
+				#sc = plt.scatter(res["Y_model"],res["Y"],c = Ro_sh[mask_g],s=60, norm=LogNorm(vmin=Ro_sh[mask_g].min(), vmax=Ro_sh[mask_g].max()))
+				sc = plt.scatter(res["Y_model"][mask_plot],res["Y"][mask_plot],c = Ro_sh[mask_g][mask_plot],s=60, norm=LogNorm(vmin=Ro_sh[mask_g][mask_plot].min(), vmax=Ro_sh[mask_g][mask_plot].max()))
+				xmin = min(res["Y_model"].min(), res["Y"].min(), (0.99*Ra_mod_added**(0.31)).min())
+				xmax = max(res["Y_model"].max(), res["Y"].max(), (0.99*Ra_mod_added**(0.31)).max())
+				x = np.linspace(xmin, xmax, 100)
+				plt.plot(x, x, 'r--')
+				plt.plot(res["Y_model"][~mask_plot],res["Y"][~mask_plot],"k*",label ="added data")
+				#plt.plot(1.78*Ra_mod_added**(0.29)*Pm_added**(-0.48),Lo_fohm_added,"b*",label ="My law")
+				#plt.plot(0.76*Ra_mod_added**(0.32)*Pm_added**(0.11),Lo_fohm_added,"k*",label ="Christensen's law")
+				plt.xlabel(rf"$ {A:.2f} \cdot Ra_{{Q}}^{{*{a:.2f}}} \cdot Pm^{{{b:.2f}}} $")
+				plt.ylabel(r"$\frac{Lo}{f_{ohm}^{1/2}}$ from simulations")
+				plt.title(r"Scale law of $\frac{Lo}{f_{ohm}^{1/2}}$ for $g \propto 1/r^2$")
+				plt.colorbar(sc)
+				plt.grid()
+				plt.legend()
+			
 			"""
 			if len(variables) == 1:
 				A = res["intercept"]
