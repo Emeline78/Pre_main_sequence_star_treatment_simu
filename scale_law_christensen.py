@@ -6,7 +6,7 @@ from sklearn.linear_model import LinearRegression
 from sklearn.decomposition import PCA
 from sklearn.model_selection import LeaveOneOut
 from sklearn.metrics import r2_score
-
+from matplotlib.colors import LogNorm
 """
 git add scale_law_christensen.py
 git commit -m "modifications"
