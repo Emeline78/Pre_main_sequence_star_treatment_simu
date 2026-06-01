@@ -76,7 +76,7 @@ Ro_added = added_df["Ro"].to_numpy()
 Pm_added = added_df["Pm"].to_numpy()
 Rosh_added = np.zeros(len(Pm_added))
 g_added = np.ones(len(Pm_added))
-mask_plot = np.concatenate([np.ones(len(Nu_mod[mask])), np.zeros(len(Nu_mod_added))])
+mask_plot = np.concatenate([np.ones(len(Nu_mod[mask])), np.zeros(len(Nu_added))])
 
 Lo_fohm_added = added_df["Lo"].to_numpy()/(added_df["fohm"].to_numpy())**(1/2)
 Ra_mod_added = Ra_added * (Nu_added - 1) * E_added**3 / Pr_added**2
