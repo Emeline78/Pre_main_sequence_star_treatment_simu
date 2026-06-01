@@ -76,7 +76,6 @@ Ro_added = added_df["Ro"].to_numpy()
 Pm_added = added_df["Pm"].to_numpy()
 Rosh_added = np.zeros(len(Pm_added))
 g_added = np.ones(len(Pm_added))
-mask_plot = np.concatenate([np.ones(len(Nu_mod[mask]),dtype=bool), np.zeros(len(Nu_added),dtype=bool)])
 
 Lo_fohm_added = added_df["Lo"].to_numpy()/(added_df["fohm"].to_numpy())**(1/2)
 Ra_mod_added = Ra_added * (Nu_added - 1) * E_added**3 / Pr_added**2
@@ -263,7 +262,7 @@ models = {"Ra_Q": [Ra_mod], "Ra_Q_Pm": [Ra_mod, Pm]}
 for g_code in np.unique(g):
 
 	mask_g = (g == g_code) #& mask
-	mask_plot &= mask_g
+	mask_plot = np.concatenate([np.ones(len(Nu_mod[mask]),dtype=bool), np.zeros(len(Nu_added),dtype=bool)])[mask_g]
 
 	npts = np.sum(mask_g)
 	print()
