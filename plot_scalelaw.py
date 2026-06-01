@@ -77,13 +77,10 @@ plt.figure()
 sc = plt.scatter(mine(Ra_mod[mask]),Lo_fohm[mask],c = Ro_sh[mask],s=60, norm=LogNorm(vmin=Ro_sh[mask].min(), vmax=Ro_sh[mask].max()))
 
 plt.plot(schrinner(Ra_mod_added),Lo_fohm_added,"r*",label ="Schrinner's law")
-plt.plot(christensen(Ra_mod_added),Lo_fohm_added,"k*",label ="Christensen's law")
-plt.plot(christensen(Ra_mod),Lo_fohm,"g*",label ="Christensen on my data")
+plt.plot(mine(Ra_mod_added),mine,"r*",label ="my law")
+plt.plot(christensen(Ra_mod_both),Lo_fohm_both,"k*",label ="Christensen's law")
 
-plt.plot(schrinner(x),schrinner(x),"r--",label ="Schrinner's law")
-plt.plot(christensen(x),christensen(x),"k--",label ="Christensen's law")
-
-
+plt.plot(schrinner(x),schrinner(x),"r--")
 plt.xlabel(r"law on $Ra_{Q}$")
 plt.ylabel(r"$\frac{Lo}{f_{ohm}^{1/2}}$ from simulations")
 plt.title(r"Scale law of $\frac{Lo}{f_{ohm}^{1/2}}$ for $g \propto 1/r^2$")
