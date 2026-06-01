@@ -287,16 +287,13 @@ for g_code in np.unique(g):
 		print(model_name)
 		print("--------------------------------------------")
 
-		for X, case, sign in [(Ro, "Ro",False),(Lo_fohm, "Lo_fohm",False),(Lo_fohm_added, "Lo_fohm_added",False),(Nu_mod, "Nu_mod",True)]:
+		for X, case, sign in [(Ro, "Ro",False),(Lo_fohm, "Lo_fohm",False),(Nu_mod, "Nu_mod",True)]:
 			print()
 			print(f"===== {case} =====")
 			
-			if case == "Lo_fohm_added":
-				vars_fit = [v for v in variables]
-				res = evaluate_scaling_realspace(vars_fit, X, signed=sign)
-			else :
-				vars_fit = [v[mask_g] for v in variables]
-				res = evaluate_scaling_realspace(vars_fit, X[mask_g], signed=sign)
+			print(X[mask_g].shape)
+			vars_fit = [v[mask_g] for v in variables]
+			res = evaluate_scaling_realspace(vars_fit, X[mask_g], signed=sign)
 
 			print("R2                 :", res["R2"])
 			print("adj_R2             :", res["adj_R2"])
@@ -318,7 +315,7 @@ for g_code in np.unique(g):
 				xmax = max(res["Y_model"].max(), res["Y"].max(), Ra_mod_added.max(), Lo_fohm_added.max())
 				x = np.linspace(xmin, xmax, 100)
 				plt.plot(x, x, 'r--')
-				#plt.plot(1.78*Ra_mod_added**(0.3),Lo_fohm_added,"k*")
+				plt.plot(1.31*Ra_mod_added**(0.36),Lo_fohm_added,"r*")
 				plt.plot(res["Y_model"][~mask_plot],res["Y"][~mask_plot],"k*")
 				plt.xlabel(rf"$ {A:.2f} \cdot Ra_{{Q}}^{{*{a:.2f}}} \cdot Pm^{{{b:.2f}}}$")
 				plt.ylabel(r"$\frac{Lo}{f_{ohm}^{1/2}}$ from simulations")
@@ -378,6 +375,17 @@ for g_code in np.unique(g):
 
 plt.show()
 
+"""
+vars_fit = [Ra_mod_added, Pm_added]
+res = evaluate_scaling_realspace(vars_fit, Lo_fohm_added, signed=sign)
 
-
-
+print("R2                 :", res["R2"])
+print("adj_R2             :", res["adj_R2"])
+print("coefs              :", res["coefs"])
+print("intercept          :", res["intercept"])
+print("condition_number   :", res["condition_number"])
+print("PCA_variance       :", res["PCA_variance"])
+print("correlation_matrix :")
+print(res["correlation_matrix"])
+print("LOO score:",loo_score(vars_fit,Lo_fohm_added,signed=sign))
+"""
