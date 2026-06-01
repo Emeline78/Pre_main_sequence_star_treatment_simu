@@ -81,7 +81,7 @@ Lo_fohm_added = added_df["Lo"].to_numpy()/(added_df["fohm"].to_numpy())**(1/2)
 Ra_mod_added = Ra_added * (Nu_added - 1) * E_added**3 / Pr_added**2
 Nu_mod_added = (Nu_added - 1) * E_added / Pr_added
 
-
+"""
 Nu_mod = np.concatenate([Nu_mod[mask], Nu_mod_added])
 Ra_mod = np.concatenate([Ra_mod[mask], Ra_mod_added])
 Lo_fohm = np.concatenate([Lo_fohm[mask], Lo_fohm_added])
@@ -89,7 +89,7 @@ Ro = np.concatenate([Ro[mask], Ro_added])
 Pm = np.concatenate([Pm[mask], Pm_added])
 Ro_sh = np.concatenate([Ro_sh[mask], Rosh_added])
 g = np.concatenate([g[mask], g_added])
-
+"""
 
 
 def model_func(X_flat, *params):
@@ -261,7 +261,7 @@ models = {"Ra_Q": [Ra_mod], "Ra_Q_Pm": [Ra_mod, Pm]}
 
 for g_code in np.unique(g):
 
-	mask_g = (g == g_code) #& mask
+	mask_g = (g == g_code) & mask
 
 	npts = np.sum(mask_g)
 	print()
@@ -303,16 +303,17 @@ for g_code in np.unique(g):
 			print("correlation_matrix :")
 			print(res["correlation_matrix"])
 			print("LOO score:",loo_score(vars_fit,X[mask_g],signed=sign))
-			"""
+			
 			if model_name == "Ra_Q" and case == "Lo_fohm":
 				A = res["intercept"]
 				a = res["coefs"][0]
 				plt.figure()
-				sc = plt.scatter(res["Y_model"],res["Y"],c = Ro_sh[mask_g],s=60)	#,norm=LogNorm(vmin=Ro_sh[mask_g].min(), vmax=Ro_sh[mask_g].max())
+				sc = plt.scatter(res["Y_model"],res["Y"],c = Ro_sh[mask_g],s=60, norm=LogNorm(vmin=Ro_sh[mask_g].min(), vmax=Ro_sh[mask_g].max()))
 				xmin = min(res["Y_model"].min(), res["Y"].min())
 				xmax = max(res["Y_model"].max(), res["Y"].max())
 				x = np.linspace(xmin, xmax, 100)
 				plt.plot(x, x, 'r--')
+				plt.plot(Ra_mod_added,Lo_fohm_added,"k*")
 				plt.xlabel(rf"$ {A:.2f} \cdot Ra_{{Q}}^{{*{a:.2f}}} $")
 				plt.ylabel(r"$\frac{Lo}{f_{ohm}^{1/2}}$ from simulations")
 				plt.title(r"Scale law of $\frac{Lo}{f_{ohm}^{1/2}}$ for $g \propto 1/r^2$")
@@ -349,7 +350,7 @@ for g_code in np.unique(g):
 				plt.xlabel(f"{model_name}, "rf"$A={A:.2e},\ a={a:.2f},\ b={b:.2f}$")
 				plt.title(f"Scale law of {case} for $g \propto 1/r^2$")
 				plt.grid()
-			
+			"""
 
 plt.show()
 
