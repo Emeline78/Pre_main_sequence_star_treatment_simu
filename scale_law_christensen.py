@@ -155,8 +155,14 @@ def evaluate_scaling_realspace(X_vars, Y, signed = True):
 
 		params, cov = curve_fit(model_func_signed, X_stack, Y, absolute_sigma=True, bounds=(bounds_lower, bounds_upper), p0=p0, maxfev=20000)
 
+		errors = np.sqrt(np.diag(cov))
+
 		coefs = params[:-1]
+		coef_errors = errors[:-1]
+
 		intercept = params[-1]
+
+		intercept_error = (np.log(10)* intercept* errors[-1])
 		Y_model = model_func_signed(X_stack, *params)
 		
 	else :
