@@ -184,10 +184,16 @@ def evaluate_scaling_realspace(X_vars, Y, signed = True):
 
 		X_stack = np.vstack(X_vars)
 
-		params, cov = curve_fit(model_func,X_stack,Y,absolute_sigma=True,p0=p0,maxfev=20000)
+		params, cov = curve_fit(model_func,X_stack,Y,absolute_sigma=False,p0=p0,maxfev=20000)
+		
+		errors = np.sqrt(np.diag(cov))
 
 		coefs = params[:-1]
+		coef_errors = errors[:-1]
+
 		intercept = 10**params[-1]
+
+		intercept_error = (np.log(10)* intercept* errors[-1])
 		
 		Y_model = model_func(X_stack, *params)
 
@@ -213,7 +219,7 @@ def evaluate_scaling_realspace(X_vars, Y, signed = True):
 	pca = PCA().fit(logX)
 	corr = np.corrcoef(logX.T)
 
-	return {"mask_fit": mask_fit,"R2": R2,"adj_R2": adj_R2,"coefs": coefs,"intercept": intercept, "condition_number": cond,"PCA_variance": pca.explained_variance_ratio_, "correlation_matrix": corr,"Y_model": Y_model,"Y": Y,"residuals": residuals}
+	return {"mask_fit": mask_fit,"R2": R2,"adj_R2": adj_R2,"coefs": coefs,"intercept": intercept, "condition_number": cond,"PCA_variance": pca.explained_variance_ratio_, "correlation_matrix": corr,"Y_model": Y_model,"Y": Y,"residuals": residuals,"coef_errors": coef_errors,"intercept_error": intercept_error,}
 
 
 def loo_score(X_vars, Y, signed=False):
@@ -301,8 +307,10 @@ for g_code in np.unique(g):
 
 			print("R2                 :", res["R2"])
 			print("adj_R2             :", res["adj_R2"])
-			print("coefs              :", res["coefs"])
-			print("intercept          :", res["intercept"])
+			print("coefs :", res["coefs"])
+			print("coef errors :", res["coef_errors"])
+			print("A :", res["intercept"])
+			print("A error :", res["intercept_error"])
 			print("condition_number   :", res["condition_number"])
 			print("PCA_variance       :", res["PCA_variance"])
 			print("correlation_matrix :")
