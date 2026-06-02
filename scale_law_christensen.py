@@ -303,7 +303,7 @@ for g_code in np.unique(g):
 		print(model_name)
 		print("--------------------------------------------")
 
-		for X, case, sign in [(Ro, "Ro",False),(Lo_fohm, "Lo_fohm",False),(Nu_mod, "Nu_mod",True)]:
+		for X, case, sign in [(Ro, "Ro",False),(Lo_fohm, "Lo_fohm",False),(Nu_mod, "Nu_mod",False)]:
 			print()
 			print(f"===== {case} =====")
 			
