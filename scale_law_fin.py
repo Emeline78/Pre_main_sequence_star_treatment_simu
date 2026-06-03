@@ -253,7 +253,7 @@ def loo_score(X_vars, Y, signed=False):
 L_eta = 0.62 * Rm**(-1/2) + 0.014
 Els_prime = Els/(Rm*L_eta)
 
-models = {"Els_prime": [Els_prime], "Ro_conv": [Ro_conv], "ELs": [Els], "Ro_sh": [Ro_sh], "Ro_conv_xi": [Ro_conv, xi], "Els_prime_Ro_conv": [Els_prime,Ro_conv], "Ro_conv_Els": [Ro_conv, Els], "Ro_conv_Ro_sh": [Ro_conv, Ro_sh], "Ro_conv_xi_Rosh": [Ro_conv, xi, Ro_sh], "Ro_conv_xi_Els": [Ro_conv, xi, Els],"Ro_conv_Els_Rosh": [Ro_conv, Els, Ro_sh], "Els_prime_Ro_conv_Ro_sh_xi": [Els_prime, Ro_conv, Ro_sh,xi]}
+models = {"Els_prime": [Els_prime], "Ro_conv": [Ro_conv], "ELs": [Els], "Ro_sh": [Ro_sh], "Ro_conv_xi": [Ro_conv, xi], "Els_prime_Ro_conv": [Els_prime,Ro_conv], "Ro_conv_Els": [Ro_conv, Els], "Ro_conv_Ro_sh": [Ro_conv, Ro_sh], "Ro_conv_xi_Rosh": [Ro_conv, xi, Ro_sh], "Ro_conv_xi_Els": [Ro_conv, xi, Els],"Ro_conv_Els_Rosh": [Ro_conv, Els, Ro_sh], "Els_prime_Ro_conv_Ro_sh": [Els_prime, Ro_conv, Ro_sh], "Els_prime_Ro_conv_Ro_sh_xi": [Els_prime, Ro_conv, Ro_sh,xi]}
 #models = {"Ro_conv": [Ro_conv],"Ro_conv_Els": [Ro_conv, Els],"Ro_conv_Rosh": [Ro_conv, Ro_sh],"Ro_conv_Els_Rosh": [Ro_conv, Els, Ro_sh],}
 #models = {"Ro_conv_Els_Rosh": [Ro_conv, Els, Ro_sh],}
 for g_code in np.unique(g):
