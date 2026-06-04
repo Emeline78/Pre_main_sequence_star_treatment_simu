@@ -13,6 +13,7 @@ from scipy.optimize import curve_fit
 from sklearn.model_selection import LeaveOneOut
 from sklearn.metrics import r2_score
 from scipy.optimize import least_squares
+from matplotlib.colors import LogNorm
 """
 git add scale_law_fin.py
 git commit -m "modifications"
@@ -83,6 +84,12 @@ for i,namefile in enumerate(names):
 MS_int_sign = np.sign(MS_int)
 MS_int_amp  = np.abs(MS_int)
 
+def MS_at_middle(g):
+    r_mid = 0.5 * (g["r"].min() + g["r"].max())
+    idx = (g["r"] - r_mid).abs().argmin()
+    return g.iloc[idx]["MS"]
+
+MS_mid = df.groupby("name").apply(MS_at_middle).to_numpy()
 
 def model_func(X_flat, *params):
 	n_vars = X_flat.shape[0]
@@ -253,9 +260,9 @@ def loo_score(X_vars, Y, signed=False):
 L_eta = 0.62 * Rm**(-1/2) + 0.014
 Els_prime = Els/(Rm*L_eta)
 
-models = {"Els_prime": [Els_prime], "Ro_conv": [Ro_conv], "ELs": [Els], "Ro_sh": [Ro_sh], "Ro_conv_xi": [Ro_conv, xi], "Els_prime_Ro_conv": [Els_prime,Ro_conv], "Ro_conv_Els": [Ro_conv, Els], "Ro_conv_Ro_sh": [Ro_conv, Ro_sh], "Ro_conv_xi_Rosh": [Ro_conv, xi, Ro_sh], "Ro_conv_xi_Els": [Ro_conv, xi, Els],"Ro_conv_Els_Rosh": [Ro_conv, Els, Ro_sh], "Els_prime_Ro_conv_Ro_sh": [Els_prime, Ro_conv, Ro_sh], "Els_prime_Ro_conv_Ro_sh_xi": [Els_prime, Ro_conv, Ro_sh,xi]}
+#models = {"Els_prime": [Els_prime], "Ro_conv": [Ro_conv], "ELs": [Els], "Ro_sh": [Ro_sh], "Ro_conv_xi": [Ro_conv, xi], "Els_prime_Ro_conv": [Els_prime,Ro_conv], "Ro_conv_Els": [Ro_conv, Els], "Ro_conv_Ro_sh": [Ro_conv, Ro_sh], "Ro_conv_xi_Rosh": [Ro_conv, xi, Ro_sh], "Ro_conv_xi_Els": [Ro_conv, xi, Els],"Ro_conv_Els_Rosh": [Ro_conv, Els, Ro_sh], "Els_prime_Ro_conv_Ro_sh": [Els_prime, Ro_conv, Ro_sh], "Els_prime_Ro_conv_Ro_sh_xi": [Els_prime, Ro_conv, Ro_sh,xi]}
 #models = {"Ro_conv": [Ro_conv],"Ro_conv_Els": [Ro_conv, Els],"Ro_conv_Rosh": [Ro_conv, Ro_sh],"Ro_conv_Els_Rosh": [Ro_conv, Els, Ro_sh],}
-#models = {"Ro_conv_Els_Rosh": [Ro_conv, Els, Ro_sh],}
+models = {"Els_prime_Ro_conv": [Els_prime,Ro_conv],"Ro_conv_Els_prime_Ro_sh": [Ro_conv, Els_prime, Ro_sh],"Els_prime_Ro_conv_Ro_sh_xi": [Els_prime, Ro_conv, Ro_sh,xi]}
 for g_code in np.unique(g):
 
 	mask_g = mask & (g == g_code)
@@ -319,7 +326,7 @@ for g_code in np.unique(g):
 		print(model_name)
 		print("--------------------------------------------")
 
-		for MS, MS_err, case, sign in [(MS_rms, MS_rms_err, "MS_rms",False),(MS_int, MS_int_err, "MS_int",True),(MS_max, MS_max_err, "MS_max",True),(MS_mean, MS_mean_err, "MS_mean",True)]:
+		for MS, MS_err, case, sign in [(MS_rms, MS_rms_err, "MS_rms",False),(MS_int, MS_int_err, "MS_int",True),(MS_max, MS_max_err, "MS_max",True),(MS_mid, MS_mean_err, "MS_mean",True)]:
 			print()
 			print(f"===== {case} =====")
 			
@@ -338,13 +345,14 @@ for g_code in np.unique(g):
 			print("correlation_matrix :")
 			print(res["correlation_matrix"])
 			print("LOO score:",loo_score(vars_fit,MS[mask_g],signed=sign))
-			print(len(res["Y_model"]))
+			#print(res["Y_model"])
 			
-			if model_name == "Els_prime_Ro_conv":
+			if model_name == "Ro_conv_Els_prime_Ro_sh":
 				A = res["intercept"]
-				a,b = res["coefs"]
+				a,b,c = res["coefs"]
 				plt.figure()
-				plt.scatter(res["Y_model"],res["Y"],s=60)
+				plt.scatter(res["Y_model"],res["Y"], c= Ro_sh[mask_g],s=60, norm=LogNorm(vmin=Ro_sh[mask_g].min(), vmax=Ro_sh[mask_g].max()))
+				plt.colorbar()
 				xmin = min(res["Y_model"].min(), res["Y"].min())
 				xmax = max(res["Y_model"].max(), res["Y"].max())
 				x = np.linspace(xmin, xmax, 100)
