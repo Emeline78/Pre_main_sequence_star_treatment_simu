@@ -338,6 +338,7 @@ for g_code in np.unique(g):
 			print("correlation_matrix :")
 			print(res["correlation_matrix"])
 			print("LOO score:",loo_score(vars_fit,MS[mask_g],signed=sign))
+			print(len(res["Y_model"]))
 			
 			if model_name == "Els_prime_Ro_conv":
 				A = res["intercept"]
