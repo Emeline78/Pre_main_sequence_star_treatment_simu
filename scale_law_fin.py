@@ -362,7 +362,7 @@ for g_code in np.unique(g):
 				xmax = max(res["Y_model"].max(), res["Y"].max())
 				x = np.linspace(xmin, xmax, 100)
 				plt.plot(x, x, 'r--')
-				plt.xlabel(rf"$ {A:.2f} \cdot Ro_{{conv}}^{{{b:.2f}}} \cdot \Lambda'^{{{a:.2f}}} $")
+				#plt.xlabel(rf"$ {A:.2f} \cdot Ro_{{conv}}^{{{b:.2f}}} \cdot \Lambda'^{{{a:.2f}}} $")
 				if case == "MS_rms":
 					plt.ylabel(r"$MS_{rms}$ from simulations")
 					plt.title(r"Scale law of $MS_{rms}$ for $g \propto 1/r^2$")
@@ -375,6 +375,9 @@ for g_code in np.unique(g):
 				if case == "MS_mean":
 					plt.ylabel(r"$MS_{mean}$ from simulations")
 					plt.title(r"Scale law of $MS_{mean}$ for $g \propto 1/r^2$")	
+				if case == "MS_mid":
+					plt.ylabel(r"$MS_{mid}$ from simulations")
+					plt.title(r"Scale law of $MS_{mid}$ for $g \propto 1/r^2$")
 				plt.grid()
 				
 				
