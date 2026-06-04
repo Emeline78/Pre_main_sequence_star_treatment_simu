@@ -67,7 +67,7 @@ for i,namefile in enumerate(names):
 	r = data["r"]
 	
 	r_mid = 0.5 * (r.min() + r.max())
-	idx = (r - r_mid).abs().argmin()
+	idx = np.argmin(np.abs((r - r_mid)))
 	x = MS_snap[:,idx]
 	MS_mid_err[i] = np.std(x) / np.sqrt(len(x))
 	
