@@ -37,7 +37,7 @@ MS_max = df.groupby("name")["MS"].apply(lambda x: x.iloc[x.argmax()]).to_numpy()
 def MS_max_loc(g):
     r_mid = 0.5 * (g["r"].min() + g["r"].max())
     idx_mid = (g["r"] - r_mid).abs().argmin()
-    return g.iloc[idx:]["MS"].max()
+    return g.iloc[idx_mid:]["MS"].max()
 
 MS_max_i = df.groupby("name").apply(MS_max_loc).to_numpy()
 
