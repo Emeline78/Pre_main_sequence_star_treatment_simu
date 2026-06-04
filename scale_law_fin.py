@@ -59,12 +59,17 @@ MS_max_err = np.full(len(names),np.nan)
 MS_min_err = np.full(len(names),np.nan)
 MS_rms_err = np.full(len(names),np.nan)
 MS_int_err = np.full(len(names),np.nan)
-
+MS_mid_err = np.full(len(names),np.nan)
 for i,namefile in enumerate(names): 
 	data = np.load(datadir+namefile+".npz")
 	MS_snap = data["MS"]
 	times = data["times"]
 	r = data["r"]
+	
+	r_mid = 0.5 * (r.min() + r.max())
+	idx = (r - r_mid).abs().argmin()
+	x = MS_snap[:,idx]
+	MS_mid_err[i] = np.std(x) / np.sqrt(len(x))
 	
 	x = np.mean(MS_snap, axis=1)
 	MS_mean_err[i] = np.std(x) / np.sqrt(len(x))
@@ -326,7 +331,7 @@ for g_code in np.unique(g):
 		print(model_name)
 		print("--------------------------------------------")
 
-		for MS, MS_err, case, sign in [(MS_rms, MS_rms_err, "MS_rms",False),(MS_int, MS_int_err, "MS_int",True),(MS_max, MS_max_err, "MS_max",True),(MS_mid, MS_mean_err, "MS_mean",True)]:
+		for MS, MS_err, case, sign in [(MS_rms, MS_rms_err, "MS_rms",False),(MS_int, MS_int_err, "MS_int",True),(MS_max, MS_max_err, "MS_max",True),(MS_mean, MS_mean_err, "MS_mean",True),(MS_mid, MS_mid_err, "MS_mid",True)]:
 			print()
 			print(f"===== {case} =====")
 			
