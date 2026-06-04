@@ -34,6 +34,20 @@ MS_int = df.groupby("name").apply(lambda g: np.trapz(g["MS"], g["r"])).to_numpy(
 MS_min = df.groupby("name")["MS"].apply(lambda x: x.iloc[x.argmin()]).to_numpy()
 MS_max = df.groupby("name")["MS"].apply(lambda x: x.iloc[x.argmax()]).to_numpy()
 
+def MS_max_loc(g):
+    r_mid = 0.5 * (g["r"].min() + g["r"].max())
+    idx_mid = (g["r"] - r_mid).abs().argmin()
+    return g.iloc[idx:]["MS"].max()
+
+MS_max_i = df.groupby("name").apply(MS_max_loc).to_numpy()
+
+def MS_at_middle(g):
+    r_mid = 0.5 * (g["r"].min() + g["r"].max())
+    idx = (g["r"] - r_mid).abs().argmin()
+    return g.iloc[idx]["MS"]
+
+MS_mid = df.groupby("name").apply(MS_at_middle).to_numpy()
+
 neg_width = (df.groupby("name")["MS"].apply(lambda x: np.sum(x < 0)).to_numpy())
 Nmin = 10
 
@@ -60,6 +74,7 @@ MS_min_err = np.full(len(names),np.nan)
 MS_rms_err = np.full(len(names),np.nan)
 MS_int_err = np.full(len(names),np.nan)
 MS_mid_err = np.full(len(names),np.nan)
+MS_maxi_err = np.full(len(names),np.nan)
 for i,namefile in enumerate(names): 
 	data = np.load(datadir+namefile+".npz")
 	MS_snap = data["MS"]
@@ -70,6 +85,9 @@ for i,namefile in enumerate(names):
 	idx = np.argmin(np.abs((r - r_mid)))
 	x = MS_snap[:,idx]
 	MS_mid_err[i] = np.std(x) / np.sqrt(len(x))
+	
+	x = np.max(MS_snap[:,idx :],axis = 1)
+	MS_maxi_err[i] = np.std(x) / np.sqrt(len(x))
 	
 	x = np.mean(MS_snap, axis=1)
 	MS_mean_err[i] = np.std(x) / np.sqrt(len(x))
@@ -88,13 +106,6 @@ for i,namefile in enumerate(names):
 	
 MS_int_sign = np.sign(MS_int)
 MS_int_amp  = np.abs(MS_int)
-
-def MS_at_middle(g):
-    r_mid = 0.5 * (g["r"].min() + g["r"].max())
-    idx = (g["r"] - r_mid).abs().argmin()
-    return g.iloc[idx]["MS"]
-
-MS_mid = df.groupby("name").apply(MS_at_middle).to_numpy()
 
 def model_func(X_flat, *params):
 	n_vars = X_flat.shape[0]
@@ -331,7 +342,7 @@ for g_code in np.unique(g):
 		print(model_name)
 		print("--------------------------------------------")
 
-		for MS, MS_err, case, sign in [(MS_rms, MS_rms_err, "MS_rms",False),(MS_int, MS_int_err, "MS_int",True),(MS_max, MS_max_err, "MS_max",True),(MS_mean, MS_mean_err, "MS_mean",True),(MS_mid, MS_mid_err, "MS_mid",True)]:
+		for MS, MS_err, case, sign in [(MS_rms, MS_rms_err, "MS_rms",False),(MS_int, MS_int_err, "MS_int",True),(MS_max, MS_max_err, "MS_max",True),(MS_mean, MS_mean_err, "MS_mean",True),(MS_mid, MS_mid_err, "MS_mid",True),(MS_max_i, MS_maxi_err, "MS_inner_max",True)]:
 			print()
 			print(f"===== {case} =====")
 			
