@@ -144,8 +144,10 @@ def model_func_signed(X_flat, *params):
 
 	n_vars = X_flat.shape[0]
 
-	a = params[:-1]
-	A = params[-1]
+	signA=params[-2]
+	logAmp=params[-1]
+
+	A=signA*np.exp(logAmp)
 
 	Y_model = A
 	with np.errstate(over='ignore'):
@@ -176,19 +178,21 @@ def evaluate_scaling_realspace(X_vars, Y, Yerr, signed = True):
 		# ---------------- Initial guess from log fit ----------------
 
 		logX = np.column_stack([np.log10(v) for v in X_vars])
-		p0 = [0.5]*len(X_vars) + [np.mean(Y)]
-		p0[-1] = np.mean(Y)
+		p0=[0.5]*len(X_vars)
+
+		p0 += [np.sign(np.mean(Y))]
+		p0 += [np.log(np.mean(np.abs(Y)))]
 		
-		bounds_lower = [-5]*len(X_vars) + [-np.inf]
-		bounds_upper = [5]*len(X_vars) + [ np.inf]
+		bounds_lower=[-5]*len(X_vars)+[-1,-np.inf]
+		bounds_upper=[5]*len(X_vars)+[1,np.inf]
 		
 		# ---------------- Real-space nonlinear fit ----------------
 
 		X_stack = np.vstack(X_vars)
 
-		#params, cov = curve_fit(model_func_signed, X_stack, Y, sigma=Yerr, absolute_sigma=True, bounds=(bounds_lower, bounds_upper), p0=p0, maxfev=20000)
-		result = least_squares(residuals_signed,x0=p0,args=(X_stack, Y, Yerr), bounds=(bounds_lower, bounds_upper), max_nfev=50000)
-		params = result.x
+		params, cov = curve_fit(model_func_signed, X_stack, Y, sigma=Yerr, absolute_sigma=True, bounds=(bounds_lower, bounds_upper), p0=p0, maxfev=20000)
+		#result = least_squares(residuals_signed,x0=p0,args=(X_stack, Y, Yerr), bounds=(bounds_lower, bounds_upper), max_nfev=50000)
+		#params = result.x
 
 		coefs = params[:-1]
 		intercept = params[-1]
