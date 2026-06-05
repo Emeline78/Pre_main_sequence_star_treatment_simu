@@ -362,7 +362,7 @@ for g_code in np.unique(g):
 		print(model_name)
 		print("--------------------------------------------")
 
-		for MS, MS_err, case, sign in [(MS_rms, MS_rms_err, "MS_rms",False),(MS_int, MS_int_err, "MS_int",True),(MS_max, MS_max_err, "MS_max",True),(MS_mean, MS_mean_err, "MS_mean",True),(MS_mid, MS_mid_err, "MS_mid",True),(MS_max_i, MS_maxi_err, "MS_inner_max",True)]:
+		for MS, MS_err, case, sign in [(MS_rms, MS_rms_err, "MS_rms",False),(MS_int, MS_int_err, "MS_int",True),(MS_max, MS_max_err, "MS_max",False),(MS_mean, MS_mean_err, "MS_mean",True),(MS_mid, MS_mid_err, "MS_mid",True),(MS_max_i, MS_maxi_err, "MS_inner_max",True)]:
 			print()
 			print(f"===== {case} =====")
 			
