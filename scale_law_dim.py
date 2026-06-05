@@ -75,7 +75,9 @@ Omega_phys = 2 * np.pi/ (10*24*3600) * Ek	# temps de ref, visqueux
 liste = []
 Rsun = 6.957e8
 
-t,r,rho = param
+t = param[:,0]
+r = param[:,1]
+rho = param[:,2]
 idx = (t > 5) & (t < 6)
 
 r_phys = r[idx] * 0.9 * Rsun
