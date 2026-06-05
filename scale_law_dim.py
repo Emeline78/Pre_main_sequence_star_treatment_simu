@@ -186,9 +186,9 @@ def evaluate_scaling_realspace(X_vars, Y, Yerr, signed = True):
 
 		X_stack = np.vstack(X_vars)
 
-		params, cov = curve_fit(model_func_signed, X_stack, Y, sigma=Yerr, absolute_sigma=True, bounds=(bounds_lower, bounds_upper), p0=p0, maxfev=20000)
-		#result = least_squares(residuals_signed,x0=p0,args=(X_stack, Y, Yerr), bounds=(bounds_lower, bounds_upper), max_nfev=50000)
-		#params = result.x
+		#params, cov = curve_fit(model_func_signed, X_stack, Y, sigma=Yerr, absolute_sigma=True, bounds=(bounds_lower, bounds_upper), p0=p0, maxfev=20000)
+		result = least_squares(residuals_signed,x0=p0,args=(X_stack, Y, Yerr), bounds=(bounds_lower, bounds_upper), max_nfev=50000)
+		params = result.x
 
 		coefs = params[:-1]
 		intercept = params[-1]
