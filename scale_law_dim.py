@@ -144,10 +144,8 @@ def model_func_signed(X_flat, *params):
 
 	n_vars = X_flat.shape[0]
 
-	signA=params[-2]
-	logAmp=params[-1]
-
-	A=signA*np.exp(logAmp)
+	a = params[:-1]
+	A = params[-1]
 
 	Y_model = A
 	with np.errstate(over='ignore'):
@@ -175,16 +173,14 @@ def evaluate_scaling_realspace(X_vars, Y, Yerr, signed = True):
 		Yerr = Yerr[mask_fit]
 		Yerr = np.maximum(Yerr, 1e-12)
 
-		# ---------------- Initial guess from log fit ----------------
+		# ---------------- Initial guess ---------------
 
 		logX = np.column_stack([np.log10(v) for v in X_vars])
-		p0=[0.5]*len(X_vars)
-
-		p0 += [np.sign(np.mean(Y))]
-		p0 += [np.log(np.mean(np.abs(Y)))]
+		p0 = [0.5]*len(X_vars) + [np.mean(Y)]
+		p0[-1] = np.mean(Y)
 		
-		bounds_lower=[-5]*len(X_vars)+[-1,-np.inf]
-		bounds_upper=[5]*len(X_vars)+[1,np.inf]
+		bounds_lower = [-5]*len(X_vars) + [-np.inf]
+		bounds_upper = [5]*len(X_vars) + [ np.inf]
 		
 		# ---------------- Real-space nonlinear fit ----------------
 
