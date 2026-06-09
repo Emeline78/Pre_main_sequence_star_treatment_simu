@@ -195,7 +195,7 @@ def evaluate_scaling_realspace(X_vars, Y, Yerr, signed = True):
 		#params = result.x
 
 		coefs = params[:-1]
-		intercept = params[-1]*Y_scale
+		intercept = params[-1]*Yscale
 		Y_model = model_func_signed(X_stack, *params)
 		
 	else :
