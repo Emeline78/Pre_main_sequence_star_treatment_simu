@@ -185,13 +185,17 @@ def evaluate_scaling_realspace(X_vars, Y, Yerr, signed = True):
 		# ---------------- Real-space nonlinear fit ----------------
 
 		X_stack = np.vstack(X_vars)
-
-		params, cov = curve_fit(model_func_signed, X_stack, Y, sigma=Yerr, absolute_sigma=True, bounds=(bounds_lower, bounds_upper), p0=p0, maxfev=20000)
+		
+		Yscale = np.median(np.abs(Y))
+		Y_fit = Y / Yscale
+		Yerr_fit = Yerr / Yscale
+		
+		params, cov = curve_fit(model_func_signed, X_stack, Y_fit, sigma=Yerr_fit, absolute_sigma=True, bounds=(bounds_lower, bounds_upper), p0=p0, maxfev=20000)
 		#result = least_squares(residuals_signed,x0=p0,args=(X_stack, Y, Yerr), bounds=(bounds_lower, bounds_upper), max_nfev=50000)
 		#params = result.x
 
 		coefs = params[:-1]
-		intercept = params[-1]
+		intercept = params[-1]*Y_scale
 		Y_model = model_func_signed(X_stack, *params)
 		
 	else :
